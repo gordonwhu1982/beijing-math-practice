@@ -780,7 +780,7 @@
     }
     var now = new Date();
     return {
-      siteName: '中小学知识图谱',
+      siteName: '北京数学练习',
       subject: subjectName,
       scope: shareScopeText(),
       mastered: sum.mastered.length,
