@@ -3,8 +3,8 @@
  * 改了 SHELL 或 DATA 列表、或数据结构变了，就把 VERSION 加一。 */
 'use strict';
 
-var VERSION = 'v2';
-var CACHE = 'cnm-pwa-' + VERSION;
+var VERSION = 'v1'; // 分叉独立缓存命名空间（bmp-pwa-v1），与上游 cnm-pwa-* 互不影响
+var CACHE = 'bmp-pwa-' + VERSION;
 var SCOPE = self.registration.scope;
 
 var SHELL = [
@@ -65,7 +65,7 @@ self.addEventListener('install', function (event) {
 self.addEventListener('activate', function (event) {
   event.waitUntil((async function () {
     var names = await caches.keys();
-    await Promise.all(names.filter(function (n) { return n.indexOf('cnm-pwa-') === 0 && n !== CACHE; }).map(function (n) { return caches.delete(n); }));
+    await Promise.all(names.filter(function (n) { return n.indexOf('bmp-pwa-') === 0 && n !== CACHE; }).map(function (n) { return caches.delete(n); }));
     await self.clients.claim();
   })());
 });
