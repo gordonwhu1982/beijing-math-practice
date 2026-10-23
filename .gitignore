@@ -10,3 +10,7 @@ __pycache__/
 .env.*
 PROMPT*.md
 chain.sh
+# 本地分叉新增
+_staging/
+*.tmp
+out/
