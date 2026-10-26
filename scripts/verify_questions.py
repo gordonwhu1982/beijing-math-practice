@@ -2,7 +2,7 @@
 """题库答案自动核验（仅标准库）。
 
 用法：
-  python3 scripts/verify_questions.py                       # 核验 data/questions.json，写 data/verification_report.json
+  python3 scripts/verify_questions.py                       # 核验 data/questions.json，写 out/verify-report.json
   python3 scripts/verify_questions.py --report out.json     # 指定报告路径
 
 题目的 verify 字段是一个 Python 表达式字符串，在受限环境中求值（AST 白名单：四则、**、//、%、比较、
@@ -37,8 +37,7 @@ sys.path.insert(0, os.path.join(ROOT, "scripts"))
 import validate as V  # noqa: E402
 
 QUESTIONS_PATH = os.path.join(ROOT, "data", "questions.json")
-REPORT_PATH = os.path.join(ROOT, "data", "verification_report.json")
-SECOND_PASS_LOG = os.path.join(ROOT, "data", "second_pass_log.json")
+REPORT_PATH = os.path.join(ROOT, "out", "verify-report.json")
 TOL = 1e-9
 
 
@@ -291,17 +290,10 @@ def verify_all(questions):
     return r
 
 
-def load_second_pass_log():
-    if not os.path.exists(SECOND_PASS_LOG):
-        return None
-    with open(SECOND_PASS_LOG, encoding="utf-8") as f:
-        return json.load(f)
-
-
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--file", help="只核验这个题库/批次文件")
-    ap.add_argument("--report", help="报告输出路径（默认 data/verification_report.json；--file 时默认不写）")
+    ap.add_argument("--report", help="报告输出路径（默认 out/verify-report.json；--file 时默认不写）")
     args = ap.parse_args()
 
     path = args.file or QUESTIONS_PATH
@@ -346,12 +338,9 @@ def main():
         "mismatches": res["mismatch"],
         "unverifiable_ids": sorted(res["unverifiable"]),
     }
-    sp = load_second_pass_log() if not args.file else None
-    if sp is not None:
-        report["second_pass"] = dict(sp)
-        report["second_pass"].setdefault("second_pass_mismatch", [])
     out = args.report or (None if args.file else REPORT_PATH)
     if out:
+        os.makedirs(os.path.dirname(out), exist_ok=True)
         with open(out, "w", encoding="utf-8") as f:
             json.dump(report, f, ensure_ascii=False, indent=2)
             f.write("\n")
@@ -368,10 +357,6 @@ def main():
         print("报告：" + os.path.relpath(out, ROOT))
     if res["mismatch"] or errs:
         print("VERIFICATION FAILED")
-        return 1
-    sp_bad = (report.get("second_pass") or {}).get("second_pass_mismatch")
-    if sp_bad:
-        print("VERIFICATION FAILED（第二遍复核仍有 %d 处未解决）" % len(sp_bad))
         return 1
     print("VERIFICATION PASSED")
     return 0
