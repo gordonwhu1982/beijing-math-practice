@@ -12,3 +12,5 @@ _staging/
 *.tmp
 out/
 data/verification_report.json
+# 独立复核的临时产物
+data/_second_pass/
