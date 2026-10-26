@@ -3,7 +3,7 @@
  * 改了 SHELL 或 DATA 列表、或数据结构变了，就把 VERSION 加一。 */
 'use strict';
 
-var VERSION = 'v1'; // 分叉独立缓存命名空间（bmp-pwa-v1），与上游 cnm-pwa-* 互不影响
+var VERSION = 'v1'; // 改 SHELL / DATA 或数据结构变化时加一
 var CACHE = 'bmp-pwa-' + VERSION;
 var SCOPE = self.registration.scope;
 
@@ -25,8 +25,6 @@ var SHELL = [
   'assets/site.css',
   'assets/explore.css',
   'assets/home.js',
-  'assets/stats-config.js',
-  'assets/stats.js',
   'assets/children.js',
   'assets/pwa.js',
   'assets/pwa.css',

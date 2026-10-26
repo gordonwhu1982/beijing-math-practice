@@ -133,7 +133,6 @@
     var f = { name: nameIn.value, grade: gradeSel.value, textbook: bookSel.value };
     var res = editing ? CC.update(editing, f) : CC.add(f);
     if (!res.ok) { showError(res.error); return; }
-    if (!editing && window.cnmTrack) window.cnmTrack('child_added');
     resetForm();
     render();
   });

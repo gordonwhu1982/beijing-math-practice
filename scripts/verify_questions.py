@@ -3,7 +3,6 @@
 
 用法：
   python3 scripts/verify_questions.py                       # 核验 data/questions.json，写 data/verification_report.json
-  python3 scripts/verify_questions.py --file data/_qbatches/01.json   # 只核验某个批次文件（顺带做格式检查），不写报告
   python3 scripts/verify_questions.py --report out.json     # 指定报告路径
 
 题目的 verify 字段是一个 Python 表达式字符串，在受限环境中求值（AST 白名单：四则、**、//、%、比较、

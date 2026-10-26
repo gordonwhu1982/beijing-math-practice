@@ -343,7 +343,7 @@
   function makeOracle(targets, mode) {
     const G = D.graph;
     if (mode === 'screen') {
-      // 整体筛查：按知识点序号，约 1/6 不会、1/6 不稳，其余都会（与 scripts/demo_grade.js 相同）
+      // 整体筛查：按知识点序号，约 1/6 不会、1/6 不稳，其余都会
       return function (id, attempt) {
         const i = G.index[id];
         if (i % 6 === 0) return 'wrong';
@@ -1000,41 +1000,6 @@
 
     page.append(standardsCard(sum));
     page.append(logCard());
-    page.append(h('p', { class: 'iq-line', id: 'iq-line' },
-      '做完数学诊断，再测测思维能力？→ ',
-      h('a', {
-        href: 'https://test.pansgo.com/?from=math-result',
-        target: '_blank',
-        rel: 'noopener',
-        text: '儿童智商测试'
-      })));
-    show(page);
-    mountPathGraph(sum);
-  }
-
-  function nameList(ids) { return ids.map(nameOf).join('、'); }
-
-  function chaptersCard(chapters, outOfScope) {
-    const seg = function (cls, n, total) { return n ? h('i', { class: cls, style: 'width:' + (n / total * 100) + '%' }) : null; };
-    return h('div', { class: 'card', id: 'chapters' },
-      h('h2', { text: '按章汇总' }),
-      h('p', { class: 'muted small' }, '每章的知识点掌握情况，薄弱多的章排在前面；点开看具体是哪几个知识点。色条从左到右：掌握、不稳、薄弱、未测。'),
-      outOfScope.length ? h('p', { class: 'notice', id: 'out-of-scope' }, '部分薄弱点的先修在所选范围之外，未检查（涉及 ' + outOfScope.length + ' 个薄弱点，如「' +
-        outOfScope.slice(0, 3).map(function (r) { return nameOf(r.id); }).join('」「') + '」）。可对这些知识点单独做诊断，沿先修继续往前查。') : null,
-      chapters.map(function (c) {
-        return h('details', { class: 'topic chap-sum', open: c.weak > 0 || c.shaky > 0 },
-          h('summary', null,
-            h('span', { class: 'chap-name', text: c.label }),
-            h('span', { class: 'chap-counts' },
-              tag('mastered', '掌握 ' + c.mastered), tag('shaky', '不稳 ' + c.shaky), tag('weak', '薄弱 ' + c.weak), tag('unknown', '未测 ' + c.untested)),
-            h('span', { class: 'chap-bar', 'aria-hidden': 'true' },
-              seg('m', c.mastered, c.total), seg('s', c.shaky, c.total), seg('w', c.weak, c.total), seg('u', c.untested, c.total))),
-          h('div', { class: 'body' },
-            h('div', { class: 'muted small', text: '共 ' + c.total + ' 个知识点' }),
-            c.weakIds.length ? h('div', { class: 'chap-names' }, tag('weak', '薄弱'), nameList(c.weakIds)) : null,
-            c.shakyIds.length ? h('div', { class: 'chap-names' }, tag('shaky', '不稳'), nameList(c.shakyIds)) : null,
-            !c.weakIds.length && !c.shakyIds.length ? h('div', { class: 'muted small', text: c.untested ? '没有发现薄弱或不稳的点，另有 ' + c.untested + ' 个没测到。' : '没有发现薄弱或不稳的点。' }) : null));
-      }));
   }
 
   function stat(cls, n, label) { return h('div', { class: 'stat ' + cls }, h('b', { text: String(n) }), label); }

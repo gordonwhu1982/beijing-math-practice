@@ -1,16 +1,14 @@
 node_modules/
 .DS_Store
 *.log
-claude*.log
 *.tgz
 *.zip
 __pycache__/
 *.pyc
 .env
 .env.*
-PROMPT*.md
-chain.sh
 # 本地分叉新增
 _staging/
 *.tmp
 out/
+data/verification_report.json

@@ -15,7 +15,8 @@ else echo "数据校验失败："; grep -E "^错误|VALIDATION FAILED" /tmp/bmp_
 if [ "${1:-all}" != "quick" ]; then
   echo
   echo "== 3/3 题目 verify 自动核验（较慢）=="
-  if python scripts/verify_questions.py >/tmp/bmp_verify.log 2>&1; then tail -5 /tmp/bmp_verify.log
+  mkdir -p out
+  if python scripts/verify_questions.py --report out/verify-report.json >/tmp/bmp_verify.log 2>&1; then tail -5 /tmp/bmp_verify.log
   else echo "核验返回非 0（不等于题目有错，先看报告）"; tail -8 /tmp/bmp_verify.log; fail=1; fi
 fi
 echo
