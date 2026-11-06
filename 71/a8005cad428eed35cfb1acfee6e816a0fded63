@@ -1,0 +1,1621 @@
+classic.html
+  s_f7fe7e394ee45d::t_9e38a553ebbdf5 1-108
+math-coach/AGENTS.md
+  s_f7fe7e394ee45d::t_ca7396b230fd9b 1-15
+math-coach/DELIVERY_MAP.json
+  s_f7fe7e394ee45d::t_2fbef556051b66 1-34
+math-coach/content/framework/knowledge_points/701.json
+  s_89f3a2b0a5ba49::t_7cd8a1ff1a38bd 1-356
+math-coach/content/framework/knowledge_points/702.detail.jsonl
+  s_89f3a2b0a5ba49::t_55eb92004f835a 1-160
+math-coach/content/framework/knowledge_points/702.json
+  s_89f3a2b0a5ba49::t_5358ee8056d78e 1-411
+math-coach/content/framework/question_types.json
+  s_89f3a2b0a5ba49::t_ceb2323136c8fb 1-440
+math-coach/content/framework/volumes/701.json
+  s_89f3a2b0a5ba49::t_6e6f26201e21cc 1-364
+math-coach/content/relations/edges.jsonl
+  s_89f3a2b0a5ba49::t_aa6cf11bedad32 1-6924
+math-coach/content/skills/702/ch7.jsonl
+  s_89f3a2b0a5ba49::t_c158d50bcc6f26 1-32
+math-coach/content/skills/901/ch18.jsonl
+  s_89f3a2b0a5ba49::t_75b5069d2528fa 1-37
+math-coach/design/ux-redesign/04_CURRENT_UI_AUDIT.md
+  s_89f3a2b0a5ba49::t_336a3c43c9e30f 1-43
+math-coach/design/ux-redesign/09_REVIEW_ROUND1.md
+  s_5fa575dd10e4d8::t_66b46794c68697 1-176
+math-coach/design/ux-redesign/10_REVIEW_ROUND2.md
+  s_81c4e09d9285bc::t_6703b7f3ec352d 1-103
+math-coach/design/ux-redesign/11_REVIEW_ROUND3.md
+  s_061ace27ae2b86::t_0c6a01a3459c55 1-110
+math-coach/design/ux-redesign/12_REVIEW_ROUND4.md
+  s_91e51b9cc5b165::t_7e7811cd757e59 1-110
+math-coach/design/ux-redesign/13_REVIEW_ROUND5.md
+  s_6448de114e5208::t_93474eec9c4276 1-97
+math-coach/design/ux-redesign/14_REVIEW_ROUND6.md
+  s_c019e91640feb6::t_0d3e03ea8be618 1-126
+math-coach/design/ux-redesign/15_REVIEW_ROUND7.md
+  s_c60e8ef91bdbe7::t_336934e8dda991 1-126
+math-coach/design/ux-redesign/18_REVIEW_M5.md
+  s_f7fe7e394ee45d::t_155ce58f836d19 1-96
+math-coach/design/ux-redesign/18_REVIEW_M6.md
+  s_e911302bec8273::t_03d1ee19b8ea37 1-157
+math-coach/design/ux-redesign/18_REVIEW_M7.md
+  s_f7fe7e394ee45d::t_675bd141c224f4 1-87
+math-coach/design/ux-redesign/23_REVIEW_M3.md
+  s_f7fe7e394ee45d::t_64a8d3da4c7921 1-85
+math-coach/design/ux-redesign/24_REVIEW_M6.md
+  s_dc1ab796b66732::t_3bd979270147a6 1-110
+math-coach/design/ux-redesign/24_REVIEW_M7.md
+  s_dc1ab796b66732::t_e0934523ac4637 1-78
+math-coach/design/ux-redesign/prototype/app.js
+  s_f7fe7e394ee45d::t_850a28bbef81d3 1-5022
+math-coach/design/ux-redesign/prototype/index.html
+  s_f7fe7e394ee45d::t_3c603b2e276994 1-26
+math-coach/docs/STATE.md
+  s_ecec7f3e499e2c::t_5623aaed8e910e 1-734
+math-coach/docs/analogies-table.md
+  s_89f3a2b0a5ba49::t_778edf906d78d4 1-45
+math-coach/docs/delivery/ACCEPTANCE_REPORT.md
+  s_f7fe7e394ee45d::t_f8ee54b127a53e 1-21
+math-coach/docs/delivery/AGENT_REGISTRY.json
+  s_f7fe7e394ee45d::t_cb6a6b9ce721c4 1-133
+math-coach/docs/delivery/AGENT_REGISTRY.md
+  s_f7fe7e394ee45d::t_5b85a644ec44b1 1-24
+math-coach/docs/delivery/BACKLOG.md
+  s_f7fe7e394ee45d::t_50b0f67dfd3550 1-33
+math-coach/docs/delivery/DECISIONS.md
+  s_f7fe7e394ee45d::t_812f83debe15be 1-19
+math-coach/docs/delivery/INTERACTION_SPEC.md
+  s_f7fe7e394ee45d::t_271cee82e12198 1-12
+math-coach/docs/delivery/ISSUES.md
+  s_f7fe7e394ee45d::t_7e3facf127d1c6 1-17
+math-coach/docs/delivery/ITERATION_LOG.md
+  s_f7fe7e394ee45d::t_c1e8c91447edfa 1-43
+math-coach/docs/delivery/PROJECT_BRIEF.md
+  s_f7fe7e394ee45d::t_55a5636e99d9bb 1-61
+math-coach/docs/delivery/PROJECT_GOVERNANCE.md
+  s_f7fe7e394ee45d::t_aaa80388a7bbea 1-129
+math-coach/docs/delivery/PROJECT_STATE.json
+  s_f7fe7e394ee45d::t_75b79ed11213d4 1-62
+math-coach/docs/delivery/REQUIREMENTS.md
+  s_f7fe7e394ee45d::t_2b72449d225265 1-34
+math-coach/docs/delivery/RESEARCH_INDEX.md
+  s_f7fe7e394ee45d::t_adba9658ab0c44 1-27
+math-coach/docs/delivery/RISK_REGISTER.md
+  s_f7fe7e394ee45d::t_5687e2144fbf5c 1-9
+math-coach/docs/delivery/TEST_PLAN.md
+  s_f7fe7e394ee45d::t_47984592fffe1d 1-29
+math-coach/docs/delivery/TRACEABILITY_MATRIX.md
+  s_f7fe7e394ee45d::t_d62ae546295406 1-13
+math-coach/docs/delivery/UI_DESIGN_SPEC.md
+  s_f7fe7e394ee45d::t_1920a54ebe32e7 1-8
+math-coach/docs/delivery/USER_FEEDBACK.md
+  s_f7fe7e394ee45d::t_f1a4086f9771f8 1-8
+math-coach/docs/delivery/UX_AUDIT.md
+  s_f7fe7e394ee45d::t_cb51d0e4044342 1-23
+math-coach/docs/delivery/agent-validation/README.md
+  s_f7fe7e394ee45d::t_81c12c01b72245 1-23
+math-coach/docs/delivery/team-cards/developer.md
+  s_f7fe7e394ee45d::t_7491eba0373fec 1-93
+math-coach/docs/delivery/team-cards/interaction-designer.md
+  s_f7fe7e394ee45d::t_25612e591adde8 1-106
+math-coach/docs/delivery/team-cards/product-analyst.md
+  s_f7fe7e394ee45d::t_0aabef9072933a 1-95
+math-coach/docs/delivery/team-cards/qa-engineer.md
+  s_f7fe7e394ee45d::t_f46d8e9f3f7f51 1-98
+math-coach/docs/delivery/team-cards/system-architect.md
+  s_f7fe7e394ee45d::t_1df293ebc213a4 1-100
+math-coach/docs/delivery/team-cards/ui-designer.md
+  s_f7fe7e394ee45d::t_9fc994fb017b24 1-108
+math-coach/docs/delivery/team-cards/ux-designer.md
+  s_f7fe7e394ee45d::t_61f945c5067494 1-108
+math-coach/docs/framework-status.md
+  s_89f3a2b0a5ba49::t_978d4bedd68f71 1-95
+math-coach/runtime/web/data/figures.js
+  s_89f3a2b0a5ba49::t_f88a6f80e2cb5c 1-2
+math-coach/runtime/web/data/qtypes.js
+  s_89f3a2b0a5ba49::t_3b9b7bdc4c60d0 1-2
+math-coach/runtime/web/js/fig.js
+  s_89f3a2b0a5ba49::t_43cb9fb7266413 1-107
+math-coach/tools/hooks/pre-commit
+  s_89f3a2b0a5ba49::t_6bcd40635600da 1-12
+README.md
+  s_89f3a2b0a5ba49::t_a98a6929da193e 7-16,26
+assets/home.js
+  s_89f3a2b0a5ba49::t_0e64bae842060b 27
+children/history.html
+  s_89f3a2b0a5ba49::t_0441badf31b0b1 29-30
+children/index.html
+  s_89f3a2b0a5ba49::t_3960ba86b0ece6 29-30
+diagnose/app.js
+  s_89f3a2b0a5ba49::t_2eeb7067640042 110
+diagnose/index.html
+  s_89f3a2b0a5ba49::t_19a2ded489b3e6 34-35
+explore/app.js
+  s_89f3a2b0a5ba49::t_344916ba65ccb3 884
+explore/index.html
+  s_89f3a2b0a5ba49::t_7fe92eff67035d 34-35
+index.html
+  s_89f3a2b0a5ba49::t_0a20704947fe80 6-7,9-27,30-42,44-69
+math-coach/.gitattributes
+  s_89f3a2b0a5ba49::t_e596041c7eaf40 1-9
+math-coach/.gitignore
+  s_89f3a2b0a5ba49::t_d96a9faa313362 1-12
+math-coach/README.md
+  s_89f3a2b0a5ba49::t_482b8e1a711035 1-167
+math-coach/assets/vendor/cytoscape/LICENSE-cytoscape-dagre.txt
+  s_89f3a2b0a5ba49::t_2d69b43e0c1560 1-21
+math-coach/assets/vendor/cytoscape/LICENSE-cytoscape.txt
+  s_89f3a2b0a5ba49::t_856a639b6cd508 1-19
+math-coach/assets/vendor/cytoscape/LICENSE-dagre.txt
+  s_89f3a2b0a5ba49::t_67bfe513b304eb 1-19
+math-coach/assets/vendor/cytoscape/cytoscape-dagre.js
+  s_89f3a2b0a5ba49::t_a8b6a652dd4e0e 1-397
+math-coach/assets/vendor/cytoscape/cytoscape.min.js
+  s_89f3a2b0a5ba49::t_9bd21c839a9ae3 1-32
+math-coach/assets/vendor/cytoscape/dagre.min.js
+  s_89f3a2b0a5ba49::t_711cbe5910e285 1-3809
+math-coach/assets/vendor/katex/LICENSE
+  s_89f3a2b0a5ba49::t_ebf04516376a37 1-21
+math-coach/assets/vendor/katex/README.md
+  s_89f3a2b0a5ba49::t_a0751ced989afd 1-8
+math-coach/assets/vendor/katex/katex.min.css
+  s_89f3a2b0a5ba49::t_3f8c5143be2d20 1
+math-coach/assets/vendor/katex/katex.min.js
+  s_89f3a2b0a5ba49::t_0b8a21ce9344f7 1
+math-coach/content/curriculum/kp_standards.json
+  s_89f3a2b0a5ba49::t_fd46baf2bc3d6d 1-1229
+math-coach/content/curriculum/standards.jsonl
+  s_89f3a2b0a5ba49::t_4e00d342e0259f 1-314
+math-coach/content/framework/README.md
+  s_89f3a2b0a5ba49::t_e54b2d791c096c 1-61
+math-coach/content/framework/analogies.json
+  s_89f3a2b0a5ba49::t_f8bf00434af171 1-269
+math-coach/content/framework/figures.json
+  s_89f3a2b0a5ba49::t_8459c9684063a0 1-84
+math-coach/content/framework/knowledge_points/701.detail.jsonl
+  s_89f3a2b0a5ba49::t_506f95c1fc81aa 1-147
+math-coach/content/framework/knowledge_points/801.detail.jsonl
+  s_89f3a2b0a5ba49::t_a88c33de6dda8a 1-151
+math-coach/content/framework/knowledge_points/801.json
+  s_89f3a2b0a5ba49::t_3886048f5da113 1-377
+math-coach/content/framework/knowledge_points/802.detail.jsonl
+  s_89f3a2b0a5ba49::t_c86ac0958cc0b7 1-79
+math-coach/content/framework/knowledge_points/802.json
+  s_89f3a2b0a5ba49::t_82a83c333d9c74 1-234
+math-coach/content/framework/knowledge_points/901.detail.jsonl
+  s_89f3a2b0a5ba49::t_a8156e9ea6bb73 1-105
+math-coach/content/framework/knowledge_points/901.json
+  s_89f3a2b0a5ba49::t_98baab12fabb5e 1-302
+math-coach/content/framework/knowledge_points/902.detail.jsonl
+  s_89f3a2b0a5ba49::t_a5a8a2febf6d74 1-45
+math-coach/content/framework/knowledge_points/902.json
+  s_89f3a2b0a5ba49::t_4e5bd7d87fa5ac 1-152
+math-coach/content/framework/kp_prerequisites.json
+  s_89f3a2b0a5ba49::t_7ec64b6b8ef2a0 1-4255
+math-coach/content/framework/prerequisites.json
+  s_89f3a2b0a5ba49::t_0829e5ae68b36a 1-805
+math-coach/content/framework/skill_prerequisites.json
+  s_89f3a2b0a5ba49::t_55b7c8bd38639c 1-2085
+math-coach/content/framework/volumes/702.json
+  s_89f3a2b0a5ba49::t_7987d3bfd3b27f 1-462
+math-coach/content/framework/volumes/801.json
+  s_89f3a2b0a5ba49::t_9b8475ec86b70c 1-270
+math-coach/content/framework/volumes/802.json
+  s_89f3a2b0a5ba49::t_a5e833dc45f77b 1-304
+math-coach/content/framework/volumes/901.json
+  s_89f3a2b0a5ba49::t_17a7fc0ddd62a3 1-365
+math-coach/content/framework/volumes/902.json
+  s_89f3a2b0a5ba49::t_4f8d0c40cf67fa 1-205
+math-coach/content/misconceptions/801/ch10.jsonl
+  s_89f3a2b0a5ba49::t_6b2c7c887fdf6a 1-21
+math-coach/content/misconceptions/801/ch11.jsonl
+  s_89f3a2b0a5ba49::t_adffb3fcca87b7 1-27
+math-coach/content/misconceptions/801/ch12.jsonl
+  s_89f3a2b0a5ba49::t_6de52bbe4d77a3 1-64
+math-coach/content/misconceptions/801/ch13.jsonl
+  s_89f3a2b0a5ba49::t_e82378a08eb008 1-15
+math-coach/content/questions/801/COVERAGE.md
+  s_89f3a2b0a5ba49::t_cd526d0b773cc4 1-145
+math-coach/content/questions/801/ch10.answer.jsonl
+  s_89f3a2b0a5ba49::t_6880f5138dcf7d 1-14
+math-coach/content/questions/801/ch10.jsonl
+  s_89f3a2b0a5ba49::t_7c81e6069a75c7 1-482
+math-coach/content/questions/801/ch10.kp.jsonl
+  s_89f3a2b0a5ba49::t_5c79127e8d6ef1 1-427
+math-coach/content/questions/801/ch10.meta.jsonl
+  s_89f3a2b0a5ba49::t_5d88a41010a725 1-19
+math-coach/content/questions/801/ch10.options.jsonl
+  s_89f3a2b0a5ba49::t_316c0ebd70cf36 1-57
+math-coach/content/questions/801/ch10.spec.jsonl
+  s_89f3a2b0a5ba49::t_46270f16559c2a 1-482
+math-coach/content/questions/801/ch11.jsonl
+  s_89f3a2b0a5ba49::t_c0541aac192c6b 1-614
+math-coach/content/questions/801/ch11.kp.jsonl
+  s_89f3a2b0a5ba49::t_b2cc0683ba4413 1-607
+math-coach/content/questions/801/ch11.meta.jsonl
+  s_89f3a2b0a5ba49::t_c2ed2ceb6eb262 1-7
+math-coach/content/questions/801/ch11.options.jsonl
+  s_89f3a2b0a5ba49::t_ee36071803e15a 1-143
+math-coach/content/questions/801/ch11.spec.jsonl
+  s_89f3a2b0a5ba49::t_ea39df0bea6676 1-614
+math-coach/content/questions/801/ch12.jsonl
+  s_89f3a2b0a5ba49::t_226fa2fc32c0a9 1-1242
+math-coach/content/questions/801/ch12.kp.jsonl
+  s_89f3a2b0a5ba49::t_2650d7875ee843 1-1176
+math-coach/content/questions/801/ch12.meta.jsonl
+  s_89f3a2b0a5ba49::t_3080f8ec57363f 1-412
+math-coach/content/questions/801/ch12.options.jsonl
+  s_89f3a2b0a5ba49::t_c463bfc945c28f 1-17
+math-coach/content/questions/801/ch12.review.answer.jsonl
+  s_89f3a2b0a5ba49::t_dd27a6ab238904 1-27
+math-coach/content/questions/801/ch12.spec.jsonl
+  s_89f3a2b0a5ba49::t_66975c646912eb 1-303
+math-coach/content/questions/801/ch12.textbook.answer.jsonl
+  s_89f3a2b0a5ba49::t_267dc21a553d79 1-114
+math-coach/content/questions/801/ch13.jsonl
+  s_89f3a2b0a5ba49::t_ebbfc642f19d52 1-370
+math-coach/content/questions/801/ch13.kp.jsonl
+  s_89f3a2b0a5ba49::t_dcf53cfdd0ee9d 1-366
+math-coach/content/questions/801/ch13.meta.jsonl
+  s_89f3a2b0a5ba49::t_e2c7171573ae49 1-52
+math-coach/content/questions/801/ch13.options.jsonl
+  s_89f3a2b0a5ba49::t_8d3c05bbbf302b 1-10
+math-coach/content/questions/801/ch13.spec.jsonl
+  s_89f3a2b0a5ba49::t_68afd4871024c8 1-370
+math-coach/content/questions/801/ch13.textbook.answer.jsonl
+  s_89f3a2b0a5ba49::t_79130d3b1a1087 1-26
+math-coach/content/registry/competencies.json
+  s_89f3a2b0a5ba49::t_c5a843a5810b7f 1-37
+math-coach/content/registry/schema.json
+  s_89f3a2b0a5ba49::t_b44bb35ca1bf60 1-823
+math-coach/content/rubric/801/ch12.jsonl
+  s_89f3a2b0a5ba49::t_0dea1c89103f7f 1-3179
+math-coach/content/skills/701/ch1.jsonl
+  s_89f3a2b0a5ba49::t_02c7d9646a0d84 1-62
+math-coach/content/skills/701/ch2.jsonl
+  s_89f3a2b0a5ba49::t_3ef47b1317f3bf 1-32
+math-coach/content/skills/701/ch3.jsonl
+  s_89f3a2b0a5ba49::t_765710578bfa71 1-48
+math-coach/content/skills/702/ch4.jsonl
+  s_89f3a2b0a5ba49::t_be9475d1fdbf5c 1-18
+math-coach/content/skills/702/ch5.jsonl
+  s_89f3a2b0a5ba49::t_eb0f434763788e 1-22
+math-coach/content/skills/702/ch6.jsonl
+  s_89f3a2b0a5ba49::t_4186a1a59e1fed 1-17
+math-coach/content/skills/702/ch8.jsonl
+  s_89f3a2b0a5ba49::t_8a0d9f49929bb6 1-9
+math-coach/content/skills/702/ch9.jsonl
+  s_89f3a2b0a5ba49::t_1cc801c9c5d6bf 1-18
+math-coach/content/skills/801/ch10.jsonl
+  s_89f3a2b0a5ba49::t_e7f4df09a1bcac 1-23
+math-coach/content/skills/801/ch11.jsonl
+  s_89f3a2b0a5ba49::t_d5518f1656df2f 1-27
+math-coach/content/skills/801/ch12.jsonl
+  s_89f3a2b0a5ba49::t_7bee5b63956c6f 1-64
+math-coach/content/skills/801/ch13.jsonl
+  s_89f3a2b0a5ba49::t_2ec9d12eef1448 1-11
+math-coach/content/skills/802/ch14.jsonl
+  s_89f3a2b0a5ba49::t_49f5bd531b8949 1-30
+math-coach/content/skills/802/ch15.jsonl
+  s_89f3a2b0a5ba49::t_76d9e950af6a16 1-30
+math-coach/content/skills/802/ch16.jsonl
+  s_89f3a2b0a5ba49::t_6156400e6f929d 1-19
+math-coach/content/skills/802/ch17.jsonl
+  s_89f3a2b0a5ba49::t_1a40bad1f5686e 1-13
+math-coach/content/skills/901/ch19.jsonl
+  s_89f3a2b0a5ba49::t_412d3c121b41c2 1-32
+math-coach/content/skills/901/ch20.jsonl
+  s_89f3a2b0a5ba49::t_a8db05baca1f84 1-23
+math-coach/content/skills/901/ch21.jsonl
+  s_89f3a2b0a5ba49::t_9bb5d0121bcda5 1-25
+math-coach/content/skills/901/ch22.jsonl
+  s_89f3a2b0a5ba49::t_2e4507cb9d5339 1-18
+math-coach/content/skills/902/ch23.jsonl
+  s_89f3a2b0a5ba49::t_decdde07a25c0d 1-22
+math-coach/content/skills/902/ch24.jsonl
+  s_89f3a2b0a5ba49::t_8890b4b71ed709 1-19
+math-coach/content/skills/902/ch25.jsonl
+  s_89f3a2b0a5ba49::t_f4cb0b9aac0f78 1-13
+math-coach/content/skills/902/ch26.jsonl
+  s_89f3a2b0a5ba49::t_6be0986c82d476 1-10
+math-coach/content/thoughts.jsonl
+  s_89f3a2b0a5ba49::t_9fa859f230e21b 1-16
+math-coach/design/ux-redesign/00_DESIGN_OVERVIEW.md
+  s_89f3a2b0a5ba49::t_2140bf006233b1 1-65
+math-coach/design/ux-redesign/00_PHASE1_BRIEF.md
+  s_89f3a2b0a5ba49::t_ddc380f934f047 1-58
+math-coach/design/ux-redesign/01_REQUIREMENT_BASELINE.md
+  s_89f3a2b0a5ba49::t_93fc8440ef32e5 1-31
+math-coach/design/ux-redesign/02_RESEARCH_INDEX.md
+  s_89f3a2b0a5ba49::t_dd93fe4f49e23e 1-30
+math-coach/design/ux-redesign/03_CURRENT_PRODUCT_MAP.md
+  s_89f3a2b0a5ba49::t_a10afbd99551c2 1-54
+math-coach/design/ux-redesign/05_COMPETITOR_SOURCE_NOTE.md
+  s_89f3a2b0a5ba49::t_e9432d77db6072 1-147
+math-coach/design/ux-redesign/06_INFORMATION_ARCHITECTURE.md
+  s_89f3a2b0a5ba49::t_7b4e0d7d70b496 1-196
+math-coach/design/ux-redesign/07_INTERACTION.md
+  s_89f3a2b0a5ba49::t_b16fd928561392 1-489
+math-coach/design/ux-redesign/08_DESIGN_SYSTEM.md
+  s_89f3a2b0a5ba49::t_2abb75a4566d89 1-427
+math-coach/design/ux-redesign/16_ACCEPTANCE_GAPS.md
+  s_89f3a2b0a5ba49::t_1d397df5d30d5f 1-65
+math-coach/design/ux-redesign/16_FLOW_GAPS.md
+  s_89f3a2b0a5ba49::t_681de8d310f26e 1-43
+math-coach/design/ux-redesign/16_JOURNEY_GAPS.md
+  s_89f3a2b0a5ba49::t_1006a3461f3e79 1-50
+math-coach/design/ux-redesign/18_REVIEW_M4.md
+  s_89f3a2b0a5ba49::t_8498285c2e1e4a 1-78
+math-coach/design/ux-redesign/19_REVIEW_M5.md
+  s_89f3a2b0a5ba49::t_039ec10c75e890 1-21
+math-coach/design/ux-redesign/19_REVIEW_M6.md
+  s_89f3a2b0a5ba49::t_55f2acc5f3e9f0 1-106
+math-coach/design/ux-redesign/19_REVIEW_M7.md
+  s_89f3a2b0a5ba49::t_02e2d877310553 1-38
+math-coach/design/ux-redesign/20_REVIEW_M6.md
+  s_89f3a2b0a5ba49::t_9d3f582d8a2f61 1-72
+math-coach/design/ux-redesign/20_REVIEW_M7.md
+  s_89f3a2b0a5ba49::t_2829126f705614 1-29
+math-coach/design/ux-redesign/21_REVIEW_M6.md
+  s_89f3a2b0a5ba49::t_8139875f7deffc 1-58
+math-coach/design/ux-redesign/22_REVIEW_M1.md
+  s_89f3a2b0a5ba49::t_54c36367b2444b 1-114
+math-coach/design/ux-redesign/22_REVIEW_M2.md
+  s_89f3a2b0a5ba49::t_6a987fafcdf8c1 1-83
+math-coach/design/ux-redesign/22_REVIEW_M3.md
+  s_89f3a2b0a5ba49::t_db12a0413f1d84 1-118
+math-coach/design/ux-redesign/22_REVIEW_M8.md
+  s_89f3a2b0a5ba49::t_249e52592f4e8c 1-71
+math-coach/design/ux-redesign/23_REVIEW_M2.md
+  s_89f3a2b0a5ba49::t_573de9143a52e1 1-27
+math-coach/design/ux-redesign/24_REVIEW_M5.md
+  s_89f3a2b0a5ba49::t_abf8e54bc7138c 1-76
+math-coach/design/ux-redesign/prototype/app.css
+  s_89f3a2b0a5ba49::t_8c474d1b87f2b7 1-1013
+math-coach/design/ux-redesign/prototype/capture.ps1
+  s_89f3a2b0a5ba49::t_65962090d598eb 1-46
+math-coach/design/ux-redesign/screenshots/current/INDEX.md
+  s_89f3a2b0a5ba49::t_b1c695bfa0ad71 1-39
+math-coach/docs/analysis-2026-10-teacher-kg.md
+  s_89f3a2b0a5ba49::t_0dc452eba704af 1-1001
+math-coach/docs/delivery/agent-validation/MODEL-OPUS-2026-11-04.md
+  s_89f3a2b0a5ba49::t_54ddab8cb52a95 1-12
+math-coach/docs/delivery/design/README.md
+  s_89f3a2b0a5ba49::t_b464e71289ef78 1-18
+math-coach/docs/delivery/reviews/2026-11-06-audit-ch12.md
+  s_89f3a2b0a5ba49::t_24a78540c7db8c 1-71
+math-coach/docs/delivery/reviews/2026-11-06-panorama-audit-brief.md
+  s_89f3a2b0a5ba49::t_b305b46b91f1f4 1-30
+math-coach/docs/delivery/reviews/2026-11-06-ui-curve.md
+  s_89f3a2b0a5ba49::t_d74f2db11e78b8 1-60
+math-coach/docs/delivery/reviews/2026-11-06-ux-book-cloud.md
+  s_89f3a2b0a5ba49::t_77668305ec3f99 1-180
+math-coach/docs/delivery/reviews/2026-11-06-ux-book-space.md
+  s_89f3a2b0a5ba49::t_fe25e6d5d0c442 1-61
+math-coach/docs/delivery/reviews/2026-11-06-ux-curve.md
+  s_89f3a2b0a5ba49::t_3e86aba9ba24c9 1-44
+math-coach/docs/delivery/reviews/2026-11-06-ux-method-and-labels.md
+  s_89f3a2b0a5ba49::t_31f965d504b7a9 1-99
+math-coach/docs/delivery/reviews/2026-11-06-ux-ring.md
+  s_89f3a2b0a5ba49::t_df41d30a80261a 1-153
+math-coach/docs/framework-completeness.md
+  s_89f3a2b0a5ba49::t_df6168932ad9f0 1-97
+math-coach/docs/graph-delivery.md
+  s_89f3a2b0a5ba49::t_80a45bffaa1369 1-61
+math-coach/docs/math-text.md
+  s_89f3a2b0a5ba49::t_afad778016bbde 1-103
+math-coach/docs/plan/2026-10-26-data-architecture-v3.md
+  s_89f3a2b0a5ba49::t_a33fa9564ed929 1-394
+math-coach/docs/plan/2026-10-26-system-design-v2.md
+  s_89f3a2b0a5ba49::t_ec3c3d04bf8489 1-270
+math-coach/docs/plan/2026-10-27-architecture-v4.md
+  s_89f3a2b0a5ba49::t_5c5bc5fd1777fd 1-173
+math-coach/docs/plan/2026-10-28-competitor-parity.md
+  s_89f3a2b0a5ba49::t_a9d7bbd38119cd 1-567
+math-coach/docs/plan/2026-10-28-ux-mindmap.md
+  s_89f3a2b0a5ba49::t_1e544df5b29ba9 1-62
+math-coach/docs/plan/2026-10-28-ux-overview-redesign.md
+  s_89f3a2b0a5ba49::t_7625e38f07666f 1-216
+math-coach/docs/question-kp-mapping.md
+  s_89f3a2b0a5ba49::t_a0d5c7fb1bbae4 1-167
+math-coach/docs/records-schema.md
+  s_89f3a2b0a5ba49::t_be124a40191566 1-59
+math-coach/docs/retry-queue.md
+  s_89f3a2b0a5ba49::t_e757718a5f3599 1-34
+math-coach/docs/review/2026-10-27-arch.md
+  s_89f3a2b0a5ba49::t_2b93a7ae11bed1 1-184
+math-coach/docs/review/2026-10-27-pm.md
+  s_89f3a2b0a5ba49::t_c2984a240e5d0b 1-223
+math-coach/docs/review/2026-10-27-ux-supplement.md
+  s_89f3a2b0a5ba49::t_a48dde96546f2e 1-328
+math-coach/docs/review/2026-10-27-ux.md
+  s_89f3a2b0a5ba49::t_60dc2b5b5518d1 1-227
+math-coach/docs/review/2026-11-02-ux-inspector4b.md
+  s_89f3a2b0a5ba49::t_f184f4cc04a7c6 1-120
+math-coach/docs/skill-prerequisites.md
+  s_89f3a2b0a5ba49::t_e9196e6e1da407 1-62
+math-coach/docs/superpowers/specs/2026-10-26-math-coach-design.md
+  s_89f3a2b0a5ba49::t_8fd4c3c7b9e824 1-74
+math-coach/docs/superpowers/specs/2026-10-27-chapter-map-design.md
+  s_89f3a2b0a5ba49::t_31ec6f521382d4 1-274
+math-coach/docs/textbook-extraction.md
+  s_89f3a2b0a5ba49::t_70a75cf8152b1b 1-82
+math-coach/docs/trae-assets-analysis.md
+  s_89f3a2b0a5ba49::t_928516bb4d12d5 1-127
+math-coach/docs/ui-ux-roadmap.md
+  s_89f3a2b0a5ba49::t_6636123d569c2f 1-90
+math-coach/docs/ux-asserts.md
+  s_89f3a2b0a5ba49::t_8f16f954e78f9b 1-115
+math-coach/docs/visual-baseline.md
+  s_89f3a2b0a5ba49::t_c57c56f79ccb46 1-163
+math-coach/runtime/shared/judge.js
+  s_89f3a2b0a5ba49::t_0ca0761875ef9a 1-570
+math-coach/runtime/web/app.css
+  s_89f3a2b0a5ba49::t_9a153044eb2f8a 1-1487
+math-coach/runtime/web/data/catalog.js
+  s_89f3a2b0a5ba49::t_6e9f34424a43fd 1-2
+math-coach/runtime/web/data/graph.js
+  s_89f3a2b0a5ba49::t_2ef7dd665a9eff 1-2
+math-coach/runtime/web/data/qkp.js
+  s_89f3a2b0a5ba49::t_0a95a7b85418ca 1-2
+math-coach/runtime/web/data/sec/701-1.1.ex.js
+  s_89f3a2b0a5ba49::t_e7b3f9fcae22be 1-2
+math-coach/runtime/web/data/sec/701-1.1.items.js
+  s_89f3a2b0a5ba49::t_a17b49ee9e632b 1-2
+math-coach/runtime/web/data/sec/701-1.1.js
+  s_89f3a2b0a5ba49::t_efb71a1c5617a0 1-2
+math-coach/runtime/web/data/sec/701-1.10.ex.js
+  s_89f3a2b0a5ba49::t_9033060df47f7d 1-2
+math-coach/runtime/web/data/sec/701-1.10.items.js
+  s_89f3a2b0a5ba49::t_b7daad7fcdd4db 1-2
+math-coach/runtime/web/data/sec/701-1.10.js
+  s_89f3a2b0a5ba49::t_a741cbe961f926 1-2
+math-coach/runtime/web/data/sec/701-1.11.ex.js
+  s_89f3a2b0a5ba49::t_ec8e1d366250a9 1-2
+math-coach/runtime/web/data/sec/701-1.11.items.js
+  s_89f3a2b0a5ba49::t_3542015409f60c 1-2
+math-coach/runtime/web/data/sec/701-1.11.js
+  s_89f3a2b0a5ba49::t_d2034db3c7a805 1-2
+math-coach/runtime/web/data/sec/701-1.12.ex.js
+  s_89f3a2b0a5ba49::t_e60982ce6418a0 1-2
+math-coach/runtime/web/data/sec/701-1.12.items.js
+  s_89f3a2b0a5ba49::t_7dd4a366240f47 1-2
+math-coach/runtime/web/data/sec/701-1.12.js
+  s_89f3a2b0a5ba49::t_0af2edc0ea3e07 1-2
+math-coach/runtime/web/data/sec/701-1.2.ex.js
+  s_89f3a2b0a5ba49::t_f4a1b136a2604f 1-2
+math-coach/runtime/web/data/sec/701-1.2.items.js
+  s_89f3a2b0a5ba49::t_7dbb036a3fdd9d 1-2
+math-coach/runtime/web/data/sec/701-1.2.js
+  s_89f3a2b0a5ba49::t_575db8d1381fcf 1-2
+math-coach/runtime/web/data/sec/701-1.3.ex.js
+  s_89f3a2b0a5ba49::t_0fd911ce0e14df 1-2
+math-coach/runtime/web/data/sec/701-1.3.items.js
+  s_89f3a2b0a5ba49::t_cc40e472cf1518 1-2
+math-coach/runtime/web/data/sec/701-1.3.js
+  s_89f3a2b0a5ba49::t_9fe692f39e6644 1-2
+math-coach/runtime/web/data/sec/701-1.4.ex.js
+  s_89f3a2b0a5ba49::t_5678418f28fb8e 1-2
+math-coach/runtime/web/data/sec/701-1.4.items.js
+  s_89f3a2b0a5ba49::t_d7f28bd8d85c05 1-2
+math-coach/runtime/web/data/sec/701-1.4.js
+  s_89f3a2b0a5ba49::t_b74624c9d150e7 1-2
+math-coach/runtime/web/data/sec/701-1.5.ex.js
+  s_89f3a2b0a5ba49::t_18380d7e9c1ce0 1-2
+math-coach/runtime/web/data/sec/701-1.5.items.js
+  s_89f3a2b0a5ba49::t_5c215b56928326 1-2
+math-coach/runtime/web/data/sec/701-1.5.js
+  s_89f3a2b0a5ba49::t_3fb76e0abf1394 1-2
+math-coach/runtime/web/data/sec/701-1.6.ex.js
+  s_89f3a2b0a5ba49::t_c2c775b277d853 1-2
+math-coach/runtime/web/data/sec/701-1.6.items.js
+  s_89f3a2b0a5ba49::t_7ce5346ac6399b 1-2
+math-coach/runtime/web/data/sec/701-1.6.js
+  s_89f3a2b0a5ba49::t_c61832c94f04a1 1-2
+math-coach/runtime/web/data/sec/701-1.7.ex.js
+  s_89f3a2b0a5ba49::t_b779d5df4bacf5 1-2
+math-coach/runtime/web/data/sec/701-1.7.items.js
+  s_89f3a2b0a5ba49::t_262610d386f7c1 1-2
+math-coach/runtime/web/data/sec/701-1.7.js
+  s_89f3a2b0a5ba49::t_4257e9233fbd20 1-2
+math-coach/runtime/web/data/sec/701-1.8.ex.js
+  s_89f3a2b0a5ba49::t_befc3f50a6530b 1-2
+math-coach/runtime/web/data/sec/701-1.8.items.js
+  s_89f3a2b0a5ba49::t_f2e272fc5f6caa 1-2
+math-coach/runtime/web/data/sec/701-1.8.js
+  s_89f3a2b0a5ba49::t_9630e94c123265 1-2
+math-coach/runtime/web/data/sec/701-1.9.ex.js
+  s_89f3a2b0a5ba49::t_960dfe51d99ed6 1-2
+math-coach/runtime/web/data/sec/701-1.9.items.js
+  s_89f3a2b0a5ba49::t_8b7f7e95d68548 1-2
+math-coach/runtime/web/data/sec/701-1.9.js
+  s_89f3a2b0a5ba49::t_2dda1ee56ac47b 1-2
+math-coach/runtime/web/data/sec/701-2.1.ex.js
+  s_89f3a2b0a5ba49::t_3452e3541fcc14 1-2
+math-coach/runtime/web/data/sec/701-2.1.items.js
+  s_89f3a2b0a5ba49::t_9edac043936f1e 1-2
+math-coach/runtime/web/data/sec/701-2.1.js
+  s_89f3a2b0a5ba49::t_b87a7198a01a5f 1-2
+math-coach/runtime/web/data/sec/701-2.2.ex.js
+  s_89f3a2b0a5ba49::t_a33493f691b3a3 1-2
+math-coach/runtime/web/data/sec/701-2.2.items.js
+  s_89f3a2b0a5ba49::t_b37346eee276e0 1-2
+math-coach/runtime/web/data/sec/701-2.2.js
+  s_89f3a2b0a5ba49::t_8308cf7828c2ed 1-2
+math-coach/runtime/web/data/sec/701-2.3.ex.js
+  s_89f3a2b0a5ba49::t_39823e54300dbe 1-2
+math-coach/runtime/web/data/sec/701-2.3.items.js
+  s_89f3a2b0a5ba49::t_75041b556ae1f2 1-2
+math-coach/runtime/web/data/sec/701-2.3.js
+  s_89f3a2b0a5ba49::t_ec3d0f122cbe16 1-2
+math-coach/runtime/web/data/sec/701-2.4.ex.js
+  s_89f3a2b0a5ba49::t_5034be04d96ca4 1-2
+math-coach/runtime/web/data/sec/701-2.4.items.js
+  s_89f3a2b0a5ba49::t_bc7bca4dd97760 1-2
+math-coach/runtime/web/data/sec/701-2.4.js
+  s_89f3a2b0a5ba49::t_68257a728476ad 1-2
+math-coach/runtime/web/data/sec/701-2.5.ex.js
+  s_89f3a2b0a5ba49::t_cc4d13298f61f6 1-2
+math-coach/runtime/web/data/sec/701-2.5.items.js
+  s_89f3a2b0a5ba49::t_77e4792d4bc28e 1-2
+math-coach/runtime/web/data/sec/701-2.5.js
+  s_89f3a2b0a5ba49::t_3fb50ce2ac2f8c 1-2
+math-coach/runtime/web/data/sec/701-2.6.ex.js
+  s_89f3a2b0a5ba49::t_990672ed064163 1-2
+math-coach/runtime/web/data/sec/701-2.6.items.js
+  s_89f3a2b0a5ba49::t_de7b655e3cf1ad 1-2
+math-coach/runtime/web/data/sec/701-2.6.js
+  s_89f3a2b0a5ba49::t_907e8cbfb11e33 1-2
+math-coach/runtime/web/data/sec/701-3.1.ex.js
+  s_89f3a2b0a5ba49::t_01c75fae978ddf 1-2
+math-coach/runtime/web/data/sec/701-3.1.items.js
+  s_89f3a2b0a5ba49::t_0480da37ab1746 1-2
+math-coach/runtime/web/data/sec/701-3.1.js
+  s_89f3a2b0a5ba49::t_db7c46244cd70d 1-2
+math-coach/runtime/web/data/sec/701-3.10.ex.js
+  s_89f3a2b0a5ba49::t_364364b12df8a8 1-2
+math-coach/runtime/web/data/sec/701-3.10.items.js
+  s_89f3a2b0a5ba49::t_20f42fef412fad 1-2
+math-coach/runtime/web/data/sec/701-3.10.js
+  s_89f3a2b0a5ba49::t_90364162dddd47 1-2
+math-coach/runtime/web/data/sec/701-3.11.ex.js
+  s_89f3a2b0a5ba49::t_01b7f92f7522f6 1-2
+math-coach/runtime/web/data/sec/701-3.11.items.js
+  s_89f3a2b0a5ba49::t_706126cb617e85 1-2
+math-coach/runtime/web/data/sec/701-3.11.js
+  s_89f3a2b0a5ba49::t_72074daf502231 1-2
+math-coach/runtime/web/data/sec/701-3.2.ex.js
+  s_89f3a2b0a5ba49::t_87511c7a4145f0 1-2
+math-coach/runtime/web/data/sec/701-3.2.items.js
+  s_89f3a2b0a5ba49::t_9cba350d6533eb 1-2
+math-coach/runtime/web/data/sec/701-3.2.js
+  s_89f3a2b0a5ba49::t_0af18f8a35d14e 1-2
+math-coach/runtime/web/data/sec/701-3.3.ex.js
+  s_89f3a2b0a5ba49::t_8e3bb01840fad9 1-2
+math-coach/runtime/web/data/sec/701-3.3.items.js
+  s_89f3a2b0a5ba49::t_27ceba1ab58b74 1-2
+math-coach/runtime/web/data/sec/701-3.3.js
+  s_89f3a2b0a5ba49::t_38df4556234c2a 1-2
+math-coach/runtime/web/data/sec/701-3.4.ex.js
+  s_89f3a2b0a5ba49::t_00ea546ce590c5 1-2
+math-coach/runtime/web/data/sec/701-3.4.items.js
+  s_89f3a2b0a5ba49::t_3c299f45bced22 1-2
+math-coach/runtime/web/data/sec/701-3.4.js
+  s_89f3a2b0a5ba49::t_de514346410a55 1-2
+math-coach/runtime/web/data/sec/701-3.5.ex.js
+  s_89f3a2b0a5ba49::t_4259bbb38dad93 1-2
+math-coach/runtime/web/data/sec/701-3.5.items.js
+  s_89f3a2b0a5ba49::t_d602aac5963384 1-2
+math-coach/runtime/web/data/sec/701-3.5.js
+  s_89f3a2b0a5ba49::t_3d3c2c6f554bbd 1-2
+math-coach/runtime/web/data/sec/701-3.6.ex.js
+  s_89f3a2b0a5ba49::t_63ac7d1e1c3282 1-2
+math-coach/runtime/web/data/sec/701-3.6.items.js
+  s_89f3a2b0a5ba49::t_a13fefc3e3212a 1-2
+math-coach/runtime/web/data/sec/701-3.6.js
+  s_89f3a2b0a5ba49::t_4cec987457e960 1-2
+math-coach/runtime/web/data/sec/701-3.7.ex.js
+  s_89f3a2b0a5ba49::t_82781c3a53680c 1-2
+math-coach/runtime/web/data/sec/701-3.7.items.js
+  s_89f3a2b0a5ba49::t_91b11544ea4428 1-2
+math-coach/runtime/web/data/sec/701-3.7.js
+  s_89f3a2b0a5ba49::t_d82eaf3af167cc 1-2
+math-coach/runtime/web/data/sec/701-3.8.ex.js
+  s_89f3a2b0a5ba49::t_dc5d4ef6c22f6e 1-2
+math-coach/runtime/web/data/sec/701-3.8.items.js
+  s_89f3a2b0a5ba49::t_cce77b636a8593 1-2
+math-coach/runtime/web/data/sec/701-3.8.js
+  s_89f3a2b0a5ba49::t_e2b2064b6238b4 1-2
+math-coach/runtime/web/data/sec/701-3.9.ex.js
+  s_89f3a2b0a5ba49::t_37d7d371074e52 1-2
+math-coach/runtime/web/data/sec/701-3.9.items.js
+  s_89f3a2b0a5ba49::t_07cb00f2cfa45c 1-2
+math-coach/runtime/web/data/sec/701-3.9.js
+  s_89f3a2b0a5ba49::t_512c62c2d6341e 1-2
+math-coach/runtime/web/data/sec/702-4.1.ex.js
+  s_89f3a2b0a5ba49::t_adb5f66055412b 1-2
+math-coach/runtime/web/data/sec/702-4.1.items.js
+  s_89f3a2b0a5ba49::t_1349aff4214569 1-2
+math-coach/runtime/web/data/sec/702-4.1.js
+  s_89f3a2b0a5ba49::t_7640de1c6c9c52 1-2
+math-coach/runtime/web/data/sec/702-4.2.ex.js
+  s_89f3a2b0a5ba49::t_11780d8abcad94 1-2
+math-coach/runtime/web/data/sec/702-4.2.items.js
+  s_89f3a2b0a5ba49::t_795c0bd527b0c6 1-2
+math-coach/runtime/web/data/sec/702-4.2.js
+  s_89f3a2b0a5ba49::t_a2468d6a201651 1-2
+math-coach/runtime/web/data/sec/702-4.3.ex.js
+  s_89f3a2b0a5ba49::t_d444d6108e9490 1-2
+math-coach/runtime/web/data/sec/702-4.3.items.js
+  s_89f3a2b0a5ba49::t_33b6574b9a4cb2 1-2
+math-coach/runtime/web/data/sec/702-4.3.js
+  s_89f3a2b0a5ba49::t_df19010e5e7d94 1-2
+math-coach/runtime/web/data/sec/702-4.4.ex.js
+  s_89f3a2b0a5ba49::t_a50df19c2cfcc2 1-2
+math-coach/runtime/web/data/sec/702-4.4.items.js
+  s_89f3a2b0a5ba49::t_8b64a5ee65bb29 1-2
+math-coach/runtime/web/data/sec/702-4.4.js
+  s_89f3a2b0a5ba49::t_42f649c42f0337 1-2
+math-coach/runtime/web/data/sec/702-4.5.ex.js
+  s_89f3a2b0a5ba49::t_41bdbfae96f5e9 1-2
+math-coach/runtime/web/data/sec/702-4.5.items.js
+  s_89f3a2b0a5ba49::t_147b41f4b79e75 1-2
+math-coach/runtime/web/data/sec/702-4.5.js
+  s_89f3a2b0a5ba49::t_a8a22f84bbd16c 1-2
+math-coach/runtime/web/data/sec/702-5.1.ex.js
+  s_89f3a2b0a5ba49::t_536e5aba8eda2d 1-2
+math-coach/runtime/web/data/sec/702-5.1.items.js
+  s_89f3a2b0a5ba49::t_833bf4ba82f24c 1-2
+math-coach/runtime/web/data/sec/702-5.1.js
+  s_89f3a2b0a5ba49::t_d5cc38e094342b 1-2
+math-coach/runtime/web/data/sec/702-5.2.ex.js
+  s_89f3a2b0a5ba49::t_d65830b81edd64 1-2
+math-coach/runtime/web/data/sec/702-5.2.items.js
+  s_89f3a2b0a5ba49::t_f22886b125f7dc 1-2
+math-coach/runtime/web/data/sec/702-5.2.js
+  s_89f3a2b0a5ba49::t_c518bb3c42f300 1-2
+math-coach/runtime/web/data/sec/702-5.3.ex.js
+  s_89f3a2b0a5ba49::t_3d9d899b7ae347 1-2
+math-coach/runtime/web/data/sec/702-5.3.items.js
+  s_89f3a2b0a5ba49::t_98fb130c32b4cb 1-2
+math-coach/runtime/web/data/sec/702-5.3.js
+  s_89f3a2b0a5ba49::t_6a6fff4fad5b91 1-2
+math-coach/runtime/web/data/sec/702-5.4.ex.js
+  s_89f3a2b0a5ba49::t_1d3ef3ffcec465 1-2
+math-coach/runtime/web/data/sec/702-5.4.items.js
+  s_89f3a2b0a5ba49::t_7b0c8deac3db2e 1-2
+math-coach/runtime/web/data/sec/702-5.4.js
+  s_89f3a2b0a5ba49::t_566670b0d59ade 1-2
+math-coach/runtime/web/data/sec/702-5.5.ex.js
+  s_89f3a2b0a5ba49::t_4dbf32ded443ea 1-2
+math-coach/runtime/web/data/sec/702-5.5.items.js
+  s_89f3a2b0a5ba49::t_078c9b8e1dd718 1-2
+math-coach/runtime/web/data/sec/702-5.5.js
+  s_89f3a2b0a5ba49::t_d457bd9f8933bc 1-2
+math-coach/runtime/web/data/sec/702-5.6.ex.js
+  s_89f3a2b0a5ba49::t_09c9542e3e5946 1-2
+math-coach/runtime/web/data/sec/702-5.6.items.js
+  s_89f3a2b0a5ba49::t_a03192cab3cfb8 1-2
+math-coach/runtime/web/data/sec/702-5.6.js
+  s_89f3a2b0a5ba49::t_af7b2edd7d3fb9 1-2
+math-coach/runtime/web/data/sec/702-6.1.ex.js
+  s_89f3a2b0a5ba49::t_137aaf80548385 1-2
+math-coach/runtime/web/data/sec/702-6.1.items.js
+  s_89f3a2b0a5ba49::t_68d2a7a88e4417 1-2
+math-coach/runtime/web/data/sec/702-6.1.js
+  s_89f3a2b0a5ba49::t_f5f82d5e21da31 1-2
+math-coach/runtime/web/data/sec/702-6.2.ex.js
+  s_89f3a2b0a5ba49::t_339ffedefa302d 1-2
+math-coach/runtime/web/data/sec/702-6.2.items.js
+  s_89f3a2b0a5ba49::t_6246878c2101d6 1-2
+math-coach/runtime/web/data/sec/702-6.2.js
+  s_89f3a2b0a5ba49::t_bdb8b5712e0dfa 1-2
+math-coach/runtime/web/data/sec/702-6.3.ex.js
+  s_89f3a2b0a5ba49::t_c5ed5fa4f35f7e 1-2
+math-coach/runtime/web/data/sec/702-6.3.items.js
+  s_89f3a2b0a5ba49::t_0e695a4618387d 1-2
+math-coach/runtime/web/data/sec/702-6.3.js
+  s_89f3a2b0a5ba49::t_0344a4f6f5ead4 1-2
+math-coach/runtime/web/data/sec/702-6.4.ex.js
+  s_89f3a2b0a5ba49::t_ab57b144bca51f 1-2
+math-coach/runtime/web/data/sec/702-6.4.items.js
+  s_89f3a2b0a5ba49::t_2a9051acae5f6c 1-2
+math-coach/runtime/web/data/sec/702-6.4.js
+  s_89f3a2b0a5ba49::t_d98f5a6ff71b68 1-2
+math-coach/runtime/web/data/sec/702-6.5.ex.js
+  s_89f3a2b0a5ba49::t_87ec9fcaa2c785 1-2
+math-coach/runtime/web/data/sec/702-6.5.items.js
+  s_89f3a2b0a5ba49::t_15aab330450676 1-2
+math-coach/runtime/web/data/sec/702-6.5.js
+  s_89f3a2b0a5ba49::t_647f57d301c41f 1-2
+math-coach/runtime/web/data/sec/702-7.1.ex.js
+  s_89f3a2b0a5ba49::t_4f8d4b90305000 1-2
+math-coach/runtime/web/data/sec/702-7.1.items.js
+  s_89f3a2b0a5ba49::t_fcce88e50d9938 1-2
+math-coach/runtime/web/data/sec/702-7.1.js
+  s_89f3a2b0a5ba49::t_802803177c40e1 1-2
+math-coach/runtime/web/data/sec/702-7.2.ex.js
+  s_89f3a2b0a5ba49::t_c4dfe00c066028 1-2
+math-coach/runtime/web/data/sec/702-7.2.items.js
+  s_89f3a2b0a5ba49::t_c4d036c21c09c2 1-2
+math-coach/runtime/web/data/sec/702-7.2.js
+  s_89f3a2b0a5ba49::t_05d3ccfca6633b 1-2
+math-coach/runtime/web/data/sec/702-7.3.ex.js
+  s_89f3a2b0a5ba49::t_70336a1fc09b22 1-2
+math-coach/runtime/web/data/sec/702-7.3.items.js
+  s_89f3a2b0a5ba49::t_7f4c03d7f5c71b 1-2
+math-coach/runtime/web/data/sec/702-7.3.js
+  s_89f3a2b0a5ba49::t_710d8cde4f39bb 1-2
+math-coach/runtime/web/data/sec/702-7.4.ex.js
+  s_89f3a2b0a5ba49::t_b706f9e98f7c42 1-2
+math-coach/runtime/web/data/sec/702-7.4.items.js
+  s_89f3a2b0a5ba49::t_bd4e3aeab556dc 1-2
+math-coach/runtime/web/data/sec/702-7.4.js
+  s_89f3a2b0a5ba49::t_ae4f9b7fea13e4 1-2
+math-coach/runtime/web/data/sec/702-7.5.ex.js
+  s_89f3a2b0a5ba49::t_0de722201ee159 1-2
+math-coach/runtime/web/data/sec/702-7.5.items.js
+  s_89f3a2b0a5ba49::t_f9955a965653dd 1-2
+math-coach/runtime/web/data/sec/702-7.5.js
+  s_89f3a2b0a5ba49::t_6a0b8be89be715 1-2
+math-coach/runtime/web/data/sec/702-7.6.ex.js
+  s_89f3a2b0a5ba49::t_a75188ed7758e0 1-2
+math-coach/runtime/web/data/sec/702-7.6.items.js
+  s_89f3a2b0a5ba49::t_3ccfc72e910fa3 1-2
+math-coach/runtime/web/data/sec/702-7.6.js
+  s_89f3a2b0a5ba49::t_13d46d0af7254a 1-2
+math-coach/runtime/web/data/sec/702-7.7.ex.js
+  s_89f3a2b0a5ba49::t_e5af797e28405b 1-2
+math-coach/runtime/web/data/sec/702-7.7.items.js
+  s_89f3a2b0a5ba49::t_8bba480b78f0d9 1-2
+math-coach/runtime/web/data/sec/702-7.7.js
+  s_89f3a2b0a5ba49::t_87c5601c402711 1-2
+math-coach/runtime/web/data/sec/702-7.8.ex.js
+  s_89f3a2b0a5ba49::t_51ddd276991ded 1-2
+math-coach/runtime/web/data/sec/702-7.8.items.js
+  s_89f3a2b0a5ba49::t_d068349e2778b1 1-2
+math-coach/runtime/web/data/sec/702-7.8.js
+  s_89f3a2b0a5ba49::t_c675510f869ff2 1-2
+math-coach/runtime/web/data/sec/702-8.1.ex.js
+  s_89f3a2b0a5ba49::t_780d3825658bf1 1-2
+math-coach/runtime/web/data/sec/702-8.1.items.js
+  s_89f3a2b0a5ba49::t_b122175db631dc 1-2
+math-coach/runtime/web/data/sec/702-8.1.js
+  s_89f3a2b0a5ba49::t_2acdd390c20bd2 1-2
+math-coach/runtime/web/data/sec/702-8.2.ex.js
+  s_89f3a2b0a5ba49::t_dc920f177e9b27 1-2
+math-coach/runtime/web/data/sec/702-8.2.items.js
+  s_89f3a2b0a5ba49::t_532232b997f12c 1-2
+math-coach/runtime/web/data/sec/702-8.2.js
+  s_89f3a2b0a5ba49::t_b79a1d8e11ee41 1-2
+math-coach/runtime/web/data/sec/702-8.3.ex.js
+  s_89f3a2b0a5ba49::t_4a3f3eeba5e35a 1-2
+math-coach/runtime/web/data/sec/702-8.3.items.js
+  s_89f3a2b0a5ba49::t_14209252b677da 1-2
+math-coach/runtime/web/data/sec/702-8.3.js
+  s_89f3a2b0a5ba49::t_985632782dc728 1-2
+math-coach/runtime/web/data/sec/702-9.1.ex.js
+  s_89f3a2b0a5ba49::t_602fb5643e80bb 1-2
+math-coach/runtime/web/data/sec/702-9.1.items.js
+  s_89f3a2b0a5ba49::t_1c60ec90401d66 1-2
+math-coach/runtime/web/data/sec/702-9.1.js
+  s_89f3a2b0a5ba49::t_8cf96122203d64 1-2
+math-coach/runtime/web/data/sec/702-9.2.ex.js
+  s_89f3a2b0a5ba49::t_306c0f682e6164 1-2
+math-coach/runtime/web/data/sec/702-9.2.items.js
+  s_89f3a2b0a5ba49::t_7a58552ca71a13 1-2
+math-coach/runtime/web/data/sec/702-9.2.js
+  s_89f3a2b0a5ba49::t_a029b5f0372900 1-2
+math-coach/runtime/web/data/sec/702-9.3.ex.js
+  s_89f3a2b0a5ba49::t_21e73f08d60bdd 1-2
+math-coach/runtime/web/data/sec/702-9.3.items.js
+  s_89f3a2b0a5ba49::t_0ddaa0539c097d 1-2
+math-coach/runtime/web/data/sec/702-9.3.js
+  s_89f3a2b0a5ba49::t_0161a8bf5d5071 1-2
+math-coach/runtime/web/data/sec/702-9.4.ex.js
+  s_89f3a2b0a5ba49::t_90421ebf7f3bda 1-2
+math-coach/runtime/web/data/sec/702-9.4.items.js
+  s_89f3a2b0a5ba49::t_40e35e270fbb73 1-2
+math-coach/runtime/web/data/sec/702-9.4.js
+  s_89f3a2b0a5ba49::t_0cc14152a392b6 1-2
+math-coach/runtime/web/data/sec/702-9.5.ex.js
+  s_89f3a2b0a5ba49::t_136c21dc43bafc 1-2
+math-coach/runtime/web/data/sec/702-9.5.items.js
+  s_89f3a2b0a5ba49::t_1059f6095460f7 1-2
+math-coach/runtime/web/data/sec/702-9.5.js
+  s_89f3a2b0a5ba49::t_449f321178e3e7 1-2
+math-coach/runtime/web/data/sec/702-9.6.ex.js
+  s_89f3a2b0a5ba49::t_c49211cc3f20da 1-2
+math-coach/runtime/web/data/sec/702-9.6.items.js
+  s_89f3a2b0a5ba49::t_5f4d42ddd2bf4d 1-2
+math-coach/runtime/web/data/sec/702-9.6.js
+  s_89f3a2b0a5ba49::t_355a080ba1470c 1-2
+math-coach/runtime/web/data/sec/801-10.1.ex.js
+  s_89f3a2b0a5ba49::t_3b105a0fda9063 1-2
+math-coach/runtime/web/data/sec/801-10.1.items.js
+  s_89f3a2b0a5ba49::t_f63ee3d0d23233 1-2
+math-coach/runtime/web/data/sec/801-10.1.js
+  s_89f3a2b0a5ba49::t_c66bde924cf629 1-2
+math-coach/runtime/web/data/sec/801-10.2.ex.js
+  s_89f3a2b0a5ba49::t_b5b53489bc8871 1-2
+math-coach/runtime/web/data/sec/801-10.2.items.js
+  s_89f3a2b0a5ba49::t_308d4ccccc0c28 1-2
+math-coach/runtime/web/data/sec/801-10.2.js
+  s_89f3a2b0a5ba49::t_8925ef04fa68dd 1-2
+math-coach/runtime/web/data/sec/801-10.3.ex.js
+  s_89f3a2b0a5ba49::t_60a7e28eda38fb 1-2
+math-coach/runtime/web/data/sec/801-10.3.items.js
+  s_89f3a2b0a5ba49::t_3ffc56c394e1a9 1-2
+math-coach/runtime/web/data/sec/801-10.3.js
+  s_89f3a2b0a5ba49::t_557cf535dd54f0 1-2
+math-coach/runtime/web/data/sec/801-10.4.ex.js
+  s_89f3a2b0a5ba49::t_36d51d66e1cffe 1-2
+math-coach/runtime/web/data/sec/801-10.4.items.js
+  s_89f3a2b0a5ba49::t_ff6b8ff8b0fc2a 1-2
+math-coach/runtime/web/data/sec/801-10.4.js
+  s_89f3a2b0a5ba49::t_6e2e4b6d7479d5 1-2
+math-coach/runtime/web/data/sec/801-10.5.ex.js
+  s_89f3a2b0a5ba49::t_dbbcb8bf02110c 1-2
+math-coach/runtime/web/data/sec/801-10.5.items.js
+  s_89f3a2b0a5ba49::t_8ffbd21c89fcfc 1-2
+math-coach/runtime/web/data/sec/801-10.5.js
+  s_89f3a2b0a5ba49::t_2cf7926ae914f6 1-2
+math-coach/runtime/web/data/sec/801-11.1.ex.js
+  s_89f3a2b0a5ba49::t_66af31a901c751 1-2
+math-coach/runtime/web/data/sec/801-11.1.items.js
+  s_89f3a2b0a5ba49::t_75c7811ff98428 1-2
+math-coach/runtime/web/data/sec/801-11.1.js
+  s_89f3a2b0a5ba49::t_f26f9b6e6f4f8d 1-2
+math-coach/runtime/web/data/sec/801-11.2.ex.js
+  s_89f3a2b0a5ba49::t_207dfb88e4e74a 1-2
+math-coach/runtime/web/data/sec/801-11.2.items.js
+  s_89f3a2b0a5ba49::t_4878f0a11300bb 1-2
+math-coach/runtime/web/data/sec/801-11.2.js
+  s_89f3a2b0a5ba49::t_983971fff9a967 1-2
+math-coach/runtime/web/data/sec/801-11.3.ex.js
+  s_89f3a2b0a5ba49::t_0b1ed411852e85 1-2
+math-coach/runtime/web/data/sec/801-11.3.items.js
+  s_89f3a2b0a5ba49::t_391ae7b4fe155e 1-2
+math-coach/runtime/web/data/sec/801-11.3.js
+  s_89f3a2b0a5ba49::t_be2f6bc5f4b9cc 1-2
+math-coach/runtime/web/data/sec/801-11.4.ex.js
+  s_89f3a2b0a5ba49::t_280021469fb1ad 1-2
+math-coach/runtime/web/data/sec/801-11.4.items.js
+  s_89f3a2b0a5ba49::t_1ed8f5d65cb445 1-2
+math-coach/runtime/web/data/sec/801-11.4.js
+  s_89f3a2b0a5ba49::t_17cecade011537 1-2
+math-coach/runtime/web/data/sec/801-11.5.ex.js
+  s_89f3a2b0a5ba49::t_9277ed8e3862f4 1-2
+math-coach/runtime/web/data/sec/801-11.5.items.js
+  s_89f3a2b0a5ba49::t_1e26f281e3a91b 1-2
+math-coach/runtime/web/data/sec/801-11.5.js
+  s_89f3a2b0a5ba49::t_1416fc405b016c 1-2
+math-coach/runtime/web/data/sec/801-11.6.ex.js
+  s_89f3a2b0a5ba49::t_960dfee63b6f0c 1-2
+math-coach/runtime/web/data/sec/801-11.6.items.js
+  s_89f3a2b0a5ba49::t_de8a4aabd04c43 1-2
+math-coach/runtime/web/data/sec/801-11.6.js
+  s_89f3a2b0a5ba49::t_1b3d7560f130cd 1-2
+math-coach/runtime/web/data/sec/801-11.7.ex.js
+  s_89f3a2b0a5ba49::t_fc09a1d3c287ca 1-2
+math-coach/runtime/web/data/sec/801-11.7.items.js
+  s_89f3a2b0a5ba49::t_42f1a547eb479d 1-2
+math-coach/runtime/web/data/sec/801-11.7.js
+  s_89f3a2b0a5ba49::t_7f935c9ba92741 1-2
+math-coach/runtime/web/data/sec/801-12.1.ex.js
+  s_89f3a2b0a5ba49::t_00de69faeb6726 1-2
+math-coach/runtime/web/data/sec/801-12.1.items.js
+  s_89f3a2b0a5ba49::t_d2dcc85d0fdabe 1-2
+math-coach/runtime/web/data/sec/801-12.1.js
+  s_89f3a2b0a5ba49::t_34629fc4182d50 1-2
+math-coach/runtime/web/data/sec/801-12.10.ex.js
+  s_89f3a2b0a5ba49::t_eb7c35d73976d3 1-2
+math-coach/runtime/web/data/sec/801-12.10.items.js
+  s_89f3a2b0a5ba49::t_d7c30e4df3abc1 1-2
+math-coach/runtime/web/data/sec/801-12.10.js
+  s_89f3a2b0a5ba49::t_61d5067088c56e 1-2
+math-coach/runtime/web/data/sec/801-12.11.ex.js
+  s_89f3a2b0a5ba49::t_a24c13d2b73b4c 1-2
+math-coach/runtime/web/data/sec/801-12.11.items.js
+  s_89f3a2b0a5ba49::t_cb059087284d06 1-2
+math-coach/runtime/web/data/sec/801-12.11.js
+  s_89f3a2b0a5ba49::t_0b41c00731ca3c 1-2
+math-coach/runtime/web/data/sec/801-12.12.ex.js
+  s_89f3a2b0a5ba49::t_b64c30039a9a87 1-2
+math-coach/runtime/web/data/sec/801-12.12.items.js
+  s_89f3a2b0a5ba49::t_5e67954821f683 1-2
+math-coach/runtime/web/data/sec/801-12.12.js
+  s_89f3a2b0a5ba49::t_9364ffd0c38962 1-2
+math-coach/runtime/web/data/sec/801-12.2.ex.js
+  s_89f3a2b0a5ba49::t_f61d2947f2f246 1-2
+math-coach/runtime/web/data/sec/801-12.2.items.js
+  s_89f3a2b0a5ba49::t_d40ec5a5fd185c 1-2
+math-coach/runtime/web/data/sec/801-12.2.js
+  s_89f3a2b0a5ba49::t_8200080d998e48 1-2
+math-coach/runtime/web/data/sec/801-12.3.ex.js
+  s_89f3a2b0a5ba49::t_00d61e7fbecaf3 1-2
+math-coach/runtime/web/data/sec/801-12.3.items.js
+  s_89f3a2b0a5ba49::t_aed6b5ac949a01 1-2
+math-coach/runtime/web/data/sec/801-12.3.js
+  s_89f3a2b0a5ba49::t_c6c0ca98937f26 1-2
+math-coach/runtime/web/data/sec/801-12.4.ex.js
+  s_89f3a2b0a5ba49::t_f14cc2c2830e2d 1-2
+math-coach/runtime/web/data/sec/801-12.4.items.js
+  s_89f3a2b0a5ba49::t_be944ecfeea24f 1-2
+math-coach/runtime/web/data/sec/801-12.4.js
+  s_89f3a2b0a5ba49::t_762fbfa7dbaa7e 1-2
+math-coach/runtime/web/data/sec/801-12.5.ex.js
+  s_89f3a2b0a5ba49::t_4e02ae941b8f51 1-2
+math-coach/runtime/web/data/sec/801-12.5.items.js
+  s_89f3a2b0a5ba49::t_20b9033c170cf9 1-2
+math-coach/runtime/web/data/sec/801-12.5.js
+  s_89f3a2b0a5ba49::t_62b26cad670352 1-2
+math-coach/runtime/web/data/sec/801-12.6.ex.js
+  s_89f3a2b0a5ba49::t_575dcc7b33457b 1-2
+math-coach/runtime/web/data/sec/801-12.6.items.js
+  s_89f3a2b0a5ba49::t_56b51c1953fb7f 1-2
+math-coach/runtime/web/data/sec/801-12.6.js
+  s_89f3a2b0a5ba49::t_5fba63d00acac6 1-2
+math-coach/runtime/web/data/sec/801-12.7.ex.js
+  s_89f3a2b0a5ba49::t_effb7401cbbcfa 1-2
+math-coach/runtime/web/data/sec/801-12.7.items.js
+  s_89f3a2b0a5ba49::t_a2629bef500baf 1-2
+math-coach/runtime/web/data/sec/801-12.7.js
+  s_89f3a2b0a5ba49::t_aa966698f61b71 1-2
+math-coach/runtime/web/data/sec/801-12.8.ex.js
+  s_89f3a2b0a5ba49::t_a90c349113a0ed 1-2
+math-coach/runtime/web/data/sec/801-12.8.items.js
+  s_89f3a2b0a5ba49::t_ef7145b7cc8cdc 1-2
+math-coach/runtime/web/data/sec/801-12.8.js
+  s_89f3a2b0a5ba49::t_71f778edb8da91 1-2
+math-coach/runtime/web/data/sec/801-12.9.ex.js
+  s_89f3a2b0a5ba49::t_553e5b86096cfa 1-2
+math-coach/runtime/web/data/sec/801-12.9.items.js
+  s_89f3a2b0a5ba49::t_698142125457f4 1-2
+math-coach/runtime/web/data/sec/801-12.9.js
+  s_89f3a2b0a5ba49::t_b385a8bacb8ae7 1-2
+math-coach/runtime/web/data/sec/801-13.1.ex.js
+  s_89f3a2b0a5ba49::t_7ddef5b32523fb 1-2
+math-coach/runtime/web/data/sec/801-13.1.items.js
+  s_89f3a2b0a5ba49::t_19a5e8ebd9be48 1-2
+math-coach/runtime/web/data/sec/801-13.1.js
+  s_89f3a2b0a5ba49::t_9bcaf107301974 1-2
+math-coach/runtime/web/data/sec/801-13.2.ex.js
+  s_89f3a2b0a5ba49::t_2a8746d2348313 1-2
+math-coach/runtime/web/data/sec/801-13.2.items.js
+  s_89f3a2b0a5ba49::t_a5e6383f868ea5 1-2
+math-coach/runtime/web/data/sec/801-13.2.js
+  s_89f3a2b0a5ba49::t_38b27201837343 1-2
+math-coach/runtime/web/data/sec/801-13.3.ex.js
+  s_89f3a2b0a5ba49::t_6531b060606a6f 1-2
+math-coach/runtime/web/data/sec/801-13.3.items.js
+  s_89f3a2b0a5ba49::t_56ef35e376e017 1-2
+math-coach/runtime/web/data/sec/801-13.3.js
+  s_89f3a2b0a5ba49::t_7925375a2e9628 1-2
+math-coach/runtime/web/data/sec/801-ch-end-10.ex.js
+  s_89f3a2b0a5ba49::t_a4311028d8e04e 1-2
+math-coach/runtime/web/data/sec/801-ch-end-10.items.js
+  s_89f3a2b0a5ba49::t_068ffc6dccecd5 1-2
+math-coach/runtime/web/data/sec/801-ch-end-10.js
+  s_89f3a2b0a5ba49::t_2af085ecdcb389 1-2
+math-coach/runtime/web/data/sec/801-ch-end-11.ex.js
+  s_89f3a2b0a5ba49::t_2916f0e05c7e0c 1-2
+math-coach/runtime/web/data/sec/801-ch-end-11.items.js
+  s_89f3a2b0a5ba49::t_4af303369b6f48 1-2
+math-coach/runtime/web/data/sec/801-ch-end-11.js
+  s_89f3a2b0a5ba49::t_06e9646565806e 1-2
+math-coach/runtime/web/data/sec/801-ch-end-12.ex.js
+  s_89f3a2b0a5ba49::t_7370ed33c35faa 1-2
+math-coach/runtime/web/data/sec/801-ch-end-12.items.js
+  s_89f3a2b0a5ba49::t_b43ae1b176973e 1-2
+math-coach/runtime/web/data/sec/801-ch-end-12.js
+  s_89f3a2b0a5ba49::t_9dd456d74189bc 1-2
+math-coach/runtime/web/data/sec/801-ch-end-13.ex.js
+  s_89f3a2b0a5ba49::t_3f342b2656a1db 1-2
+math-coach/runtime/web/data/sec/801-ch-end-13.items.js
+  s_89f3a2b0a5ba49::t_0e7a1187a78b12 1-2
+math-coach/runtime/web/data/sec/801-ch-end-13.js
+  s_89f3a2b0a5ba49::t_58f3b4b1509c2e 1-2
+math-coach/runtime/web/data/sec/802-14.1.ex.js
+  s_89f3a2b0a5ba49::t_3e6eb90d55e535 1-2
+math-coach/runtime/web/data/sec/802-14.1.items.js
+  s_89f3a2b0a5ba49::t_89dafdb499b7ab 1-2
+math-coach/runtime/web/data/sec/802-14.1.js
+  s_89f3a2b0a5ba49::t_a9ef58da913549 1-2
+math-coach/runtime/web/data/sec/802-14.2.ex.js
+  s_89f3a2b0a5ba49::t_da8fb7fa78f6ce 1-2
+math-coach/runtime/web/data/sec/802-14.2.items.js
+  s_89f3a2b0a5ba49::t_93ee08151642b5 1-2
+math-coach/runtime/web/data/sec/802-14.2.js
+  s_89f3a2b0a5ba49::t_b4a1fc790bf58e 1-2
+math-coach/runtime/web/data/sec/802-14.3.ex.js
+  s_89f3a2b0a5ba49::t_fd8ffeab9bc327 1-2
+math-coach/runtime/web/data/sec/802-14.3.items.js
+  s_89f3a2b0a5ba49::t_d90c5c1e0943fb 1-2
+math-coach/runtime/web/data/sec/802-14.3.js
+  s_89f3a2b0a5ba49::t_8e30f18204be5d 1-2
+math-coach/runtime/web/data/sec/802-14.4.ex.js
+  s_89f3a2b0a5ba49::t_1bcd58257db2db 1-2
+math-coach/runtime/web/data/sec/802-14.4.items.js
+  s_89f3a2b0a5ba49::t_1fe6267b7d134e 1-2
+math-coach/runtime/web/data/sec/802-14.4.js
+  s_89f3a2b0a5ba49::t_4b0e0f6518ef95 1-2
+math-coach/runtime/web/data/sec/802-14.5.ex.js
+  s_89f3a2b0a5ba49::t_d14bec7f2ef862 1-2
+math-coach/runtime/web/data/sec/802-14.5.items.js
+  s_89f3a2b0a5ba49::t_4d66714f15ef2d 1-2
+math-coach/runtime/web/data/sec/802-14.5.js
+  s_89f3a2b0a5ba49::t_e24b7690413c1a 1-2
+math-coach/runtime/web/data/sec/802-14.6.ex.js
+  s_89f3a2b0a5ba49::t_168d29d7e5b812 1-2
+math-coach/runtime/web/data/sec/802-14.6.items.js
+  s_89f3a2b0a5ba49::t_8bbd58ece5cd7e 1-2
+math-coach/runtime/web/data/sec/802-14.6.js
+  s_89f3a2b0a5ba49::t_071f7fb0d8633b 1-2
+math-coach/runtime/web/data/sec/802-14.7.ex.js
+  s_89f3a2b0a5ba49::t_ec5bd294838c05 1-2
+math-coach/runtime/web/data/sec/802-14.7.items.js
+  s_89f3a2b0a5ba49::t_544e1fd88fa848 1-2
+math-coach/runtime/web/data/sec/802-14.7.js
+  s_89f3a2b0a5ba49::t_8f4240ba4348cf 1-2
+math-coach/runtime/web/data/sec/802-15.1.ex.js
+  s_89f3a2b0a5ba49::t_7a00c16c4dd56d 1-2
+math-coach/runtime/web/data/sec/802-15.1.items.js
+  s_89f3a2b0a5ba49::t_0d22de429bffda 1-2
+math-coach/runtime/web/data/sec/802-15.1.js
+  s_89f3a2b0a5ba49::t_1d24c5e38cd104 1-2
+math-coach/runtime/web/data/sec/802-15.2.ex.js
+  s_89f3a2b0a5ba49::t_4c70f18ab0f186 1-2
+math-coach/runtime/web/data/sec/802-15.2.items.js
+  s_89f3a2b0a5ba49::t_1c6dba713cef94 1-2
+math-coach/runtime/web/data/sec/802-15.2.js
+  s_89f3a2b0a5ba49::t_93e28c09747086 1-2
+math-coach/runtime/web/data/sec/802-15.3.ex.js
+  s_89f3a2b0a5ba49::t_676c7945401057 1-2
+math-coach/runtime/web/data/sec/802-15.3.items.js
+  s_89f3a2b0a5ba49::t_ff17118485b1e4 1-2
+math-coach/runtime/web/data/sec/802-15.3.js
+  s_89f3a2b0a5ba49::t_eb2f63b527accc 1-2
+math-coach/runtime/web/data/sec/802-15.4.ex.js
+  s_89f3a2b0a5ba49::t_5ba3cef76b1258 1-2
+math-coach/runtime/web/data/sec/802-15.4.items.js
+  s_89f3a2b0a5ba49::t_3d971a67de9404 1-2
+math-coach/runtime/web/data/sec/802-15.4.js
+  s_89f3a2b0a5ba49::t_5797c99158d325 1-2
+math-coach/runtime/web/data/sec/802-15.5.ex.js
+  s_89f3a2b0a5ba49::t_9a722db2c47c6e 1-2
+math-coach/runtime/web/data/sec/802-15.5.items.js
+  s_89f3a2b0a5ba49::t_636e02f7dac094 1-2
+math-coach/runtime/web/data/sec/802-15.5.js
+  s_89f3a2b0a5ba49::t_67f607fa064f18 1-2
+math-coach/runtime/web/data/sec/802-15.6.ex.js
+  s_89f3a2b0a5ba49::t_0c11d6c90dee5b 1-2
+math-coach/runtime/web/data/sec/802-15.6.items.js
+  s_89f3a2b0a5ba49::t_449acfcd570c9d 1-2
+math-coach/runtime/web/data/sec/802-15.6.js
+  s_89f3a2b0a5ba49::t_c1e53ab3880e9f 1-2
+math-coach/runtime/web/data/sec/802-16.1.ex.js
+  s_89f3a2b0a5ba49::t_c2c30297ab3647 1-2
+math-coach/runtime/web/data/sec/802-16.1.items.js
+  s_89f3a2b0a5ba49::t_816662998063a8 1-2
+math-coach/runtime/web/data/sec/802-16.1.js
+  s_89f3a2b0a5ba49::t_f43e567d542b97 1-2
+math-coach/runtime/web/data/sec/802-16.2.ex.js
+  s_89f3a2b0a5ba49::t_17075b58b78677 1-2
+math-coach/runtime/web/data/sec/802-16.2.items.js
+  s_89f3a2b0a5ba49::t_b9d313a4ad2368 1-2
+math-coach/runtime/web/data/sec/802-16.2.js
+  s_89f3a2b0a5ba49::t_27334b81e8babc 1-2
+math-coach/runtime/web/data/sec/802-16.3.ex.js
+  s_89f3a2b0a5ba49::t_f415a6bf9a498a 1-2
+math-coach/runtime/web/data/sec/802-16.3.items.js
+  s_89f3a2b0a5ba49::t_a18c4113bd0af8 1-2
+math-coach/runtime/web/data/sec/802-16.3.js
+  s_89f3a2b0a5ba49::t_dd4f44ae306b90 1-2
+math-coach/runtime/web/data/sec/802-17.1.ex.js
+  s_89f3a2b0a5ba49::t_8eeceeb8ee6ebc 1-2
+math-coach/runtime/web/data/sec/802-17.1.items.js
+  s_89f3a2b0a5ba49::t_e840b138d4dc85 1-2
+math-coach/runtime/web/data/sec/802-17.1.js
+  s_89f3a2b0a5ba49::t_3c11cf6f444c51 1-2
+math-coach/runtime/web/data/sec/802-17.2.ex.js
+  s_89f3a2b0a5ba49::t_2009557ae7542e 1-2
+math-coach/runtime/web/data/sec/802-17.2.items.js
+  s_89f3a2b0a5ba49::t_8dafa6a530c349 1-2
+math-coach/runtime/web/data/sec/802-17.2.js
+  s_89f3a2b0a5ba49::t_2247956a41e6dd 1-2
+math-coach/runtime/web/data/sec/802-17.3.ex.js
+  s_89f3a2b0a5ba49::t_6b414fab7296b2 1-2
+math-coach/runtime/web/data/sec/802-17.3.items.js
+  s_89f3a2b0a5ba49::t_8eabdf1371ed4b 1-2
+math-coach/runtime/web/data/sec/802-17.3.js
+  s_89f3a2b0a5ba49::t_c39ee511b82966 1-2
+math-coach/runtime/web/data/sec/901-18.1.ex.js
+  s_89f3a2b0a5ba49::t_cac0f3168208f4 1-2
+math-coach/runtime/web/data/sec/901-18.1.items.js
+  s_89f3a2b0a5ba49::t_5332460ada060e 1-2
+math-coach/runtime/web/data/sec/901-18.1.js
+  s_89f3a2b0a5ba49::t_d8fdb96e826e79 1-2
+math-coach/runtime/web/data/sec/901-18.2.ex.js
+  s_89f3a2b0a5ba49::t_a87e5f196c8d12 1-2
+math-coach/runtime/web/data/sec/901-18.2.items.js
+  s_89f3a2b0a5ba49::t_5b7db85ef30a4d 1-2
+math-coach/runtime/web/data/sec/901-18.2.js
+  s_89f3a2b0a5ba49::t_b98353e09c06fd 1-2
+math-coach/runtime/web/data/sec/901-18.3.ex.js
+  s_89f3a2b0a5ba49::t_6a353addab94b0 1-2
+math-coach/runtime/web/data/sec/901-18.3.items.js
+  s_89f3a2b0a5ba49::t_14619836d2f3ea 1-2
+math-coach/runtime/web/data/sec/901-18.3.js
+  s_89f3a2b0a5ba49::t_61ff36133bb94f 1-2
+math-coach/runtime/web/data/sec/901-18.4.ex.js
+  s_89f3a2b0a5ba49::t_8e1d45a7cd65ed 1-2
+math-coach/runtime/web/data/sec/901-18.4.items.js
+  s_89f3a2b0a5ba49::t_dd9d4d78a7d36c 1-2
+math-coach/runtime/web/data/sec/901-18.4.js
+  s_89f3a2b0a5ba49::t_bd936a5a9c85cf 1-2
+math-coach/runtime/web/data/sec/901-18.5.ex.js
+  s_89f3a2b0a5ba49::t_001cbdb18a3465 1-2
+math-coach/runtime/web/data/sec/901-18.5.items.js
+  s_89f3a2b0a5ba49::t_937d3f7a1a56e4 1-2
+math-coach/runtime/web/data/sec/901-18.5.js
+  s_89f3a2b0a5ba49::t_c48bf02eff40ad 1-2
+math-coach/runtime/web/data/sec/901-18.6.ex.js
+  s_89f3a2b0a5ba49::t_cc5746f5c3384a 1-2
+math-coach/runtime/web/data/sec/901-18.6.items.js
+  s_89f3a2b0a5ba49::t_c74aac8a1510e5 1-2
+math-coach/runtime/web/data/sec/901-18.6.js
+  s_89f3a2b0a5ba49::t_7cfbe8eeeba85c 1-2
+math-coach/runtime/web/data/sec/901-18.7.ex.js
+  s_89f3a2b0a5ba49::t_fa87dfe7b4553e 1-2
+math-coach/runtime/web/data/sec/901-18.7.items.js
+  s_89f3a2b0a5ba49::t_cd94d433235a6b 1-2
+math-coach/runtime/web/data/sec/901-18.7.js
+  s_89f3a2b0a5ba49::t_65f18d57780a21 1-2
+math-coach/runtime/web/data/sec/901-19.1.ex.js
+  s_89f3a2b0a5ba49::t_6d236a38759273 1-2
+math-coach/runtime/web/data/sec/901-19.1.items.js
+  s_89f3a2b0a5ba49::t_5cb8aae9ce9f47 1-2
+math-coach/runtime/web/data/sec/901-19.1.js
+  s_89f3a2b0a5ba49::t_e66aeb8c5acbaf 1-2
+math-coach/runtime/web/data/sec/901-19.2.ex.js
+  s_89f3a2b0a5ba49::t_85eefdac0bf5c1 1-2
+math-coach/runtime/web/data/sec/901-19.2.items.js
+  s_89f3a2b0a5ba49::t_534b73310e2eac 1-2
+math-coach/runtime/web/data/sec/901-19.2.js
+  s_89f3a2b0a5ba49::t_48c3f945216841 1-2
+math-coach/runtime/web/data/sec/901-19.3.ex.js
+  s_89f3a2b0a5ba49::t_d48a213022c1ca 1-2
+math-coach/runtime/web/data/sec/901-19.3.items.js
+  s_89f3a2b0a5ba49::t_5fb5500e0479dc 1-2
+math-coach/runtime/web/data/sec/901-19.3.js
+  s_89f3a2b0a5ba49::t_4b77d1bd0b4a48 1-2
+math-coach/runtime/web/data/sec/901-19.4.ex.js
+  s_89f3a2b0a5ba49::t_291a60f8e14a13 1-2
+math-coach/runtime/web/data/sec/901-19.4.items.js
+  s_89f3a2b0a5ba49::t_c9c555166d9256 1-2
+math-coach/runtime/web/data/sec/901-19.4.js
+  s_89f3a2b0a5ba49::t_8e0679d9011252 1-2
+math-coach/runtime/web/data/sec/901-19.5.ex.js
+  s_89f3a2b0a5ba49::t_729da5949036bb 1-2
+math-coach/runtime/web/data/sec/901-19.5.items.js
+  s_89f3a2b0a5ba49::t_f2ceb5c45363f6 1-2
+math-coach/runtime/web/data/sec/901-19.5.js
+  s_89f3a2b0a5ba49::t_2ea312717f75ff 1-2
+math-coach/runtime/web/data/sec/901-19.6.ex.js
+  s_89f3a2b0a5ba49::t_fcf587352e006a 1-2
+math-coach/runtime/web/data/sec/901-19.6.items.js
+  s_89f3a2b0a5ba49::t_d7e1767d833190 1-2
+math-coach/runtime/web/data/sec/901-19.6.js
+  s_89f3a2b0a5ba49::t_f670194aee1bf0 1-2
+math-coach/runtime/web/data/sec/901-20.1.ex.js
+  s_89f3a2b0a5ba49::t_6379a312d514d5 1-2
+math-coach/runtime/web/data/sec/901-20.1.items.js
+  s_89f3a2b0a5ba49::t_8a09fdd17508c8 1-2
+math-coach/runtime/web/data/sec/901-20.1.js
+  s_89f3a2b0a5ba49::t_d4cc7e76c57fdb 1-2
+math-coach/runtime/web/data/sec/901-20.2.ex.js
+  s_89f3a2b0a5ba49::t_408d9a4874561d 1-2
+math-coach/runtime/web/data/sec/901-20.2.items.js
+  s_89f3a2b0a5ba49::t_06c9598712d936 1-2
+math-coach/runtime/web/data/sec/901-20.2.js
+  s_89f3a2b0a5ba49::t_2d1d751ae14230 1-2
+math-coach/runtime/web/data/sec/901-20.3.ex.js
+  s_89f3a2b0a5ba49::t_0f7b553011acef 1-2
+math-coach/runtime/web/data/sec/901-20.3.items.js
+  s_89f3a2b0a5ba49::t_2a9fd528ff4b90 1-2
+math-coach/runtime/web/data/sec/901-20.3.js
+  s_89f3a2b0a5ba49::t_9932e9d50bff23 1-2
+math-coach/runtime/web/data/sec/901-20.4.ex.js
+  s_89f3a2b0a5ba49::t_e3ff35b658139a 1-2
+math-coach/runtime/web/data/sec/901-20.4.items.js
+  s_89f3a2b0a5ba49::t_291f2ae788c493 1-2
+math-coach/runtime/web/data/sec/901-20.4.js
+  s_89f3a2b0a5ba49::t_e75335c258d66c 1-2
+math-coach/runtime/web/data/sec/901-20.5.ex.js
+  s_89f3a2b0a5ba49::t_79a062837bccd9 1-2
+math-coach/runtime/web/data/sec/901-20.5.items.js
+  s_89f3a2b0a5ba49::t_148fe08fb7fe77 1-2
+math-coach/runtime/web/data/sec/901-20.5.js
+  s_89f3a2b0a5ba49::t_cd9b18b3672dfd 1-2
+math-coach/runtime/web/data/sec/901-21.1.ex.js
+  s_89f3a2b0a5ba49::t_96380f371bf462 1-2
+math-coach/runtime/web/data/sec/901-21.1.items.js
+  s_89f3a2b0a5ba49::t_5903b92050e247 1-2
+math-coach/runtime/web/data/sec/901-21.1.js
+  s_89f3a2b0a5ba49::t_5e3c0af42bf506 1-2
+math-coach/runtime/web/data/sec/901-21.2.ex.js
+  s_89f3a2b0a5ba49::t_56946a21bc2232 1-2
+math-coach/runtime/web/data/sec/901-21.2.items.js
+  s_89f3a2b0a5ba49::t_1c7c7adaf19ec6 1-2
+math-coach/runtime/web/data/sec/901-21.2.js
+  s_89f3a2b0a5ba49::t_9125d2bb109cb9 1-2
+math-coach/runtime/web/data/sec/901-21.3.ex.js
+  s_89f3a2b0a5ba49::t_c72e8f2d666aee 1-2
+math-coach/runtime/web/data/sec/901-21.3.items.js
+  s_89f3a2b0a5ba49::t_3816a192c01a33 1-2
+math-coach/runtime/web/data/sec/901-21.3.js
+  s_89f3a2b0a5ba49::t_dca5a3fe6bd883 1-2
+math-coach/runtime/web/data/sec/901-21.4.ex.js
+  s_89f3a2b0a5ba49::t_4e89a1a28cd035 1-2
+math-coach/runtime/web/data/sec/901-21.4.items.js
+  s_89f3a2b0a5ba49::t_ae03c35a18c354 1-2
+math-coach/runtime/web/data/sec/901-21.4.js
+  s_89f3a2b0a5ba49::t_110cdff1be6ae4 1-2
+math-coach/runtime/web/data/sec/901-22.1.ex.js
+  s_89f3a2b0a5ba49::t_f07f4f7c6dca5a 1-2
+math-coach/runtime/web/data/sec/901-22.1.items.js
+  s_89f3a2b0a5ba49::t_8ed6cd0543133a 1-2
+math-coach/runtime/web/data/sec/901-22.1.js
+  s_89f3a2b0a5ba49::t_085c8bff9152c6 1-2
+math-coach/runtime/web/data/sec/901-22.2.ex.js
+  s_89f3a2b0a5ba49::t_8a19bb97ebd21b 1-2
+math-coach/runtime/web/data/sec/901-22.2.items.js
+  s_89f3a2b0a5ba49::t_3400bc9c3ff51d 1-2
+math-coach/runtime/web/data/sec/901-22.2.js
+  s_89f3a2b0a5ba49::t_571f91e9448b15 1-2
+math-coach/runtime/web/data/sec/901-22.3.ex.js
+  s_89f3a2b0a5ba49::t_8065f946f5a0e7 1-2
+math-coach/runtime/web/data/sec/901-22.3.items.js
+  s_89f3a2b0a5ba49::t_7b2286a7460d1c 1-2
+math-coach/runtime/web/data/sec/901-22.3.js
+  s_89f3a2b0a5ba49::t_abfe79fe85207b 1-2
+math-coach/runtime/web/data/sec/902-23.1.ex.js
+  s_89f3a2b0a5ba49::t_be3fb5f208501f 1-2
+math-coach/runtime/web/data/sec/902-23.1.items.js
+  s_89f3a2b0a5ba49::t_f629fca8424625 1-2
+math-coach/runtime/web/data/sec/902-23.1.js
+  s_89f3a2b0a5ba49::t_56e7e64ccb603a 1-2
+math-coach/runtime/web/data/sec/902-23.2.ex.js
+  s_89f3a2b0a5ba49::t_46b44089f6ead1 1-2
+math-coach/runtime/web/data/sec/902-23.2.items.js
+  s_89f3a2b0a5ba49::t_d7c64ace37954c 1-2
+math-coach/runtime/web/data/sec/902-23.2.js
+  s_89f3a2b0a5ba49::t_e430b28a64134e 1-2
+math-coach/runtime/web/data/sec/902-23.3.ex.js
+  s_89f3a2b0a5ba49::t_9ce8c2fdba60d0 1-2
+math-coach/runtime/web/data/sec/902-23.3.items.js
+  s_89f3a2b0a5ba49::t_d6ea34ce71cba4 1-2
+math-coach/runtime/web/data/sec/902-23.3.js
+  s_89f3a2b0a5ba49::t_f97d001540ce73 1-2
+math-coach/runtime/web/data/sec/902-23.4.ex.js
+  s_89f3a2b0a5ba49::t_9387c4f01359e3 1-2
+math-coach/runtime/web/data/sec/902-23.4.items.js
+  s_89f3a2b0a5ba49::t_e436d7435ac858 1-2
+math-coach/runtime/web/data/sec/902-23.4.js
+  s_89f3a2b0a5ba49::t_1632ca60735ada 1-2
+math-coach/runtime/web/data/sec/902-24.1.ex.js
+  s_89f3a2b0a5ba49::t_fc3a1b686acebe 1-2
+math-coach/runtime/web/data/sec/902-24.1.items.js
+  s_89f3a2b0a5ba49::t_03ee394595be5b 1-2
+math-coach/runtime/web/data/sec/902-24.1.js
+  s_89f3a2b0a5ba49::t_8b7e4275458b38 1-2
+math-coach/runtime/web/data/sec/902-24.2.ex.js
+  s_89f3a2b0a5ba49::t_06b027d52c8289 1-2
+math-coach/runtime/web/data/sec/902-24.2.items.js
+  s_89f3a2b0a5ba49::t_ec080694caa8e8 1-2
+math-coach/runtime/web/data/sec/902-24.2.js
+  s_89f3a2b0a5ba49::t_5e31b54faf8394 1-2
+math-coach/runtime/web/data/sec/902-24.3.ex.js
+  s_89f3a2b0a5ba49::t_95c4aec85dfb5e 1-2
+math-coach/runtime/web/data/sec/902-24.3.items.js
+  s_89f3a2b0a5ba49::t_4f2e514cd493b5 1-2
+math-coach/runtime/web/data/sec/902-24.3.js
+  s_89f3a2b0a5ba49::t_fb29ad1b5462fe 1-2
+math-coach/runtime/web/data/sec/902-25.1.ex.js
+  s_89f3a2b0a5ba49::t_b230f563c5ae01 1-2
+math-coach/runtime/web/data/sec/902-25.1.items.js
+  s_89f3a2b0a5ba49::t_c532519b55c3b9 1-2
+math-coach/runtime/web/data/sec/902-25.1.js
+  s_89f3a2b0a5ba49::t_a9eac7f9dd3d97 1-2
+math-coach/runtime/web/data/sec/902-25.2.ex.js
+  s_89f3a2b0a5ba49::t_4e8891c6800bfe 1-2
+math-coach/runtime/web/data/sec/902-25.2.items.js
+  s_89f3a2b0a5ba49::t_2e873e469409cf 1-2
+math-coach/runtime/web/data/sec/902-25.2.js
+  s_89f3a2b0a5ba49::t_57e88b72175167 1-2
+math-coach/runtime/web/data/sec/902-26.1.ex.js
+  s_89f3a2b0a5ba49::t_ad69dbf7153c39 1-2
+math-coach/runtime/web/data/sec/902-26.1.items.js
+  s_89f3a2b0a5ba49::t_af721644916cf3 1-2
+math-coach/runtime/web/data/sec/902-26.1.js
+  s_89f3a2b0a5ba49::t_abd26b07890776 1-2
+math-coach/runtime/web/data/sec/902-26.2.ex.js
+  s_89f3a2b0a5ba49::t_368d37b9a1754e 1-2
+math-coach/runtime/web/data/sec/902-26.2.items.js
+  s_89f3a2b0a5ba49::t_44c07ab4f082ad 1-2
+math-coach/runtime/web/data/sec/902-26.2.js
+  s_89f3a2b0a5ba49::t_1326b11afadcd1 1-2
+math-coach/runtime/web/index.html
+  s_89f3a2b0a5ba49::t_19812829892a5f 1-104
+math-coach/runtime/web/js/boot.js
+  s_89f3a2b0a5ba49::t_37e361767b14a7 1-117
+math-coach/runtime/web/js/core.js
+  s_89f3a2b0a5ba49::t_615de1df02b5c6 1-464
+math-coach/runtime/web/js/data.js
+  s_89f3a2b0a5ba49::t_79c3afb5f03ae6 1-60
+math-coach/runtime/web/js/router.js
+  s_89f3a2b0a5ba49::t_d9ef5ea96d1da4 1-59
+math-coach/runtime/web/js/store.js
+  s_89f3a2b0a5ba49::t_ee06deb32eac2f 1-123
+math-coach/runtime/web/js/views/archive.js
+  s_89f3a2b0a5ba49::t_2640f6d563ab7e 1-202
+math-coach/runtime/web/js/views/evidence.js
+  s_89f3a2b0a5ba49::t_3e4c7f4f844b74 1-107
+math-coach/runtime/web/js/views/kp.js
+  s_89f3a2b0a5ba49::t_64c1f25924a47a 1-50
+math-coach/runtime/web/js/views/map.js
+  s_89f3a2b0a5ba49::t_247996197dfe25 1-6195
+math-coach/runtime/web/js/views/practice.js
+  s_89f3a2b0a5ba49::t_2244ac592eb626 1-944
+math-coach/runtime/web/js/views/rel.js
+  s_89f3a2b0a5ba49::t_f114c824552b8d 1-73
+math-coach/runtime/web/js/views/retry.js
+  s_89f3a2b0a5ba49::t_ea67b67628d1e9 1-113
+math-coach/runtime/web/js/views/section.js
+  s_89f3a2b0a5ba49::t_e0350b76157ff9 1-184
+math-coach/runtime/web/js/views/thoughts.js
+  s_89f3a2b0a5ba49::t_f8cfb859def145 1-115
+math-coach/runtime/web/js/views/toc.js
+  s_89f3a2b0a5ba49::t_78273d043c1876 1-116
+math-coach/runtime/web/js/views/today.js
+  s_89f3a2b0a5ba49::t_bedad5fcac456e 1-416
+math-coach/runtime/web/js/views/weak.js
+  s_89f3a2b0a5ba49::t_1dc7e17c422b0f 1-179
+math-coach/tools/analogies_doc.py
+  s_89f3a2b0a5ba49::t_429baacde41d62 1-94
+math-coach/tools/answer_shape.py
+  s_89f3a2b0a5ba49::t_ccb8a352cd988b 1-143
+math-coach/tools/answer_spec_build.py
+  s_89f3a2b0a5ba49::t_6c73748a864a65 1-261
+math-coach/tools/answer_spec_merge.py
+  s_89f3a2b0a5ba49::t_f7d6972cde32c1 1-108
+math-coach/tools/answer_spec_prune.js
+  s_89f3a2b0a5ba49::t_73aa08b513ad8c 1-47
+math-coach/tools/audit_math_text.py
+  s_89f3a2b0a5ba49::t_931cd4f750116e 1-95
+math-coach/tools/build_web.py
+  s_89f3a2b0a5ba49::t_9d82f6984bac61 1-681
+math-coach/tools/ch12_math_audit.py
+  s_89f3a2b0a5ba49::t_b57660a311821b 1-107
+math-coach/tools/check_all.sh
+  s_89f3a2b0a5ba49::t_50f8d0fd538273 1-39
+math-coach/tools/check_commit.py
+  s_89f3a2b0a5ba49::t_7d2a0872536d4e 1-409
+math-coach/tools/competency_tag.py
+  s_89f3a2b0a5ba49::t_a0befd90894e99 1-104
+math-coach/tools/contrast_check.js
+  s_89f3a2b0a5ba49::t_d8d99c9b8a2270 1-264
+math-coach/tools/css_token_check.js
+  s_89f3a2b0a5ba49::t_766a4f020ee798 1-156
+math-coach/tools/edges_build.py
+  s_89f3a2b0a5ba49::t_79a5ef5359eddc 1-445
+math-coach/tools/enum_scan.py
+  s_89f3a2b0a5ba49::t_3728551260970b 1-48
+math-coach/tools/enum_values.json
+  s_89f3a2b0a5ba49::t_290cbcec08642e 1-175
+math-coach/tools/fix_answer_note.py
+  s_89f3a2b0a5ba49::t_6db4cee700fa89 1-52
+math-coach/tools/fix_math_cjk.py
+  s_89f3a2b0a5ba49::t_57308b508dd541 1-76
+math-coach/tools/fix_math_escapes.js
+  s_89f3a2b0a5ba49::t_2e482947eb1ca4 1-90
+math-coach/tools/fix_math_lost.py
+  s_89f3a2b0a5ba49::t_246f441e0a20dc 1-53
+math-coach/tools/framework_extract/README.md
+  s_89f3a2b0a5ba49::t_14725b3399ff42 1-38
+math-coach/tools/framework_extract/mkvolumes.py
+  s_89f3a2b0a5ba49::t_49c5da17aaf1fe 1-60
+math-coach/tools/framework_extract/parse_toc.py
+  s_89f3a2b0a5ba49::t_986d7a85cac2ba 1-216
+math-coach/tools/framework_gen.py
+  s_89f3a2b0a5ba49::t_2986524a94aa23 1-305
+math-coach/tools/framework_status.py
+  s_89f3a2b0a5ba49::t_059d5f5879032b 1-194
+math-coach/tools/judge_prep.js
+  s_89f3a2b0a5ba49::t_731ae25131bd02 1-31
+math-coach/tools/judge_spec_audit.js
+  s_89f3a2b0a5ba49::t_5431e5a5d6a5da 1-94
+math-coach/tools/judge_spec_test.js
+  s_89f3a2b0a5ba49::t_51a0bd49d753d7 1-99
+math-coach/tools/katex_selftest.js
+  s_89f3a2b0a5ba49::t_721bb5550e6b5e 1-50
+math-coach/tools/kp_terms.json
+  s_89f3a2b0a5ba49::t_1a6187dd95695c 1-1981
+math-coach/tools/legacy_html_import.py
+  s_89f3a2b0a5ba49::t_28d335f90acebd 1-308
+math-coach/tools/map_contract.js
+  s_89f3a2b0a5ba49::t_27e55466c53fd7 1-87
+math-coach/tools/math_baseline.json
+  s_89f3a2b0a5ba49::t_06c0d3b7a64b27 1-641
+math-coach/tools/math_text_check.js
+  s_89f3a2b0a5ba49::t_6dadb2d6d18f7c 1-182
+math-coach/tools/prereq_dist.py
+  s_89f3a2b0a5ba49::t_6773a0e42dd9d1 1-72
+math-coach/tools/preview_seeded_today.js
+  s_89f3a2b0a5ba49::t_8da8430f5ed059 1-98
+math-coach/tools/question_options_extract.py
+  s_89f3a2b0a5ba49::t_fc060074a62f9d 1-128
+math-coach/tools/question_purpose.py
+  s_89f3a2b0a5ba49::t_09c86d2d5dd168 1-164
+math-coach/tools/questions_check.py
+  s_89f3a2b0a5ba49::t_f8c5c84b15ec20 1-101
+math-coach/tools/questions_coverage.py
+  s_89f3a2b0a5ba49::t_faff3f3b30adc4 1-42
+math-coach/tools/questions_ingest_ch12.py
+  s_89f3a2b0a5ba49::t_4dd3128ce2ad92 1-100
+math-coach/tools/questions_kp_check.py
+  s_89f3a2b0a5ba49::t_58d5ad66c91360 1-103
+math-coach/tools/questions_kp_map.py
+  s_89f3a2b0a5ba49::t_ad498aa9fb2f60 1-236
+math-coach/tools/questions_kp_task_split.py
+  s_89f3a2b0a5ba49::t_bd10c9250e44dd 1-114
+math-coach/tools/questions_kp_writeback.py
+  s_89f3a2b0a5ba49::t_cfae5f219a4630 1-112
+math-coach/tools/relations_check.py
+  s_89f3a2b0a5ba49::t_2fb94b2fbd75c4 1-217
+math-coach/tools/rubric_check.py
+  s_89f3a2b0a5ba49::t_ac56bdd828a2cb 1-24
+math-coach/tools/rubric_seed.py
+  s_89f3a2b0a5ba49::t_550117c5160277 1-58
+math-coach/tools/sc_probe.js
+  s_89f3a2b0a5ba49::t_7d2497009da25e 1-77
+math-coach/tools/schema_check.py
+  s_89f3a2b0a5ba49::t_dbb3ecd1142af5 1-327
+math-coach/tools/skill_enrich.py
+  s_89f3a2b0a5ba49::t_b87826cbe0dc45 1-123
+math-coach/tools/skill_prereq_check.py
+  s_89f3a2b0a5ba49::t_f89d3879141818 1-120
+math-coach/tools/skills_auto_check.py
+  s_89f3a2b0a5ba49::t_1b5cf4cf79e8c3 1-253
+math-coach/tools/standards_import.py
+  s_89f3a2b0a5ba49::t_de0197c3accf00 1-92
+math-coach/tools/strip_note_tail.py
+  s_89f3a2b0a5ba49::t_979b3cc0feebeb 1-50
+math-coach/tools/team_roster_prune.py
+  s_89f3a2b0a5ba49::t_e445dd2063a8bd 1-290
+math-coach/tools/textbook_exercise_extract.py
+  s_89f3a2b0a5ba49::t_e9207a681aabdd 1-265
+math-coach/tools/textbook_ingest.py
+  s_89f3a2b0a5ba49::t_bd2748a01f4b22 1-165
+math-coach/tools/textbook_map_sec.py
+  s_89f3a2b0a5ba49::t_f9faccdd0345a2 1-71
+math-coach/tools/textbook_span_rebuild.py
+  s_89f3a2b0a5ba49::t_eb8558fbbe6bb9 1-351
+math-coach/tools/ux_asserts.js
+  s_89f3a2b0a5ba49::t_9e10217317374a 1-1251
+math-coach/tools/vendor_katex.py
+  s_89f3a2b0a5ba49::t_23aca08d8d97ad 1-56
+math-coach/tools/web_detail_probe.js
+  s_89f3a2b0a5ba49::t_02120b09375d3d 1-143
+math-coach/tools/web_smoke.js
+  s_89f3a2b0a5ba49::t_ae153183799400 1-1269
+sw.js
+  s_89f3a2b0a5ba49::t_4f7ac29621bd43 6,13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "71a8005cad428eed35cfb1acfee6e816a0fded63",
+  "prompts": {},
+  "sessions": {
+    "s_061ace27ae2b86": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "d886fdf4-02c6-4426-9247-fbbe56670b98",
+        "model": "claude-opus-5-5-medium"
+      },
+      "human_author": "gordonwhu1982 <129141243+gordonwhu1982@users.noreply.github.com>"
+    },
+    "s_5fa575dd10e4d8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "cdd2dbee-ed51-4d01-9c23-998ce1b9f457",
+        "model": "claude-opus-5-5-medium"
+      },
+      "human_author": "gordonwhu1982 <129141243+gordonwhu1982@users.noreply.github.com>"
+    },
+    "s_6448de114e5208": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "759366c2-795d-42f6-9424-7f235b7620f9",
+        "model": "claude-opus-5-5-medium"
+      },
+      "human_author": "gordonwhu1982 <129141243+gordonwhu1982@users.noreply.github.com>"
+    },
+    "s_81c4e09d9285bc": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "1148f760-2d03-40df-b99f-8420bcec2a25",
+        "model": "claude-opus-5-5-medium"
+      },
+      "human_author": "gordonwhu1982 <129141243+gordonwhu1982@users.noreply.github.com>"
+    },
+    "s_89f3a2b0a5ba49": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "9bf5e379-a85b-4fa8-b3a1-2a1d16b1cf77",
+        "model": "grok-4.7"
+      },
+      "human_author": "gordonwhu1982 <129141243+gordonwhu1982@users.noreply.github.com>"
+    },
+    "s_91e51b9cc5b165": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "b9f463f1-5601-4a39-8f80-dc1de9f62041",
+        "model": "claude-opus-5-5-medium"
+      },
+      "human_author": "gordonwhu1982 <129141243+gordonwhu1982@users.noreply.github.com>"
+    },
+    "s_c019e91640feb6": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "65e7a392-f29a-42dd-af4b-3cf1df023627",
+        "model": "claude-opus-5-5-medium"
+      },
+      "human_author": "gordonwhu1982 <129141243+gordonwhu1982@users.noreply.github.com>"
+    },
+    "s_c60e8ef91bdbe7": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "a34cbe57-22a4-4713-bf6e-bc5d28efdb1d",
+        "model": "claude-opus-5-5-medium"
+      },
+      "human_author": "gordonwhu1982 <129141243+gordonwhu1982@users.noreply.github.com>"
+    },
+    "s_dc1ab796b66732": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "9522e95f-6861-4c3f-88f2-6b3b43d7c441",
+        "model": "grok-4.7-high"
+      },
+      "human_author": "gordonwhu1982 <129141243+gordonwhu1982@users.noreply.github.com>"
+    },
+    "s_e911302bec8273": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "3793c928-83cc-4e99-a6e4-58789e402dbd",
+        "model": "grok-4.7-high"
+      },
+      "human_author": "gordonwhu1982 <129141243+gordonwhu1982@users.noreply.github.com>"
+    },
+    "s_ecec7f3e499e2c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "035c1a51-ee6f-47bc-8ee5-b2a0a789bed3",
+        "model": "grok-4.7"
+      },
+      "human_author": "gordonwhu1982 <129141243+gordonwhu1982@users.noreply.github.com>"
+    },
+    "s_f7fe7e394ee45d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "445ce362-ceb0-4917-928b-14b30209f3d6",
+        "model": "grok-4.7"
+      },
+      "human_author": "gordonwhu1982 <129141243+gordonwhu1982@users.noreply.github.com>"
+    }
+  }
+}
