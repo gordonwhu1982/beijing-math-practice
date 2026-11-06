@@ -1,0 +1,19 @@
+{"uid": "10.5_adv_01", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "10.5_adv_04", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-10-1-巩固-01", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-10-1-巩固-02", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-10-1-提升-01", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-10-1-提升-02", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-10-2-提升-05", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-10-4-提升-01", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-10-5-巩固-01", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-10-5-巩固-05", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-10-5-巩固-06", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-10-5-巩固-07", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-10-5-提升-01", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-10-巩固-02", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-10-巩固-09", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-10-提升-04", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "end10_adv_10", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "end10_int_10", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "end10_int_14", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}

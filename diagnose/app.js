@@ -107,7 +107,7 @@
   function applySubjectChrome() {
     document.body.classList.toggle('subject-english', subject === 'english');
     document.body.classList.toggle('subject-physics', subject === 'physics');
-    document.querySelectorAll('.site-nav a:not(.subject-link), a.brand').forEach(function (link) {
+    document.querySelectorAll('.site-nav a:not(.subject-link):not(.entry-switch), a.brand').forEach(function (link) {
       const href = link.getAttribute('href');
       const next = withSubject(href);
       if (next && next !== href) link.setAttribute('href', next);

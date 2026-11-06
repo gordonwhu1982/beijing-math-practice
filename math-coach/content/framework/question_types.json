@@ -1,0 +1,440 @@
+{
+ "review_status": "ai_draft",
+ "updated": "2026-10-29",
+ "source": "Trae ch12-triangle-bank/model/task_tree.json 的题型名和识别句；ch12-exam-library 的风格名。题目 id 只收录解答说明已经点名该模型的现有题。",
+ "groups": [
+  {
+   "code": "T-CALC",
+   "name": "求值计算"
+  },
+  {
+   "code": "T-PROVE",
+   "name": "推理证明"
+  },
+  {
+   "code": "T-EXTREMUM",
+   "name": "最值"
+  },
+  {
+   "code": "T-LOCUS",
+   "name": "轨迹与定值"
+  },
+  {
+   "code": "T-TRANSFORM",
+   "name": "变换与折叠"
+  },
+  {
+   "code": "T-CONSTRUCT",
+   "name": "作图与构造"
+  },
+  {
+   "code": "T-MODEL",
+   "name": "模型综合"
+  }
+ ],
+ "styles": [
+  "新定义理解与应用",
+  "阅读理解—迁移—拓展",
+  "跨学科融合",
+  "真实情境应用建模",
+  "方案设计与决策",
+  "数学文化浸润",
+  "定值 / 不变量探究",
+  "一题多解",
+  "动手操作与实验",
+  "规律探究",
+  "分类讨论",
+  "开放探究"
+ ],
+ "types": [
+  {
+   "uid": "QT-T-CALC-01",
+   "code": "T-CALC-01",
+   "name": "求线段长度",
+   "group": "T-CALC",
+   "recognition": "结论是一个长度值，条件给出若干边长、角度或比例",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  },
+  {
+   "uid": "QT-T-CALC-02",
+   "code": "T-CALC-02",
+   "name": "求角度",
+   "group": "T-CALC",
+   "recognition": "结论是一个角或几个角的度数、和差关系",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  },
+  {
+   "uid": "QT-T-CALC-03",
+   "code": "T-CALC-03",
+   "name": "求面积",
+   "group": "T-CALC",
+   "recognition": "结论是面积或面积比",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  },
+  {
+   "uid": "QT-T-CALC-04",
+   "code": "T-CALC-04",
+   "name": "求比值与比例",
+   "group": "T-CALC",
+   "recognition": "结论是两线段之比或若干量的比例关系",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  },
+  {
+   "uid": "QT-T-PROVE-01",
+   "code": "T-PROVE-01",
+   "name": "证明三角形全等",
+   "group": "T-PROVE",
+   "recognition": "结论为两个三角形全等",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  },
+  {
+   "uid": "QT-T-PROVE-02",
+   "code": "T-PROVE-02",
+   "name": "证明三角形相似",
+   "group": "T-PROVE",
+   "recognition": "结论为两三角形相似或成比例",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  },
+  {
+   "uid": "QT-T-PROVE-03",
+   "code": "T-PROVE-03",
+   "name": "证明线段相等",
+   "group": "T-PROVE",
+   "recognition": "结论为两线段相等",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  },
+  {
+   "uid": "QT-T-PROVE-04",
+   "code": "T-PROVE-04",
+   "name": "证明线段和差倍分",
+   "group": "T-PROVE",
+   "recognition": "结论形如 a=b+c、a=2b 等线段和差倍分关系",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  },
+  {
+   "uid": "QT-T-PROVE-05",
+   "code": "T-PROVE-05",
+   "name": "证明角相等",
+   "group": "T-PROVE",
+   "recognition": "结论为两角相等或角平分",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  },
+  {
+   "uid": "QT-T-PROVE-06",
+   "code": "T-PROVE-06",
+   "name": "证明垂直与平行",
+   "group": "T-PROVE",
+   "recognition": "结论为两线垂直或平行",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  },
+  {
+   "uid": "QT-T-PROVE-07",
+   "code": "T-PROVE-07",
+   "name": "证明共线与共点",
+   "group": "T-PROVE",
+   "recognition": "结论为三点共线或三线共点",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  },
+  {
+   "uid": "QT-T-EXTREMUM-01",
+   "code": "T-EXTREMUM-01",
+   "name": "两点之间线段最短",
+   "group": "T-EXTREMUM",
+   "recognition": "折线路径可拉直为两定点的连线",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  },
+  {
+   "uid": "QT-T-EXTREMUM-02",
+   "code": "T-EXTREMUM-02",
+   "name": "垂线段最短",
+   "group": "T-EXTREMUM",
+   "recognition": "动点到定直线的最短距离",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  },
+  {
+   "uid": "QT-T-EXTREMUM-03",
+   "code": "T-EXTREMUM-03",
+   "name": "将军饮马（两定一动）",
+   "group": "T-EXTREMUM",
+   "recognition": "两定点、一动点，求折线段之和最小，动点在同一直线上移动",
+   "kp_refs": [
+    "K801-12.10-06",
+    "K801-11.5-04"
+   ],
+   "skill_refs": [
+    "SK-801-12.10-05"
+   ],
+   "questions": [
+    {
+     "id": "12.7_com_03",
+     "vol": "801",
+     "sec": "12.7",
+     "role": "core"
+    },
+    {
+     "id": "12.10_int_09",
+     "vol": "801",
+     "sec": "12.10",
+     "role": "core"
+    },
+    {
+     "id": "12.10_int_21",
+     "vol": "801",
+     "sec": "12.10",
+     "role": "core"
+    },
+    {
+     "id": "12.10_adv_05",
+     "vol": "801",
+     "sec": "12.10",
+     "role": "core"
+    },
+    {
+     "id": "12.10_cha_05",
+     "vol": "801",
+     "sec": "12.10",
+     "role": "core"
+    },
+    {
+     "id": "12.10_cha_11",
+     "vol": "801",
+     "sec": "12.10",
+     "role": "core"
+    },
+    {
+     "id": "12.10_cha_16",
+     "vol": "801",
+     "sec": "12.10",
+     "role": "core"
+    },
+    {
+     "id": "12.10_com_05",
+     "vol": "801",
+     "sec": "12.10",
+     "role": "core"
+    },
+    {
+     "id": "12.10_com_09",
+     "vol": "801",
+     "sec": "12.10",
+     "role": "core"
+    },
+    {
+     "id": "12.10_adv_09",
+     "vol": "801",
+     "sec": "12.10",
+     "role": "variant"
+    },
+    {
+     "id": "11.5_com_06",
+     "vol": "801",
+     "sec": "11.5",
+     "role": "core"
+    },
+    {
+     "id": "end11_cha_09",
+     "vol": "801",
+     "sec": "ch-end-11",
+     "role": "core"
+    }
+   ],
+   "why": "这些题的解答说明自己点了将军饮马。变式是同一说明里写出的孪生结论：同侧求距离之差最大。"
+  },
+  {
+   "uid": "QT-T-EXTREMUM-04",
+   "code": "T-EXTREMUM-04",
+   "name": "三点共线最值",
+   "group": "T-EXTREMUM",
+   "recognition": "两定一动，求距离差最大或距离和最小，动点落在两定点所在直线上",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  },
+  {
+   "uid": "QT-T-EXTREMUM-05",
+   "code": "T-EXTREMUM-05",
+   "name": "双对称周长最小",
+   "group": "T-EXTREMUM",
+   "recognition": "角内一定点（或两定点在两相交直线上），求三角形周长最小，需两次轴对称",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  },
+  {
+   "uid": "QT-T-EXTREMUM-06",
+   "code": "T-EXTREMUM-06",
+   "name": "多动点最值",
+   "group": "T-EXTREMUM",
+   "recognition": "两定两动、两动一定、两定一定长等含多个动点或定长线段的最值",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  },
+  {
+   "uid": "QT-T-EXTREMUM-07",
+   "code": "T-EXTREMUM-07",
+   "name": "费马点",
+   "group": "T-EXTREMUM",
+   "recognition": "求三角形内一点到三顶点距离之和的最小值",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  },
+  {
+   "uid": "QT-T-EXTREMUM-08",
+   "code": "T-EXTREMUM-08",
+   "name": "胡不归（加权折线）",
+   "group": "T-EXTREMUM",
+   "recognition": "求 k·PA+PB（0<k<1）型加权折线最值",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  },
+  {
+   "uid": "QT-T-EXTREMUM-09",
+   "code": "T-EXTREMUM-09",
+   "name": "阿氏圆（加权，轨迹为圆）",
+   "group": "T-EXTREMUM",
+   "recognition": "k·PA+PB 型且动点 P 的轨迹为圆",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  },
+  {
+   "uid": "QT-T-EXTREMUM-10",
+   "code": "T-EXTREMUM-10",
+   "name": "隐圆最值",
+   "group": "T-EXTREMUM",
+   "recognition": "动点对定线段张定角或到定点距离为定值，轨迹为圆，求最值",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  },
+  {
+   "uid": "QT-T-EXTREMUM-11",
+   "code": "T-EXTREMUM-11",
+   "name": "取值范围",
+   "group": "T-EXTREMUM",
+   "recognition": "求某个量（边长、角、周长、面积）的取值范围而非单点最值",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  },
+  {
+   "uid": "QT-T-LOCUS-01",
+   "code": "T-LOCUS-01",
+   "name": "判断动点轨迹",
+   "group": "T-LOCUS",
+   "recognition": "问动点运动形成什么图形（直线、圆、圆弧）",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  },
+  {
+   "uid": "QT-T-LOCUS-02",
+   "code": "T-LOCUS-02",
+   "name": "定点定值",
+   "group": "T-LOCUS",
+   "recognition": "问某个点是否固定、某个量是否恒为定值",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  },
+  {
+   "uid": "QT-T-TRANSFORM-01",
+   "code": "T-TRANSFORM-01",
+   "name": "折叠与翻折求长",
+   "group": "T-TRANSFORM",
+   "recognition": "题面描述沿某条线折叠，求折叠后的线段长或位置",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  },
+  {
+   "uid": "QT-T-TRANSFORM-02",
+   "code": "T-TRANSFORM-02",
+   "name": "旋转下的关系",
+   "group": "T-TRANSFORM",
+   "recognition": "图形绕某点旋转后，判断线段或角的关系",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  },
+  {
+   "uid": "QT-T-TRANSFORM-03",
+   "code": "T-TRANSFORM-03",
+   "name": "平移下的关系",
+   "group": "T-TRANSFORM",
+   "recognition": "图形平移后，判断线段或角的关系",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  },
+  {
+   "uid": "QT-T-CONSTRUCT-01",
+   "code": "T-CONSTRUCT-01",
+   "name": "尺规作图",
+   "group": "T-CONSTRUCT",
+   "recognition": "要求用无刻度直尺和圆规作出满足条件的图形",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  },
+  {
+   "uid": "QT-T-CONSTRUCT-02",
+   "code": "T-CONSTRUCT-02",
+   "name": "网格与格点作图",
+   "group": "T-CONSTRUCT",
+   "recognition": "在网格中找满足条件的格点或作出图形",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  },
+  {
+   "uid": "QT-T-MODEL-01",
+   "code": "T-MODEL-01",
+   "name": "模型识别与应用",
+   "group": "T-MODEL",
+   "recognition": "题干图形明显对应某个已知模型（手拉手、半角、一线三等角等）",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  },
+  {
+   "uid": "QT-T-MODEL-02",
+   "code": "T-MODEL-02",
+   "name": "综合实践与探究迁移",
+   "group": "T-MODEL",
+   "recognition": "以问题背景/类比迁移/拓展形式给出，跨多个知识点",
+   "kp_refs": [],
+   "skill_refs": [],
+   "questions": []
+  }
+ ]
+}

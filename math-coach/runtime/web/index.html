@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>math-coach · 北京版初中数学</title>
+<!-- KaTeX 样式 + 自带字体（23KB CSS / 20 个 woff2，字体只在真用到数学式时才下载）。
+     http 下 core.js 用 HTML 输出走这套字体；file:// 下自动退回 MathML，字体不会被请求。 -->
+<link rel="stylesheet" href="../../assets/vendor/katex/katex.min.css">
+<link rel="stylesheet" href="app.css?v=20261103r14">
+</head>
+<body>
+<header id="topbar"></header>
+<main id="app"><div class="empty">正在打开…</div></main>
+<nav id="tabs"></nav>
+<div id="toast" class="toast"></div>
+<!-- 起服务的目录不对时（例如 --directory runtime/web），../../assets 与 ../shared 会 404：
+     页面永远停在「正在打开…」，公式退成裸 TeX，人只会以为代码坏了。这里说清怎么救。
+     2026-11-02 补：KaTeX 的字体（fonts/*.woff2）取不到时页面照样能用，但根号、分数线、
+     上下标会换成系统衬线字体画，看着「根号很高、横线压着字母、有的地方对不齐」——
+     这类退化必须是屏幕上的一句话说清楚，不能靠人猜是代码坏了还是字没加载。 -->
+<script>
+(function () {
+  function warn(title, hint) {
+    var d = document.createElement('div');
+    d.setAttribute('role', 'alert');
+    /* 这条提示原来插在 body 最前面、走正常文档流：它自己 74px 高 + 12px 外边距 = 98px。
+       于是「点开知识点 → 进题目 → 返回图谱」时横幅才出现（字体检查 6 秒后才下结论），
+       整页连同画布被推下去 98px，用户看到的就是「返回后绘制乱了」（out/probe_layout.js：
+       wrap t=51→149、#cy t=189→287，docH 1033→1077）。
+       提示是临时态，不许参与排版：改成贴底的浮层，并给一个「知道了」自己关掉。 */
+    d.style.cssText = 'position:fixed;left:12px;right:12px;bottom:12px;z-index:80;'
+      + 'margin:0 auto;max-width:860px;padding:12px 14px;border:1px solid #c9a227;border-radius:10px;'
+      + 'background:#fdf6e3;color:#3a2f0b;font:14px/1.7 system-ui,sans-serif;'
+      + 'box-shadow:0 8px 24px rgba(12,26,36,.18)';
+    d.innerHTML = '<b>' + title + '</b><br>' + hint +
+      '<div style="margin-top:8px"><button type="button" style="font:inherit;padding:4px 12px;'
+      + 'border:1px solid #c9a227;border-radius:8px;background:#fff;color:#3a2f0b;cursor:pointer">知道了</button></div>';
+    d.querySelector('button').addEventListener('click', function () {
+      if (d.parentNode) d.parentNode.removeChild(d);
+    });
+    document.body.appendChild(d);
+    return d;
+  }
+  window.addEventListener('load', function () {
+    var miss = [];
+    if (typeof window.katex === 'undefined') miss.push('KaTeX');
+    if (!window.MC) miss.push('应用脚本');
+    if (miss.length) {
+      warn('这个页面没加载完：' + miss.join('、') + '没取到。',
+        '多半是服务器起的目录不对。要在<b>仓库根目录</b>起服务（<code>python -m http.server 8080</code>），'
+        + '再打开 <code>/runtime/web/index.html</code>；直接对着 runtime/web 起，'
+        + '<code>../../assets</code> 就到仓库外面去了。');
+      return;
+    }
+    /* 字体是延迟加载的：第一帧通常还没有公式，所以 1.2s 时 check 常常是 false；
+       而 load 事件之后页面还会继续渲染，几千毫秒后才真正把 woff2 用上。
+       原来只测一次就报——实测冷启动每次开练习页都弹「字体没加载上」，
+       而 .katex 的 computed 字体明明是好的。误报比不报更坏：它会把「根号看着不对」
+       的错误结论直接栽到字体上。所以改成轮询：随时好了就撤条，6 秒还不行才留话。 */
+    var fontBox = null, fontTries = 0;
+    function dropFontWarn() {
+      if (fontBox && fontBox.parentNode) fontBox.parentNode.removeChild(fontBox);
+      fontBox = null;
+    }
+    function checkFonts() {
+      if (!document.fonts || !document.fonts.check) return;
+      if (document.fonts.check('16px KaTeX_Main', 'a')) {
+        window.MC.katexFonts = 'ok';
+        dropFontWarn();
+        return;
+      }
+      fontTries++;
+      if (fontTries < 15) { setTimeout(checkFonts, 400); return; }
+      window.MC.katexFonts = 'missing';
+      fontBox = warn('数学字体没加载上：根号、分数线、上下标会显示得不对。',
+        '页面功能不受影响，只是公式会退回系统字体来画。检查 <code>assets/vendor/katex/fonts/*.woff2</code>'
+        + '能不能取到（浏览器 F12 → 网络，看有没有 404），或换个 http 服务、清缓存重开。');
+    }
+    setTimeout(checkFonts, 800);
+  });
+})();
+</script><script src="../../assets/vendor/katex/katex.min.js"></script>
+<script src="../shared/judge.js"></script>
+<script src="js/core.js?v=20261102manual1"></script>
+<script src="js/store.js?v=20261102manual1"></script>
+<script src="js/data.js?v=20261029fig2"></script>
+<script src="js/fig.js?v=20261029fig"></script>
+<script src="js/router.js"></script>
+<script src="js/views/today.js?v=20261102manual1"></script>
+<script src="js/views/toc.js?v=20261102manual1"></script>
+<script src="js/views/section.js?v=20261031r9c"></script>
+<script src="js/views/kp.js?v=20261031r9"></script>
+<script src="js/views/rel.js?v=20261031r9"></script>
+<script src="js/views/thoughts.js"></script>
+<script src="js/views/weak.js?v=20261102manual1"></script>
+<script src="js/views/evidence.js"></script>
+<script src="js/views/map.js?v=20261103r16"></script>
+<script src="js/views/practice.js?v=20261102manual1"></script>
+<script src="js/views/retry.js?v=20261102manual1"></script>
+<script src="js/views/archive.js?v=20261102manual1"></script>
+<script src="js/boot.js?v=20261102build1"></script>
+</body>
+</html>

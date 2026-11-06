@@ -881,7 +881,7 @@
   function configureSubject() {
     document.body.classList.toggle('subject-english', subject === 'english');
     document.body.classList.toggle('subject-physics', subject === 'physics');
-    document.querySelectorAll('.site-nav a:not(.subject-link), a.brand').forEach(function (link) {
+    document.querySelectorAll('.site-nav a:not(.subject-link):not(.entry-switch), a.brand').forEach(function (link) {
       var href = link.getAttribute('href');
       var next = withSubject(href);
       if (next && next !== href) link.setAttribute('href', next);

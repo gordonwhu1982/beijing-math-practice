@@ -1,0 +1,12 @@
+# 不可再分发与隐私内容：永不进仓
+private/
+out/
+*.log
+__pycache__/
+.DS_Store
+node_modules/
+
+# 构建产物可重跑：build/ 全部派生自 content/，不锚定
+build/
+# 前端数据切片：tools/build_web.py 生成，重跑即恢复
+runtime/web/data/

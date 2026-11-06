@@ -1,0 +1,365 @@
+{
+ "schema_version": 1,
+ "volume_id": "901",
+ "label": "九年级上册",
+ "grade": 9,
+ "term": 1,
+ "edition": {
+  "publisher": "北京出版社（北京版）",
+  "revision": "旧版",
+  "note": "旧版电子课本（网络流传版，印次待核）",
+  "verified": false
+ },
+ "source": {
+  "kind": "pdf_local",
+  "filename": "【北京版】九年级上册数学电子课本.pdf",
+  "sha1": "4e3841c003111061d72510e9b8f641c195454d7e",
+  "bytes": 46681386,
+  "pdf_pages": 171,
+  "extracted_on": "2026-10-26",
+  "extractor": "pymupdf 1.28 text layer (TOC pages only)"
+ },
+ "chapters": [
+  {
+   "no": 18,
+   "title": "相似形",
+   "page": 1,
+   "units": [
+    {
+     "label": "一",
+     "title": "比例线段",
+     "page": 2
+    },
+    {
+     "label": "二",
+     "title": "相似三角形",
+     "page": 12
+    }
+   ],
+   "sections": [
+    {
+     "no": "18.1",
+     "title": "比例线段",
+     "page": 2
+    },
+    {
+     "no": "18.2",
+     "title": "黄金分割",
+     "page": 4
+    },
+    {
+     "no": "18.3",
+     "title": "平行线分三角形两边成比例",
+     "page": 8
+    },
+    {
+     "no": "18.4",
+     "title": "相似多边形",
+     "page": 12
+    },
+    {
+     "no": "18.5",
+     "title": "相似三角形的判定",
+     "page": 18
+    },
+    {
+     "no": "18.6",
+     "title": "相似三角形的性质",
+     "page": 25
+    },
+    {
+     "no": "18.7",
+     "title": "应用举例",
+     "page": 28
+    }
+   ],
+   "extras": [
+    {
+     "kind": "阅读理解",
+     "title": "不仅仅是美",
+     "page": 7
+    },
+    {
+     "kind": "阅读理解",
+     "title": "从“雪花曲线”谈起",
+     "page": 16
+    },
+    {
+     "kind": "综合与实践",
+     "title": "测量旗杆的高度",
+     "page": 30
+    }
+   ]
+  },
+  {
+   "no": 19,
+   "title": "二次函数和反比例函数",
+   "page": 37,
+   "units": [
+    {
+     "label": "一",
+     "title": "二次函数",
+     "page": 38
+    },
+    {
+     "label": "二",
+     "title": "反比例函数",
+     "page": 62
+    }
+   ],
+   "sections": [
+    {
+     "no": "19.1",
+     "title": "二次函数",
+     "page": 38
+    },
+    {
+     "no": "19.2",
+     "title": "二次函数 y = ax2 + bx + c（a ≠ 0）的图象",
+     "page": 40
+    },
+    {
+     "no": "19.3",
+     "title": "二次函数的性质",
+     "page": 53
+    },
+    {
+     "no": "19.4",
+     "title": "二次函数的应用",
+     "page": 55
+    },
+    {
+     "no": "19.5",
+     "title": "反比例函数",
+     "page": 62
+    },
+    {
+     "no": "19.6",
+     "title": "反比例函数的图象、性质和应用",
+     "page": 64
+    }
+   ],
+   "extras": [
+    {
+     "kind": "回顾与整理",
+     "title": "回顾与整理",
+     "page": 33
+    },
+    {
+     "kind": "复习题",
+     "title": "复习题",
+     "page": 34
+    },
+    {
+     "kind": "阅读理解",
+     "title": "抛物线和最速降线",
+     "page": 49
+    },
+    {
+     "kind": "探究学习",
+     "title": "一元二次不等式解法的探究",
+     "page": 58
+    },
+    {
+     "kind": "回顾与整理",
+     "title": "回顾与整理",
+     "page": 69
+    }
+   ]
+  },
+  {
+   "no": 20,
+   "title": "解直角三角形",
+   "page": 75,
+   "units": [
+    {
+     "label": "一",
+     "title": "锐角三角函数",
+     "page": 76
+    },
+    {
+     "label": "二",
+     "title": "解直角三角形",
+     "page": 87
+    }
+   ],
+   "sections": [
+    {
+     "no": "20.1",
+     "title": "锐角三角函数",
+     "page": 76
+    },
+    {
+     "no": "20.2",
+     "title": "30°，45°，60°角的三角函数值",
+     "page": 82
+    },
+    {
+     "no": "20.3",
+     "title": "用科学计算器求锐角三角函数值",
+     "page": 83
+    },
+    {
+     "no": "20.4",
+     "title": "解直角三角形",
+     "page": 87
+    },
+    {
+     "no": "20.5",
+     "title": "测量与计算",
+     "page": 90
+    }
+   ],
+   "extras": [
+    {
+     "kind": "复习题",
+     "title": "复习题",
+     "page": 71
+    },
+    {
+     "kind": "综合与实践",
+     "title": "测量建筑物的高度",
+     "page": 97
+    }
+   ]
+  },
+  {
+   "no": 21,
+   "title": "圆（上）",
+   "page": 105,
+   "units": [
+    {
+     "label": "一",
+     "title": "圆的有关概念",
+     "page": 106
+    },
+    {
+     "label": "二",
+     "title": "圆的性质",
+     "page": 116
+    }
+   ],
+   "sections": [
+    {
+     "no": "21.1",
+     "title": "圆的有关概念",
+     "page": 106
+    },
+    {
+     "no": "21.2",
+     "title": "过三点的圆",
+     "page": 111
+    },
+    {
+     "no": "21.3",
+     "title": "圆的对称性",
+     "page": 116
+    },
+    {
+     "no": "21.4",
+     "title": "圆周角",
+     "page": 123
+    }
+   ],
+   "extras": [
+    {
+     "kind": "阅读理解",
+     "title": "三角函数符号史话",
+     "page": 98
+    },
+    {
+     "kind": "回顾与整理",
+     "title": "回顾与整理",
+     "page": 99
+    },
+    {
+     "kind": "复习题",
+     "title": "复习题",
+     "page": 100
+    },
+    {
+     "kind": "阅读理解",
+     "title": "《原本》及其影响",
+     "page": 130
+    }
+   ]
+  },
+  {
+   "no": 22,
+   "title": "圆（下）",
+   "page": 137,
+   "units": [
+    {
+     "label": "一",
+     "title": "直线和圆",
+     "page": 138
+    },
+    {
+     "label": "二",
+     "title": "正多边形和圆",
+     "page": 150
+    }
+   ],
+   "sections": [
+    {
+     "no": "22.1",
+     "title": "直线和圆的位置关系",
+     "page": 138
+    },
+    {
+     "no": "22.2",
+     "title": "圆的切线",
+     "page": 140
+    },
+    {
+     "no": "22.3",
+     "title": "正多边形的有关计算",
+     "page": 150
+    }
+   ],
+   "extras": [
+    {
+     "kind": "回顾与整理",
+     "title": "回顾与整理",
+     "page": 131
+    },
+    {
+     "kind": "复习题",
+     "title": "复习题",
+     "page": 133
+    },
+    {
+     "kind": "探究学习",
+     "title": "与圆有关的比例线段",
+     "page": 147
+    },
+    {
+     "kind": "阅读理解",
+     "title": "从刘徽割圆说起",
+     "page": 155
+    },
+    {
+     "kind": "回顾与整理",
+     "title": "回顾与整理",
+     "page": 157
+    },
+    {
+     "kind": "复习题",
+     "title": "复习题",
+     "page": 158
+    }
+   ]
+  }
+ ],
+ "counts": {
+  "chapters": 5,
+  "sections": 25,
+  "units": 10,
+  "extras": 20
+ },
+ "topic_coverage": {
+  "knowledge_points": 0,
+  "status": "stub",
+  "note": "待从教材正文抽取"
+ }
+}

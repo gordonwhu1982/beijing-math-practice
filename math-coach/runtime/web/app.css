@@ -1,0 +1,1487 @@
+/* 三列：卡住时先补哪几个，用文字名单，不再给一张图 */
+.rel-page .rel-grid{display:grid;grid-template-columns:1fr 1.05fr 1fr;gap:14px;margin-top:10px;align-items:start}
+.rel-col{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:12px 14px}
+.rel-col a{display:inline-flex;align-items:center;min-height:24px}
+.rel-col.rel-now{border-color:#a8c4e0;background:var(--card-3)}
+.rel-h{font-weight:600;font-size:var(--fs);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.rel-n{font-weight:400;font-size:var(--fs-xs);color:var(--ink-soft);background:var(--chip);border-radius:var(--r-pill);padding:0 7px}
+.rel-list{margin:0;padding-left:18px;font-size:var(--fs);line-height:var(--lh-read)}
+.rel-list li{margin:0}
+.rel-sec{color:var(--ink-soft);font-size:var(--fs-xs);margin-left:6px}
+.rel-more{margin-top:8px;font-size:var(--fs-sm)}
+.rel-more summary{cursor:pointer;color:var(--ink-soft);display:inline-flex;align-items:center;min-height:40px}
+.rel-cur{font-size:var(--fs);line-height:var(--lh-ui)}
+.rel-cur a{display:inline-flex;align-items:center;min-height:24px}
+.rel-links{margin-top:10px;display:flex;gap:12px;font-size:var(--fs-sm)}
+.dd-hint{font-size:var(--fs-xs);color:var(--ink-soft);margin-bottom:6px}
+/* 正文里的「看三列」是句子的一部分：24px 高（WCAG 2.2 AA），不做成按钮 */
+.dd-hint a{display:inline-flex;align-items:center;min-height:24px}
+@media (max-width:760px){.rel-page .rel-grid{grid-template-columns:1fr}}
+
+/* math-coach 前端样式 · v2
+   设计语言：暖砂纸底 + 墨绿主色 + 五档难度色 + 三域学科色；宽屏走左侧栏，窄屏走底部 tab。
+   约定：颜色与尺寸只用变量；间距 4 的倍数；类名与 v1 完全兼容（视图 JS 不改也能跑）。 */
+
+/* ============ 1. 调色板（浅色） ============ */
+:root{
+  color-scheme: light;
+
+  /* 中性：冷白（原来是暖砂纸 #f7f4ee，偏灰黄，整页发闷、看着不亮） */
+  /* 四层表面：纸底 → 区块底 → 卡底（白） → 当前列/选中列。分层靠 ΔL*，不靠 1px 边框 */
+  --paper:#f2f7fd; --paper-2:#eef4fb; --card:#ffffff; --card-2:#dfe9f6; --card-3:#c9dcf3;
+  --ink:#0c1a24; --ink-soft:#43556a; --ink-mute:#54667a; --ink-faint:#596a7d;
+  /* 分隔线只有一档。原先还有一条 --line-soft（#dbe6f1，对 --card 只有 1.26:1），
+     它承担「同一张卡里的行分隔 / 进度条底槽」，可 1.26 肉眼几乎看不见，
+     等于这条线不存在。两档合并成 --line（1.53:1）之后，该断的地方才真断得开。 */
+  --line:#b9cddf; --line-strong:#a5bcd2;
+
+  /* 主色：翠绿（墨绿 #1c6b4b 在白底上偏暗，提亮两档） */
+  --green:#097756; --green-strong:#05603f; --green-soft:#d9f4e9; --green-glow:#bfe9d8;
+
+  /* 五档难度 */
+  --basic:#0a7660; --basic-soft:#dcf5ef;
+  --standard:#2554d6; --standard-soft:#e3ecfe;
+  --advanced:#8a5009; --advanced-soft:#fdeed6;
+  --challenge:#a52d10; --challenge-soft:#fde5dd;
+  --competition:#7433c4; --competition-soft:#f0e6fd;
+
+  /* 三域（图谱节点、章节标签）：比中性色更饱和一档，节点在白底上要一眼分得开 */
+  --dom-num:#1a63cf;   --dom-num-soft:#dfeafd;   /* 数与代数 */
+  --dom-geo:#097756;   --dom-geo-soft:#d9f4e9;   /* 图形与几何 */
+  --dom-sta:#8b2fbd;   --dom-sta-soft:#f2e4fd;   /* 统计与概率 */
+
+  /* 语义 */
+  --amber:#8a5009; --amber-soft:#fdeed6;
+  --red:#a52d10; --red-soft:#fde5dd;
+  --slate:#4c6178; --slate-soft:#eaf0f7;
+  --ok:#0a7841; --ok-soft:#dcf5e6;
+
+  /* 阴影与圆角 */
+  --sh-1:0 1px 2px rgba(12,26,36,.06), 0 2px 8px -4px rgba(12,26,36,.10);
+  --sh-2:0 1px 2px rgba(12,26,36,.06), 0 8px 22px -10px rgba(12,26,36,.18);
+  --sh-3:0 2px 6px rgba(12,26,36,.07), 0 20px 44px -20px rgba(12,26,36,.28);
+  /* 圆角只有四档：6（标签/小胶囊）、10（按钮、输入、行）、14（卡片、面板）、999（药丸）。
+     --r-md 与 --r-xl 保留变量名但挂到同一档上 —— 它们被 30 多处引用，改值比改 30 个调用点安全，
+     而形状档数看的是算出来的 px 不是变量名（实测原来同一屏出现过 7 种圆角）。 */
+  --r-sm:6px; --r-md:10px; --r:10px; --r-lg:14px; --r-xl:14px; --r-pill:999px;
+
+  /* 版面 */
+  --maxw:760px; --wide:880px; --side:236px;
+  --tabh:58px;
+
+  /* 字阶 */
+  /* 字阶：6 档，相邻差 >=1.5px 才看得出层级。
+     原来 lowest 是 12px，全站 47.8% 的可见文字落在这档以下（实测 11416/23896 字符），
+     手机上看着就是「一片糊」。医生处方级别的注释才用 12px，练习界面里不需要。
+     13px 是这批小字的新下限：它仍然是明确的「辅助信息」档，但正文字号一栏读得清。 */
+  /* 2026-10-30 三档真正拉开：正文 16.5 / 次要 14.5 / 辅助 13。
+     原来 15.5 与 14 只差 1.5px，实测知识点页 66.5% 的字符是 13px、31% 是 14px —— 两档差 1px
+     在屏幕上就是一档，整页一片匀质：「字小看不清」和「看不出重点」是同一个根因。
+     现在主档与次档差 2px、与辅助档差 3.5px；段标题也提到 var(--fs)（见 .dd-block>h3）。 */
+  --fs-h1:27px; --fs-h2:22px; --fs-h3:18px; --fs:16.5px; --fs-sm:14.5px; --fs-xs:13px;
+  /* 行高只有三档：1.15 大数字/图标、1.55 界面行、1.8 正文。
+     原来 53 处 line-height 写了 18 个不同的值（1、1.1、1.15、1.2、1.25、1.3、1.35、1.4、1.45、
+     1.5、1.55、1.6、1.65、1.7、1.75、1.8、1.85、1.9），差 0.05 的档肉眼分不出来，
+     但每加一档就多一种「行距感」，整页读起来像三个人排的版。 */
+  --lh-display:1.15; --lh-ui:1.55; --lh-read:1.8;
+
+  --t-fast:120ms; --t-slow:240ms; --ease:cubic-bezier(.2,.7,.3,1);
+}
+
+/* ============ 2. 语义别名（补齐历史引用） ============ */
+/* .rel-n / .four-row a / .dd-q / .th-nums span / .th-card:hover 引用的是短名（--chip、--accent、
+   --bg2、--bg、--ink2、--sta）——从设计稿搬过来时漏了定义。var() 取不到值就回退成「无背景 /
+   直角 / 继承色 / 边框等于文字色」，于是胶囊没有底色、圆角变直角。这里把它们统一挂到第 1 节
+   的色阶上，名字保持原样，调用处一行都不用改。 */
+:root{
+  --chip:#eef3f9; --accent:var(--green-strong);
+  --bg2:var(--card-2); --bg:var(--paper-2);
+  --ink2:var(--ink-soft); --sta:var(--dom-sta);
+}
+
+/* ============ 3. 基础 ============ */
+*{box-sizing:border-box}
+/* 页面内容不够高时，底部会露出 html 的默认白：把纸色铺到 html 上，整屏才是一块颜色 */
+html{-webkit-text-size-adjust:100%;background:var(--paper);min-height:100%}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper);
+  background-image:
+    /* 混进 var(--paper) 而不是写死 #fff：green-soft 与 paper 同族，混出来是一层很淡的
+       绿雾；混白会在纸色上压出一块亮斑，整页发花 */
+    radial-gradient(1100px 480px at 8% -10%, color-mix(in oklab, var(--green-soft) 72%, var(--paper)), transparent 64%),
+    radial-gradient(900px 420px at 98% 0%, color-mix(in oklab, var(--dom-num-soft) 62%, var(--paper)), transparent 60%);
+  color:var(--ink);
+  font:var(--fs)/var(--lh-read) -apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  padding-bottom:calc(var(--tabh) + env(safe-area-inset-bottom));
+  transition:background-color var(--t-slow) var(--ease), color var(--t-slow) var(--ease);
+}
+h1{font-size:var(--fs-h1);line-height:var(--lh-ui);margin:18px 0 6px;letter-spacing:-.012em;font-weight:750}
+h2{font-size:var(--fs-h2);margin:0 0 8px;letter-spacing:-.006em;font-weight:600}
+h3{font-size:var(--fs-h3);margin:14px 0 6px;color:var(--ink-soft);letter-spacing:.02em;font-weight:600}
+p{margin:8px 0}
+a{color:var(--green);text-decoration:none;transition:color var(--t-fast) var(--ease)}
+a:hover{text-decoration:underline;text-underline-offset:2px}
+strong,b{font-weight:600}
+small{font-size:var(--fs-xs)}
+::selection{background:var(--green-soft);color:var(--green-strong)}
+.muted{color:var(--ink-soft);font-size:var(--fs-sm)}
+.lead{color:var(--ink-soft);margin:6px 0 16px;font-size:var(--fs)}
+.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:var(--fs-xs);font-variant-numeric:tabular-nums}
+hr{border:0;border-top:1px solid var(--line);margin:18px 0}
+.num,.n,.g,.meta,.k{font-variant-numeric:tabular-nums}
+.divider{display:flex;align-items:center;gap:10px;margin:22px 0 12px;color:var(--ink-mute);font-size:var(--fs-xs);letter-spacing:.1em;font-weight:600}
+.divider:before,.divider:after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent)}
+
+/* 键盘可见焦点，鼠标点击不显示 */
+:focus-visible{outline:2px solid var(--green);outline-offset:2px;border-radius:var(--r-sm)}
+
+/* ============ 4. 顶栏 ============ */
+#topbar{
+  position:sticky;top:0;z-index:30;
+  background:color-mix(in oklab, var(--paper) 86%, transparent);
+  backdrop-filter:saturate(1.4) blur(10px);
+  border-bottom:1px solid var(--line);
+}
+#topbar .bar{max-width:var(--maxw);margin:0 auto;padding:10px 14px;display:flex;align-items:center;gap:10px;min-height:50px}
+/* 返回键原来 18×22：手指按不到、鼠标也要瞄。min 40×40（WCAG 2.5.5），负 margin 抵掉多出的高度，
+   这样顶栏高度不变、视觉位置不变，只有可点区域变大。 */
+#topbar .back{display:inline-flex;align-items:center;justify-content:center;min-width:40px;min-height:40px;border:0;background:none;font-size:var(--fs-h3);color:var(--ink-soft);padding:0 10px;margin:-6px 0 -6px -4px;cursor:pointer;line-height:var(--lh-display);border-radius:var(--r-sm)}
+#topbar .back:hover{background:var(--paper-2);color:var(--ink)}
+#topbar .t{font-weight:600;font-size:var(--fs);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:-.01em}
+#topbar .sub{font-size:var(--fs-xs);color:var(--ink-mute);font-weight:400;margin-left:6px}
+#topbar .clock{
+  display:inline-flex;align-items:center;min-height:40px;
+  border:1px solid var(--line);background:var(--card);border-radius:var(--r-pill);padding:0 13px;
+  font-size:var(--fs-xs);color:var(--ink-soft);cursor:pointer;white-space:nowrap;
+  box-shadow:var(--sh-1);transition:border-color var(--t-fast) var(--ease),color var(--t-fast) var(--ease);
+}
+#topbar .clock:hover{border-color:var(--green);color:var(--green)}
+
+/* ============ 5. 导航（窄屏底部 tab） ============ */
+#tabs{
+  position:fixed;left:0;right:0;bottom:0;z-index:40;
+  background:color-mix(in oklab, var(--card) 92%, transparent);
+  backdrop-filter:saturate(1.4) blur(12px);
+  border-top:1px solid var(--line);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+#tabs .in{max-width:var(--maxw);margin:0 auto;display:flex;height:var(--tabh)}
+#tabs a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  color:var(--ink-mute);font-size:var(--fs-xs);letter-spacing:.02em;transition:color var(--t-fast) var(--ease)}
+#tabs a .i{font-size:var(--fs-h3);line-height:var(--lh-display);transition:transform var(--t-fast) var(--ease)}
+#tabs a.on{color:var(--green);font-weight:600}
+#tabs a.on .i{transform:translateY(-1px)}
+#tabs a:hover{text-decoration:none;color:var(--green)}
+
+/* ============ 6. 宽屏：左侧栏 ============ */
+@media (min-width:1024px){
+  body{padding-bottom:0;padding-left:var(--side)}
+  #tabs{
+    top:0;bottom:0;right:auto;width:var(--side);
+    border-top:0;border-right:1px solid var(--line);
+    background:var(--card-2);backdrop-filter:none;
+    padding:22px 12px;display:flex;flex-direction:column;gap:4px;
+  }
+  #tabs:before{
+    content:"北京数学练习";display:block;padding:0 12px 2px;
+    font-size:var(--fs);font-weight:750;color:var(--ink);letter-spacing:-.01em;
+  }
+  #tabs:after{
+    content:"北京版 · 初中数学";display:block;padding:0 12px 18px;
+    font-size:var(--fs-xs);color:var(--ink-mute);letter-spacing:.04em;
+    border-bottom:1px solid var(--line);margin-bottom:8px;
+  }
+  #tabs .in{flex-direction:column;height:auto;gap:2px;max-width:none}
+  #tabs a{
+    flex:0 0 auto;flex-direction:row;justify-content:flex-start;gap:12px;
+    padding:10px 12px;border-radius:var(--r);font-size:var(--fs-sm);letter-spacing:0;
+  }
+  #tabs a .i{font-size:var(--fs);width:20px;text-align:center}
+  #tabs a:hover{background:var(--paper-2)}
+  #tabs a.on{background:var(--green-soft);color:var(--green-strong)}
+  #tabs a.on .i{transform:none}
+
+  #topbar{left:var(--side)}
+  #topbar .bar{max-width:var(--wide)}
+  .wrap,.narrow,.footer,.empty{max-width:var(--wide)}
+  .wrap{padding:20px 24px 40px}
+  h1{font-size:var(--fs-h1)}
+}
+
+/* ============ 7. 布局 ============ */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:14px 14px 24px}
+.narrow{max-width:var(--maxw);margin:0 auto}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:16px;margin:12px 0;min-width:0;box-shadow:var(--sh-1);
+  transition:box-shadow var(--t-slow) var(--ease),border-color var(--t-slow) var(--ease);
+}
+.card.tight{padding:12px 14px}
+.card.flat{border:0;background:transparent;padding:0;box-shadow:none}
+.card-h{display:flex;align-items:baseline;gap:8px;margin-bottom:6px}
+.card-h .more{margin-left:auto;font-size:var(--fs-xs)}
+.row{display:flex;align-items:center;gap:10px}
+/* 不换行时长按钮会顶出卡片右边（430px 实测溢出 92px）：允许换行，按钮自己落一行 */
+.row.between{justify-content:space-between;flex-wrap:wrap}
+.row.wrap{flex-wrap:wrap}
+.grid{display:grid;gap:10px}
+.grid.c2{grid-template-columns:1fr 1fr}
+.grid.c3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:560px){.grid.c3{grid-template-columns:1fr 1fr}}
+.stack>*+*{margin-top:8px}
+
+/* ============ 8. 按钮 ============ */
+.btn{
+  border:1px solid var(--line-strong);background:var(--card);color:var(--ink);
+  display:inline-flex;align-items:center;justify-content:center;min-height:40px;
+  border-radius:var(--r);padding:10px 15px;font:inherit;font-size:var(--fs);cursor:pointer;
+  white-space:nowrap;box-shadow:var(--sh-1);max-width:100%;
+  transition:border-color var(--t-fast) var(--ease),background var(--t-fast) var(--ease),
+             color var(--t-fast) var(--ease),transform var(--t-fast) var(--ease),box-shadow var(--t-fast) var(--ease);
+}
+.btn:hover{border-color:var(--green);color:var(--green-strong);box-shadow:var(--sh-2)}
+.btn:active{transform:translateY(1px);box-shadow:none}
+.btn-primary{
+  background:linear-gradient(180deg,var(--green) 0%,var(--green-strong) 100%);
+  border-color:var(--green-strong);color:#fff;
+  box-shadow:0 1px 2px rgba(20,82,58,.25), inset 0 1px 0 rgba(255,255,255,.16);
+}
+.btn-primary:hover{background:linear-gradient(180deg,var(--green-strong),var(--green-strong));color:#fff;border-color:var(--green-strong)}
+.btn-secondary{background:var(--card)}
+.btn-ghost{background:transparent;border-color:transparent;color:var(--ink-soft);box-shadow:none}
+.btn-ghost:hover{background:var(--paper-2);border-color:transparent;color:var(--ink)}
+.btn.used{border-color:var(--amber);color:var(--amber);background:var(--amber-soft)}
+.btn[disabled]{opacity:.45;cursor:default;box-shadow:none;transform:none}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn-row .btn-primary{flex:1 1 auto;min-width:0}
+.choice-card{
+  display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--r-lg);padding:14px 16px;margin:8px 0;font:inherit;color:inherit;cursor:pointer;
+  box-shadow:var(--sh-1);
+  transition:border-color var(--t-fast) var(--ease),background var(--t-fast) var(--ease),
+             transform var(--t-fast) var(--ease),box-shadow var(--t-fast) var(--ease);
+}
+.choice-card:hover{border-color:var(--green);background:var(--card-2);transform:translateY(-1px);box-shadow:var(--sh-2)}
+.choice-card .t{font-weight:600;font-size:var(--fs)}
+.choice-card .s{color:var(--ink-soft);font-size:var(--fs-sm);margin-top:2px}
+/* 结算页「接下来」是一次决策，不是一个等价列表：最该走的那一步做成主按钮卡片。
+   卡片形主按钮不能直接套 .btn（那是胶囊，12px 内边距会把 .t/.s 两行挤在一起），
+   这里只借 .btn-primary 的绿底与白字，圆角与内边距仍按卡片算。 */
+.choice-card.btn-primary{
+  background:linear-gradient(180deg,var(--green) 0%,var(--green-strong) 100%);
+  border-color:var(--green-strong);color:#fff;
+  box-shadow:0 2px 6px rgba(20,82,58,.22), inset 0 1px 0 rgba(255,255,255,.16);
+}
+.choice-card.btn-primary .t{color:#fff}
+.choice-card.btn-primary .s{color:rgba(255,255,255,.82)}
+.choice-card.btn-primary:hover{background:linear-gradient(180deg,var(--green-strong),var(--green-strong));border-color:var(--green-strong)}
+
+/* ============ 9. 标签 / 徽章 ============ */
+.pill{
+  display:inline-block;border-radius:var(--r-pill);padding:2px 9px;font-size:var(--fs-xs);
+  line-height:var(--lh-read);background:var(--paper-2);color:var(--ink-soft);white-space:nowrap;
+  border:1px solid transparent;font-weight:600;
+}
+.pill.basic{background:var(--basic-soft);color:var(--basic);border-color:color-mix(in oklab,var(--basic) 18%,transparent)}
+.pill.standard{background:var(--standard-soft);color:var(--standard);border-color:color-mix(in oklab,var(--standard) 18%,transparent)}
+.pill.advanced{background:var(--advanced-soft);color:var(--advanced);border-color:color-mix(in oklab,var(--advanced) 22%,transparent)}
+.pill.challenge{background:var(--challenge-soft);color:var(--challenge);border-color:color-mix(in oklab,var(--challenge) 20%,transparent)}
+.pill.competition{background:var(--competition-soft);color:var(--competition);border-color:color-mix(in oklab,var(--competition) 20%,transparent)}
+.pill.detail{background:var(--green-soft);color:var(--green);border-color:color-mix(in oklab,var(--green) 18%,transparent)}
+.pill.stub{background:var(--paper-2);color:var(--ink-mute)}
+.tag{font-size:var(--fs-xs);color:var(--ink-mute)}
+/* 首页底部那一行快捷入口：四个 17px 高的链接手指点不中，给到 40px 但不用按钮样式（它们是句子的一部分） */
+.quick-links{margin:10px 0 0;font-size:var(--fs);color:var(--ink-mute)}
+.quick-links a{display:inline-flex;align-items:center;min-height:40px;padding:0 2px}
+.quick-links span{margin:0 5px;color:var(--ink-faint)}
+/* 目录里「展开这一册」：同上，文字链给 40px 高，不改字重/颜色 */
+.more-line{padding:0 2px}
+/* 40px 热区是为了好点，不是为了把链接做成正文灰：加上热区以后「展开这一册」
+   看起来像一行说明文字，没人会去点。保留热区，颜色回到链接色并加下划线。 */
+.more-line a{display:inline-flex;align-items:center;min-height:40px;padding:0 2px;font-size:var(--fs-sm);color:var(--green);text-decoration:underline;text-underline-offset:2px}
+/* 行内「详情 ›」这类文字链：做成按钮块会把整行文字拆散，只保证 24px 高（WCAG 2.2 AA 2.5.8） */
+a.tag{display:inline-flex;align-items:center;min-height:24px;padding:0 2px}
+.kp-of{font-size:var(--fs-xs);color:var(--ink-mute);margin:8px 0 2px}
+.kp-of a{color:var(--ink-soft);border-bottom:1px dashed currentColor;text-decoration:none}
+.kp-of a:hover{color:var(--green);border-bottom-color:var(--green)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chip{
+  border:1px solid var(--line-strong);border-radius:var(--r-pill);padding:7px 13px;
+  font-size:var(--fs-sm);background:var(--card);cursor:pointer;font-family:inherit;color:var(--ink);
+  transition:all var(--t-fast) var(--ease);
+}
+.chip:hover{border-color:var(--green);color:var(--green-strong);background:var(--card-2)}
+.chip.on{background:var(--green);border-color:var(--green);color:#fff}
+
+/* ============ 10. 统计 / 进度 ============ */
+.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+.stat{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:13px 10px;text-align:center;box-shadow:var(--sh-1);
+}
+.stat .n{font-size:var(--fs-h2);font-weight:750;line-height:var(--lh-display);letter-spacing:-.02em}
+.stat .k{font-size:var(--fs-xs);color:var(--ink-soft);margin-top:2px}
+/* 结算小结里「判不了 · 你自己定的」单列一行：不进上面三个数，也不假装没发生 */
+.self-row{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;margin:2px 0 12px;padding:10px 12px;
+  border:1px solid var(--line);border-left:4px solid var(--slate);border-radius:var(--r-lg);background:var(--slate-soft)}
+.self-row .muted{flex:1 1 240px}
+.kv{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:var(--fs-sm)}
+.kv:last-child{border-bottom:0}
+.kv .g{margin-left:auto;color:var(--ink-soft);font-size:var(--fs-sm);white-space:nowrap}
+.bar{height:6px;background:var(--paper-2);border-radius:var(--r-pill);overflow:hidden;margin-top:8px}
+.bar>i{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--green-strong));border-radius:var(--r-pill);transition:width var(--t-slow) var(--ease)}
+.bar.amber>i{background:linear-gradient(90deg,var(--amber),#8a5a12)}
+.bar.slate>i{background:linear-gradient(90deg,var(--slate),#3c4954)}
+
+/* ============ 11. 目录树 ============ */
+.vol{margin:16px 0}
+.vol-h{display:flex;align-items:baseline;gap:8px;padding:8px 2px;border-bottom:1px solid var(--line)}
+.vol-h .lb{font-weight:750;font-size:var(--fs);letter-spacing:-.01em}
+.vol-h .no{margin-left:auto;font-size:var(--fs-xs);color:var(--ink-mute)}
+.ch{margin:10px 0 0}
+.ch-h{display:flex;align-items:baseline;gap:8px;padding:6px 2px;color:var(--ink);font-size:var(--fs)}
+.ch-h .cn{font-weight:600}
+.ch-h .cq{margin-left:auto;font-size:var(--fs-xs);color:var(--ink-mute)}
+.secs{margin:2px 0 0;padding:0;list-style:none}
+.secs li{border-bottom:1px solid var(--line)}
+.secs li:last-child{border-bottom:0}
+.sec-row{
+  display:flex;align-items:center;gap:10px;padding:9px 8px 9px 10px;color:var(--ink);font-size:var(--fs);
+  border-radius:var(--r);transition:background var(--t-fast) var(--ease);position:relative;
+}
+.sec-row:before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:2px;border-radius:var(--r-pill);background:transparent;transition:background var(--t-fast) var(--ease)}
+.sec-row:hover{text-decoration:none;background:var(--card-2)}
+.sec-row:hover:before{background:var(--green)}
+.sec-row .no{color:var(--ink-soft);font-size:var(--fs-sm);min-width:44px}
+.sec-row .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* 目录每行右侧「知识点 4 · 题 77 · 方法 3」是家长扫一眼就要读的数，
+   不是脚注：13px 在 430 宽上要凑近看，也把整页 13px 占比顶到 53%。 */
+.sec-row .meta{font-size:var(--fs-sm);color:var(--ink-mute);white-space:nowrap}
+.sec-row .dot{width:7px;height:7px;border-radius:50%;background:var(--line-strong);flex:none}
+.sec-row .dot.have{background:var(--green);box-shadow:0 0 0 3px var(--green-soft)}
+.sec-row .dot.part{background:var(--amber);box-shadow:0 0 0 3px var(--amber-soft)}
+.sec-row.na{color:var(--ink-mute)}
+
+/* ============ 12. 题面 / 判题结果 ============ */
+/* pre-wrap：题干里的选项 A./B./C./D. 是一行一行存的，不保留换行会挤成一整行不可读。 */
+.stem{font-size:var(--fs);line-height:var(--lh-read);overflow-wrap:anywhere;white-space:pre-wrap}
+.stem math{font-size:1.06em}
+textarea.answer{
+  width:100%;min-height:108px;margin-top:12px;padding:12px 14px;border:1px solid var(--line-strong);
+  border-radius:var(--r);font:inherit;font-size:var(--fs);line-height:var(--lh-read);background:var(--card);
+  color:var(--ink);resize:vertical;overflow-wrap:anywhere;transition:border-color var(--t-fast) var(--ease),box-shadow var(--t-fast) var(--ease);
+}
+textarea.answer:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px var(--green-soft)}
+textarea.answer::placeholder{color:var(--ink-faint)}
+/* 选择题点选卡片：四个上下排，选中描边；判完对错各上色，正确项永远标出来 */
+.opts{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.opt{
+  display:flex;gap:10px;align-items:flex-start;text-align:left;
+  padding:10px 12px;border:1px solid var(--line);border-radius:var(--r-lg);
+  background:var(--card);color:inherit;font:inherit;cursor:pointer;
+  transition:border-color .12s,background .12s;
+}
+.opt:hover:not([disabled]){border-color:var(--green);background:var(--card-2)}
+.opt b{flex:0 0 20px;color:var(--ink-soft);font-weight:600}
+.opt span{flex:1 1 auto;min-width:0}
+.opt-sel{border-color:var(--green);background:var(--card-2);box-shadow:var(--sh-2)}
+.opt-ok{border-color:var(--green);background:var(--card-2)}
+.opt-ok b{color:var(--green)}
+.opt-bad{border-color:var(--red);opacity:.85}
+.opt-bad b{color:var(--red)}
+.opt[disabled]{cursor:default}
+/* 判完后选项压扁：它已经不可点了，留着 100px 高只会把「看答案」挤出一屏 */
+.opts.is-done{gap:4px;margin-top:2px}
+.opts.is-done .opt{padding:5px 10px;font-size:var(--fs-sm);min-height:0}
+.opts.is-done .opt b{flex:0 0 16px}
+/* 判完之后的动作条：紧跟题干，首屏就能点。原来按钮在结果卡最底下，
+   判错一次要滚 780px 才看得见「下一题」。 */
+.act-strip{display:flex;gap:8px;margin-top:12px;align-items:stretch}
+.act-strip .btn{flex:1 1 0;min-width:0}
+.act-strip .btn-primary{flex:1.4 1 0}
+.toolbar{display:flex;gap:8px;margin-top:12px;align-items:stretch}
+.toolbar .btn-primary{flex:1 1 auto;min-width:0}
+.result{
+  margin-top:14px;border-left:4px solid var(--line-strong);border-radius:var(--r-lg);
+  padding:14px 16px;background:var(--card);border:1px solid var(--line);box-shadow:var(--sh-1);
+}
+.result.wrong{border-left-color:var(--amber);background:var(--amber-soft)}
+.result.correct{border-left-color:var(--green);background:var(--green-soft)}
+.result.manual{border-left-color:var(--slate);background:var(--slate-soft)}
+.result.blank{border-left-color:var(--line-strong);background:var(--card-2)}
+.result .head{display:flex;align-items:baseline;gap:8px;font-weight:600;font-size:var(--fs)}
+.result .head .tag{margin-left:auto;font-weight:400;color:var(--ink-soft)}
+.savebad{margin-top:8px;padding:8px 10px;border-radius:var(--r-sm);background:#fff3f0;border:1px solid #f3c9c0;color:#8a3a26;font-size:var(--fs-sm);line-height:var(--lh-ui)}
+.four{margin-top:12px;border-top:1px dashed var(--line-strong);padding-top:10px;display:flex;flex-direction:column;gap:8px}
+.four-row{display:grid;grid-template-columns:74px 1fr;gap:10px;align-items:start;font-size:var(--fs-sm);line-height:var(--lh-read)}
+.four-lbl{color:var(--ink-soft);font-size:var(--fs-xs);letter-spacing:.06em;padding-top:1px}
+.four-row a{color:var(--accent);text-decoration:none;border-bottom:1px dotted color-mix(in oklab,var(--accent) 45%,transparent)}
+.four-row a:hover{border-bottom-style:solid}
+@media (max-width:520px){.four-row{grid-template-columns:1fr;gap:2px}}
+.answer-block{margin-top:14px;border-top:1px dashed var(--line-strong);padding-top:14px;font-size:var(--fs);line-height:var(--lh-read);overflow-wrap:anywhere;min-width:0}
+.answer-block .lbl{font-size:var(--fs-xs);color:var(--ink-soft);letter-spacing:.08em;margin:0 0 6px;font-weight:600}
+.answer-block.clamp{max-height:9.2em;overflow:hidden;position:relative}
+.answer-block.clamp:after{content:"";position:absolute;left:0;right:0;bottom:0;height:2.4em;background:linear-gradient(rgba(255,255,255,0),var(--card))}
+.figbar{
+  display:flex;align-items:center;gap:8px;margin-top:12px;padding:10px 12px;
+  background:var(--amber-soft);border-radius:var(--r);font-size:var(--fs-sm);color:var(--amber);
+  border:1px solid color-mix(in oklab,var(--amber) 16%,transparent);
+}
+.figbar input{width:16px;height:16px;accent-color:var(--amber)}
+.dots{display:inline-flex;gap:4px;margin-left:8px;vertical-align:middle}
+.dots i{width:6px;height:6px;border-radius:50%;background:var(--line-strong);display:block;transition:background var(--t-fast) var(--ease)}
+.dots i.on{background:var(--green)}
+.footer{margin:20px auto 6px;max-width:var(--maxw);padding:0 4px}
+.footer .btn{width:100%}
+
+/* ============ 13. 抽屉 ============ */
+.drawer{
+  position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--card);
+  border-top:1px solid var(--line);border-radius:var(--r-xl) var(--r-xl) 0 0;
+  padding:16px 16px calc(16px + env(safe-area-inset-bottom));
+  max-height:76vh;overflow:auto;box-shadow:var(--sh-3);
+  animation:drawer-in var(--t-slow) var(--ease);
+}
+@keyframes drawer-in{from{transform:translateY(12px);opacity:.6}to{transform:translateY(0);opacity:1}}
+.drawer .in{max-width:var(--maxw);margin:0 auto}
+.drawer h2{font-size:var(--fs)}
+.drawer .grid{grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.drawer .grid .btn{padding:12px 10px;font-size:var(--fs-sm)}
+/* 提示抽屉现在有五个按钮（四级阶梯 + 看完整解析），双列栅格下最后一个是奇数格：
+   让它整行铺满，五个按钮共用一套栅格，右边不留半格空位。 */
+.drawer .grid .btn.wide{
+  grid-column:1 / -1;
+  border-color:var(--amber);color:var(--amber);background:var(--amber-soft);
+}
+.drawer .grid .btn.wide:hover{border-color:var(--amber);color:var(--amber);background:var(--amber-soft)}
+.drawer .btn.close{margin-top:10px;width:100%}
+.hintbox{margin-top:12px;padding:12px 14px;background:var(--paper-2);border-radius:var(--r);font-size:var(--fs-sm);line-height:var(--lh-read)}
+.scrim{position:fixed;inset:0;background:color-mix(in oklab,var(--ink) 34%,transparent);z-index:45;animation:fade-in var(--t-slow) var(--ease)}
+@keyframes fade-in{from{opacity:0}to{opacity:1}}
+
+/* ============ 14. 图谱 ============ */
+#cy{
+  width:100%;height:min(64vh,520px);border:1px solid var(--line);border-radius:var(--r-lg);
+  background:var(--card);
+  box-shadow:inset 0 1px 0 color-mix(in oklab,var(--card) 60%,transparent), var(--sh-1);
+  background-image:
+    radial-gradient(circle at 50% 40%, color-mix(in oklab,var(--green-soft) 55%,transparent), transparent 70%),
+    radial-gradient(color-mix(in oklab,var(--line) 55%,transparent) 1px, transparent 1px);
+  background-size:auto,18px 18px;
+}
+.graphbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.graphbar .btn{padding:7px 12px;font-size:var(--fs-sm)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:var(--fs-xs);color:var(--ink-soft);margin-top:8px}
+.legend .k{display:inline-flex;align-items:center;gap:5px}
+.legend .sw{width:9px;height:9px;border-radius:var(--r-sm);display:inline-block}
+
+/* ============ 15. 例题 / 知识点卡 ============ */
+.ex{
+  border:1px solid var(--line);border-radius:var(--r-lg);background:var(--card);
+  padding:16px;margin:12px 0;box-shadow:var(--sh-1);
+}
+.ex-h{display:flex;align-items:baseline;gap:8px;color:var(--ink-mute);font-size:var(--fs-xs);letter-spacing:.08em;margin-bottom:8px;font-weight:600}
+.ex .step{display:flex;gap:10px;padding:6px 0;font-size:var(--fs);line-height:var(--lh-read)}
+.ex .step .i{
+  flex:none;width:20px;height:20px;border-radius:50%;background:var(--green-soft);color:var(--green);
+  font-size:var(--fs-xs);display:flex;align-items:center;justify-content:center;margin-top:4px;font-weight:600;
+}
+.kp-card{
+  border:1px solid var(--line);border-radius:var(--r-lg);background:var(--card);
+  padding:14px 16px;margin:10px 0;box-shadow:var(--sh-1);
+  transition:box-shadow var(--t-slow) var(--ease),border-color var(--t-slow) var(--ease);
+}
+.kp-card:hover{box-shadow:var(--sh-2);border-color:var(--line-strong)}
+.kp-card .h{display:flex;align-items:baseline;gap:8px}
+.kp-card .h .nm{font-weight:600;font-size:var(--fs);flex:1;min-width:0}
+.kp-card .def{font-size:var(--fs);line-height:var(--lh-read);margin-top:6px;overflow-wrap:anywhere}
+.kp-card ul{margin:6px 0 0;padding-left:18px;font-size:var(--fs-sm);line-height:var(--lh-read);color:var(--ink-soft)}
+.kp-card li{margin:2px 0}
+
+/* ============ 16. 折叠 / 空态 / toast / 分段 ============ */
+details.fold{
+  border:1px solid var(--line);border-radius:var(--r-lg);background:var(--card);
+  padding:12px 16px;margin:10px 0;box-shadow:var(--sh-1);
+}
+details.fold>summary{cursor:pointer;font-size:var(--fs);color:var(--ink-soft);list-style:none;padding:6px 0;margin:-6px 0;min-height:40px;transition:color var(--t-fast) var(--ease)}
+details.fold>summary:hover{color:var(--ink)}
+details.fold>summary::-webkit-details-marker{display:none}
+details.fold>summary:before{content:"▸ ";color:var(--ink-mute)}
+details.fold[open]>summary:before{content:"▾ "}
+details.fold .body{margin-top:10px;font-size:var(--fs);line-height:var(--lh-read)}
+.empty{
+  max-width:var(--maxw);margin:40px auto;padding:0 20px;text-align:center;
+  color:var(--ink-soft);font-size:var(--fs);line-height:var(--lh-read);
+}
+.toast{
+  position:fixed;left:50%;bottom:calc(var(--tabh) + 18px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(6px);
+  background:var(--ink);color:var(--paper);border-radius:var(--r);padding:10px 16px;font-size:var(--fs-sm);z-index:60;
+  opacity:0;transition:opacity var(--t-slow) var(--ease),transform var(--t-slow) var(--ease);
+  pointer-events:none;max-width:88vw;text-align:center;box-shadow:var(--sh-3);
+}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.seg{display:inline-flex;border:1px solid var(--line-strong);border-radius:var(--r-pill);overflow:hidden;background:var(--card);padding:2px;gap:2px;box-shadow:var(--sh-1)}
+.seg button{
+  border:0;background:none;font:inherit;font-size:var(--fs-sm);line-height:1.5;padding:9px 13px;cursor:pointer;
+  color:var(--ink-soft);border-radius:var(--r-pill);transition:all var(--t-fast) var(--ease);white-space:nowrap;
+}
+.seg button:hover{color:var(--ink);background:var(--paper-2)}
+.seg button.on{background:var(--green);color:#fff;box-shadow:0 1px 2px rgba(20,82,58,.28)}
+/* 同一排里「网络 / 分层」只是导图的画法选项，不是另一个视图：用下划线标，不点第二块绿底。
+   它们和「导图」并排时若都用 .on 绿底，孩子会以为同时选了两个（视图是单选）。 */
+.seg button.seg-sub{color:var(--ink-soft);font-weight:500}
+.seg button.seg-sub.on{background:transparent;color:var(--green-strong);box-shadow:inset 0 -2px 0 var(--green)}
+.seg button.seg-sub.on:hover{background:var(--paper-2)}
+select{
+  border:1px solid var(--line-strong);border-radius:var(--r);padding:6px 9px;font:inherit;
+  font-size:var(--fs-sm);background:var(--card);color:var(--ink);box-shadow:var(--sh-1);
+}
+select:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px var(--green-soft)}
+input[type=search],input[type=text]{
+  border:1px solid var(--line-strong);border-radius:var(--r);padding:8px 12px;font:inherit;
+  font-size:var(--fs-sm);background:var(--card);color:var(--ink);
+}
+input[type=search]:focus,input[type=text]:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px var(--green-soft)}
+
+/* ============ 17. 动效偏好 / 窄屏微调 ============ */
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:1ms !important;transition-duration:1ms !important}
+}
+@media(max-width:640px){
+  body{font-size:var(--fs)}
+  .wrap{padding:12px 12px 24px}
+  h1{font-size:var(--fs-h2)}
+  .stem{font-size:var(--fs)}
+  .drawer .grid{grid-template-columns:1fr}
+  .statgrid{grid-template-columns:1fr 1fr 1fr}
+}
+@media print{
+  body{background:#fff;padding:0}
+  #tabs,#topbar,.drawer,.scrim,.toast{display:none !important}
+}
+
+/* ============ 18. 图谱页外壳（分簇群岛） ============ */
+/* 这一节只服务 runtime/web/js/views/map.js：控制条贴顶、画布占满、
+   搜索与图例浮在画布上，标题与说明放到画布下面 —— 图谱页的主人是那张图。 */
+.mapwrap{margin:0 0 8px}
+.mapbar{
+  display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+  padding:10px 12px;margin:0 0 10px;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+  box-shadow:var(--sh-1);position:relative;z-index:20;
+  /* 1.8 是正文的阅读行高，工具条不是正文：跟着正文走会让按钮里的字上下各空出一圈。 */
+  line-height:1.5;
+}
+/* The pill clips its own buttons. The "other views" menu has to escape that clip
+   and sit above the canvas, or the click lands on the graph and the view never changes. */
+#map-seg.seg{overflow:visible;position:relative;z-index:21}
+.mapbar-2{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-left:auto}
+.mselect{
+  min-height:40px;max-width:34vw;text-overflow:ellipsis;background:var(--card-2);
+}
+.seg-sm button{padding:9px 11px;font-size:var(--fs-xs)}
+/* 素养多选（第三行）。计数放小字，勾上才变绿；点到 0 个的素养直接禁用，
+   否则勾了它整张图会空，看着像坏了。 */
+.mapbar-3{display:flex;flex-wrap:wrap;gap:8px;align-items:center;width:100%}
+.seg-cp{flex-wrap:wrap;border-radius:var(--r-lg)}
+.seg-cp button i{font-style:normal;font-size:var(--fs-xs);opacity:.6;margin-left:4px}
+.seg-cp button.on i{opacity:.9}
+.seg-cp button[disabled]{opacity:.38;cursor:default}
+.cp-lbl{font-size:var(--fs-xs);color:var(--ink-soft);display:inline-flex;align-items:baseline;gap:6px}
+.cp-lbl i{font-style:normal;font-size:var(--fs-xs);color:var(--ink-faint)}
+.cp-reset{
+  border:1px dashed var(--line-strong);background:none;font:inherit;font-size:var(--fs-xs);
+  color:var(--ink-soft);border-radius:var(--r-pill);padding:5px 10px;cursor:pointer;
+}
+.cp-reset:hover{color:var(--ink);border-color:var(--ink-soft)}
+/* 骨架视图的节点就是节，没有层数可言：整组按钮收起，别让它假装可用 */
+.seg.is-off{display:none}
+.btn-icon{
+  padding:7px 12px;font-size:var(--fs-sm);border-radius:var(--r-pill);
+  border:1px solid var(--line-strong);background:var(--card);color:var(--ink-soft);
+  cursor:pointer;font-family:inherit;transition:all var(--t-fast) var(--ease);
+}
+.btn-icon:hover{border-color:var(--green);color:var(--green-strong);background:var(--card-2)}
+
+.mapstage{position:relative;margin:0 0 10px}
+/* 章图顶上那句固定的读图提示：不解释一句，孩子会把「书上的先后」当成「必须先学」 */
+.map-hint{
+  position:absolute;left:50%;top:8px;transform:translateX(-50%);z-index:3;
+  font-size:var(--fs-sm);color:var(--ink-soft);background:rgba(255,255,255,.86);
+  padding:4px 12px;border-radius:var(--r-pill);border:1px solid var(--line);
+  pointer-events:none;white-space:normal;max-width:calc(100% - 24px);
+  text-align:center;line-height:var(--lh-ui);
+}
+.map-hint:empty{display:none}
+/* 窄屏：提示原来居中浮在画布顶上，和左上角搜索框在同一高度线上，430 宽时相交 73%。
+   搜索框必须留在左上（它跟着视线走），所以把提示让到画布底部。 */
+@media(max-width:760px){
+  .map-hint{top:62px;left:10px;right:10px;transform:none;max-width:none}
+}
+/* 标签是能点的东西，手指要 40px：手机上标签原来只有 30px 高，实测 6/35 个点不中。 */
+@media(max-width:760px){
+  /* 40px 是手指的尺子；字号跟正文一档，窄屏上标签就是内容本身 */
+  .map-callouts .call-chip{min-height:40px;padding:8px 10px;font-size:var(--fs-sm)}
+  /* 「收起」原来固定在 bottom:55vh，跟顶部搜索框在窄屏上擦边重叠；
+     窄屏把它放到搜索框正下方，一上一下互不相压。 */
+  .mapwrap.is-mind .map-close{position:absolute;top:56px;right:10px;bottom:auto;z-index:9}
+}
+/* 悬停提示：一根线「凭什么连」比线本身重要，所以先给依据来路，再给「点一下看讲解」 */
+.map-tip{
+  position:absolute;z-index:6;max-width:240px;padding:7px 10px;
+  font-size:var(--fs-xs);line-height:var(--lh-ui);color:var(--ink);
+  background:var(--card);border:1px solid var(--line-strong);border-radius:var(--r-md);
+  box-shadow:var(--sh-2);pointer-events:none;
+}
+.map-tip[hidden]{display:none}
+.map-tip b{display:block;font-size:var(--fs-xs);margin-bottom:2px}
+.map-tip-1{color:var(--ink-soft)}
+.map-tip-2{color:var(--ink-faint);font-size:var(--fs-xs);margin-top:2px}
+.mapstage #cy{
+  width:100%;height:min(66vh,620px);border-radius:var(--r-lg);
+  background:var(--card);
+  border:1px solid var(--line);
+  box-shadow:var(--sh-2);
+  background-image:
+    radial-gradient(circle at 50% 38%, color-mix(in oklab,var(--green-soft) 50%,transparent), transparent 72%),
+    radial-gradient(color-mix(in oklab,var(--line) 60%,transparent) 1px, transparent 1px);
+  background-size:auto,18px 18px;
+}
+.mapsearch{
+  position:absolute;left:10px;top:10px;z-index:3;
+  display:flex;align-items:center;gap:8px;max-width:calc(100% - 20px);
+  background:color-mix(in oklab,var(--card) 88%,transparent);
+  border:1px solid var(--line-strong);border-radius:var(--r-pill);
+  padding:3px 12px 3px 4px;box-shadow:var(--sh-2);
+  backdrop-filter:blur(6px);
+}
+.mapsearch input[type=search]{
+  border:0;background:none;box-shadow:none;padding:10px;min-width:150px;max-width:46vw;
+  min-height:40px;font-size:var(--fs-sm);
+}
+.mapsearch input[type=search]:focus{outline:none;box-shadow:none}
+.mapsearch #map-q-tip{
+  font-size:var(--fs-xs);color:var(--ink-soft);white-space:nowrap;
+  max-width:44vw;overflow:hidden;text-overflow:ellipsis;
+}
+.mapsearch #map-q-tip:empty{display:none}
+
+/* 搜索结果面板：只给「回车逐个看」等于让人盲试，先摆一张清单再让人点 */
+.map-q-res{
+  position:absolute;left:0;top:calc(100% + 6px);z-index:7;
+  width:min(340px,86vw);max-height:284px;overflow:auto;
+  background:var(--card);border:1px solid var(--line-strong);border-radius:var(--r-md);
+  box-shadow:var(--sh-2);padding:4px;
+}
+.map-q-res[hidden]{display:none}
+.q-hit{
+  display:grid;grid-template-columns:auto 1fr;gap:2px 8px;align-items:baseline;
+  width:100%;text-align:left;padding:6px 8px;border:0;background:none;
+  font-family:inherit;font-size:var(--fs-sm);color:var(--ink);cursor:pointer;border-radius:var(--r-sm);
+}
+.q-hit:hover{background:var(--card-2)}
+.q-k{font-size:var(--fs-xs);color:var(--green-strong);background:var(--green-soft);border-radius:var(--r-pill);padding:1px 6px}
+.q-t{font-weight:600}
+.q-w{grid-column:2;font-size:var(--fs-xs);color:var(--ink-faint)}
+.q-sum,.q-none{font-size:var(--fs-xs);color:var(--ink-faint);padding:6px 8px}
+/* 图例：画布下方独立一行（原来 absolute 浮在画布上，1280 下直接压住节点，
+   430 下吃掉画布底部 154px）。静态之后它随画布自然下移，任何宽度都不会盖住节点。 */
+.maplegend{
+  position:static;margin:8px 0 0;
+  display:flex;flex-wrap:wrap;gap:6px 12px;
+  padding:8px 12px;border-radius:var(--r);
+  background:var(--card-2);
+  border:1px solid var(--line);
+  /* 图例是「照着图读」的字，不是脚注：13px 在 430 宽下要和画布里的节点标签抢注意力，太小 */
+  font-size:var(--fs-sm);color:var(--ink-soft);
+}
+.maplegend:empty{display:none}
+.maplegend .k{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.maplegend .sw{width:14px;height:9px;border-radius:var(--r-sm);display:inline-block;flex:none}
+/* 图例里的「线」样本：实线/虚线各一种，说明先修与教材顺序不是一回事 */
+.maplegend .sw.sw-line{height:2px;border-radius:var(--r-pill);align-self:center}
+/* 只带 .sw 的 span 会拿到 14x9 的圆点尺寸，单用 .sw-line 更会塌成 0 宽；
+   两种写法都要能画出一条 18px 短线。 */
+.maplegend .sw-line{display:inline-block;width:18px;height:2px;border-radius:var(--r-pill);vertical-align:middle;margin-right:5px;flex:none;align-self:center}
+/* 条目里塞进 <i>/<b> 后行高会把点/线样本顶歪：条目内统一 1.15 行高 */
+.maplegend .k{line-height:var(--lh-display)}
+.maplegend .k b,.maplegend .k i{font-style:normal;line-height:var(--lh-display)}
+/* 注脚是一整句补充说明（其余图例项保持 nowrap），占满一行自己折行。
+   它同时带 .k（inline-flex），里面 <b> 就成了 flex 项：430 宽下被挤到 24px，
+   「规则推断」「挂点推断」逐字竖排成一列 —— 所以退回块级文本流。
+   字号降一档、颜色退到 --ink-mute：和图例项同号同色会被当成第八个图例项。 */
+.maplegend .k-note{display:block;flex:1 0 100%;white-space:normal;font-size:var(--fs-xs);color:var(--ink-mute);line-height:var(--lh-ui)}
+
+#app.view-in{animation:fade-in var(--t-fast) ease both}
+.map-lead{margin:2px 0 4px;font-size:var(--fs-sm);line-height:var(--lh-read)}
+.map-note{margin:0 0 8px;font-size:var(--fs-xs);color:var(--ink-mute);line-height:var(--lh-read)}
+
+.map-detail-card{
+  border:1px solid var(--line);border-radius:var(--r-lg);background:var(--card);
+  padding:14px 16px;margin:10px 0 4px;box-shadow:var(--sh-2);
+  animation:fade-in var(--t-slow) var(--ease);
+}
+.map-detail-card .card-h{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.map-detail-card .card-h h2{font-size:var(--fs);font-weight:600;letter-spacing:-.01em;margin:0;flex:1;min-width:0}
+.map-detail-card .divider{margin:12px 0 2px}
+.map-detail-card .kv{font-size:var(--fs-sm)}
+.map-detail-card .btn-row{margin-top:12px}
+
+/* 详情面板 v2：选中一个点，这张卡要一次讲完「它是什么 / 从哪来 / 到哪去 / 配哪些方法 / 踩哪些坑 / 有哪些题」。
+   只有三行摘要等于没讲 —— 旧仓 explore 的详情抽屉之所以看着清楚，就是因为它把这六件事都摊开了。 */
+.dd-h{display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap}
+.dd-h h2{font-size:var(--fs);font-weight:600;line-height:var(--lh-ui);margin:0;flex:1;min-width:0;letter-spacing:-.01em;text-wrap:balance}
+.dd-kind{
+  flex:none;font-size:var(--fs-xs);font-weight:750;letter-spacing:.06em;padding:3px 8px;border-radius:var(--r-pill);
+  background:var(--green-soft);color:var(--green-strong);
+}
+.dd-kind.k-skill{background:var(--amber-soft);color:var(--amber)}
+.dd-kind.k-mis{background:var(--red-soft);color:var(--red)}
+.dd-kind.k-th{background:var(--dom-sta-soft);color:var(--dom-sta)}
+.dd-pills{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0 0}
+.dd-pills .pill{
+  font-size:var(--fs-xs);padding:3px 9px;border-radius:var(--r-pill);
+  background:var(--paper-2);color:var(--ink-soft);border:1px solid var(--line);
+}
+.dd-pills .pill.ok{background:var(--green-soft);color:var(--green-strong);border-color:transparent}
+.dd-pills .pill.warn{background:var(--amber-soft);color:var(--amber);border-color:transparent}
+/* 知识点整页：同七段放进整页时放宽一点，别像右栏那样窄 */
+.detail-page{max-width:760px}
+.detail-page h1{margin:2px 0 10px}
+.detail-page .dd-block{margin:18px 0 0;padding-top:12px;border-top:1px solid var(--line)}
+.detail-page .dd-block:first-of-type{border-top:0;padding-top:0}
+.detail-page .dd-def{font-size:var(--fs)}
+.detail-page .dd-block ul{font-size:var(--fs-sm)}
+/* 知识点七段的骨架块。左边缘那条 3px 色条由 .k-* 注入 --k：六类内容（定义 / 关系 /
+   方法 / 易错 / 依据 / 练习）各一色，扫一眼就知道这一段在讲什么。没挂 kind 类时
+   --k 取不到值即 transparent，条子自然不出现。padding-left 是给条子让出的位置。 */
+.dd-block{margin:13px 0 0;padding-left:0;position:relative}
+/* 只有真挂了 kind 类才为色条让出 10px。没挂类时这 10px 是纯错位：段块比 h1 和卡片
+   内缘右移 10px，一页里出现三种左边缘（h1 / 段标题 / 正文），越读越散。
+   色条是加分项，不该让正文陪它错位。 */
+.dd-block:is(.k-def,.k-rel,.k-method,.k-risk,.k-evi,.k-prac){padding-left:10px}
+.dd-block::before{content:"";position:absolute;left:0;top:2px;bottom:2px;width:3px;border-radius:var(--r-pill);background:var(--k,transparent)}
+.dd-block.k-def{--k:var(--dom-num)}
+.dd-block.k-rel{--k:var(--dom-geo)}
+.dd-block.k-method{--k:var(--amber)}
+.dd-block.k-risk{--k:var(--red)}
+.dd-block.k-evi{--k:var(--dom-sta)}
+.dd-block.k-prac{--k:var(--green)}
+/* 段标题踩过两次倒挂：① 原始 11.5px + --ink-mute，比它管辖的正文（.dd-def、列表）还小还淡，
+   读者第一眼看到的是「一段小灰字」；② 提到 --fs-sm（14.5）后仍比 .dd-def 的 16.5 小 2px，
+   段标题听命于正文，层级还是反的（设计评审 A5，kp 屏实测 sec-title 141 字 14.5 / stem-def 406 字 16.5）。
+   现在与正文同档 16.5 —— 「这一段叫什么」必须比「这一段说什么」更重更大，
+   层级靠 750 字重、.06em 字距和左侧色条区分，不再靠字号。 */
+.dd-block>h3{
+  margin:0 0 6px;font-size:var(--fs);font-weight:750;letter-spacing:.06em;color:var(--ink);
+  display:flex;align-items:baseline;gap:7px;
+}
+.dd-block>h3 em{font-style:normal;font-weight:400;letter-spacing:0;color:var(--ink-faint);font-size:var(--fs-xs)}
+.dd-def{font-size:var(--fs);line-height:var(--lh-read);color:var(--ink)}
+.dd-block ul{margin:0;padding-left:17px;font-size:var(--fs);line-height:var(--lh-read);color:var(--ink-soft)}
+.dd-block li{margin:3px 0}
+.dd-rel{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+/* 430 宽下两栏各 176px：rel-btn 里一句「等腰三角形是轴对称图形，顶角平分线…」折成
+   9 行、单卡高到 141px，读起来像竖排。手机上关系链改单列，先得会在上、学完接着在下；
+   768 以上保持并排（两栏各 300+，一句两三行）。 */
+@media(max-width:640px){.dd-rel{grid-template-columns:1fr}}
+.dd-col{background:var(--card-2);border:1px solid var(--line);border-radius:var(--r);padding:9px 10px;min-width:0}
+/* 二级标题（关系两栏的「前置 / 后继」）比 .dd-block>h3 再退一档：同字号、--ink-soft，
+   靠颜色而不是靠 0.5px 的字号差分层 */
+.dd-col>h4{
+  margin:0 0 6px;font-size:var(--fs-sm);font-weight:750;letter-spacing:.06em;color:var(--ink-soft);
+  display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;
+}
+.dd-col>h4 em{font-style:normal;font-weight:400;color:var(--ink-faint);font-size:var(--fs-xs);letter-spacing:0}
+.dd-col .none{font-size:var(--fs-xs);color:var(--ink-faint);padding:3px 0}
+.rel-btn{
+  display:flex;align-items:center;gap:6px;width:100%;text-align:left;font:inherit;font-size:var(--fs);min-height:40px;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-sm);padding:5px 8px;margin:4px 0;
+  cursor:pointer;color:var(--ink);transition:all var(--t-fast) var(--ease);
+}
+.rel-btn:hover{border-color:var(--green);background:var(--green-soft);color:var(--green-strong)}
+.rel-btn i{font-style:normal;flex:none;font-size:var(--fs-sm);color:var(--ink-faint);font-variant-numeric:tabular-nums}
+/* 关系按钮的名称允许换行，但不截断：知识点名字常是「单项式÷单项式：系数相除、
+   同底数幂相除」这种长句，截成一行只剩半句，等于没说。
+   这里不能用 -webkit-line-clamp：它会把容器里每个子 span 都 box 化，而 KaTeX
+   的公式是一层套一层的 span，结果公式被竖排成一行一个符号（实测 144px 高、
+   占满整行的空块），看起来就是「一有公式就换行、显示很不全」。 */
+.rel-btn span{flex:1;min-width:0;line-height:var(--lh-ui)}
+.dd-fold{margin:6px 0 0;background:var(--card-2);border:1px solid var(--line);border-radius:var(--r)}
+.dd-fold>summary{
+  cursor:pointer;list-style:none;padding:8px 10px;font-size:var(--fs-sm);font-weight:600;
+  display:flex;gap:7px;align-items:baseline;flex-wrap:wrap;
+}
+.dd-fold>summary::-webkit-details-marker{display:none}
+/* summary 是 flex：里面的公式必须再包一层，否则每个 KaTeX span 都成独立 flex item，
+   公式与中文各自换行。这层 span 负责内联排版，flex 只用来把徽章顶到右边。 */
+.dd-fold>summary>.sum-n{flex:1;min-width:0}
+.dd-fold>summary:before{content:'▸';color:var(--ink-faint);font-size:var(--fs-xs)}
+.dd-fold[open]>summary:before{content:'▾'}
+/* 标题文字占满两行时，分类徽章不要被挤到第三行去 */
+.dd-fold>summary em{font-style:normal;font-weight:400;font-size:var(--fs-xs);color:var(--ink-faint);margin-left:auto;flex:none;white-space:nowrap}
+.dd-fold .in{padding:0 10px 10px}
+/* 思想详情里「按册看方法」：一册一组，组头是册名与条数。
+   思想是跨册的，不分组就会变成一串看不出分布的长按钮列表 */
+.dd-grp{margin:8px 0 0}
+.dd-grp-t{font-size:var(--fs-xs);color:var(--ink-faint);margin:0 0 4px;padding-bottom:3px;border-bottom:1px dashed var(--line)}
+.dd-grp .rel-btn{margin:0 4px 4px 0}
+.dd-step{display:flex;gap:8px;font-size:var(--fs-sm);line-height:var(--lh-read);padding:3px 0;color:var(--ink-soft)}
+.dd-step b{
+  flex:none;width:18px;height:18px;border-radius:50%;background:var(--green-soft);color:var(--green-strong);
+  font-size:var(--fs-xs);display:flex;align-items:center;justify-content:center;margin-top:4px;font-weight:750;
+}
+/* 「有意义的条件只由分母决定」这类是解释句，不是标签 */
+.dd-step .why{display:block;color:var(--ink-mute);font-size:var(--fs-sm);line-height:var(--lh-read)}
+/* 题卡用 .dd-qc，和下面「方法详情里的例题条」.dd-q 分开：
+   两个组件曾经同名，后定义的胶囊样式（inline-block / padding 3px 8px / 圆角 999px）
+   把题卡压成了小药丸，框包不住里面的根号。 */
+.dd-qc{display:block;border:1px solid var(--line);border-radius:var(--r);padding:9px 10px;margin:6px 0;background:var(--card-2)}
+.dd-qc .qstem{font-size:var(--fs);line-height:var(--lh-read);color:var(--ink);white-space:pre-wrap}
+.dd-qc .meta{display:flex;gap:6px;align-items:center;margin-top:7px;font-size:var(--fs-xs);color:var(--ink-mute);flex-wrap:wrap}
+/* 题卡里的答案默认折叠：先看题、自己想一遍，再点开对答案 */
+.dd-ans{margin-top:7px!important;background:var(--card)!important}
+.dd-ans>summary{display:flex;align-items:center;min-height:40px;padding:5px 9px!important;font-size:var(--fs-xs)!important;color:var(--green-strong);font-weight:600}
+.dd-ansbody{padding:2px 10px 9px;font-size:var(--fs);line-height:var(--lh-read);color:var(--ink-soft)}
+.dd-ansbody .katex{font-size:1em}
+/* KaTeX 自带 .katex{font:normal 1.21em …}：正文 13.5px 时行内公式会顶到 16.3px，
+   根号比旁边汉字高出一大截。行内压到 1em（与正文字号齐平，15px 正文就是 15px 公式），
+   显示式单独留 1.1em，免得连 $$…$$ 一起被压小。 */
+/* KaTeX 的 .katex 是 display:inline（默认），里面的 .vlist/.strut 是 inline-block：
+   容器一挤（比如 .rel-btn 这种 flex 里 130px 的公式塞进 154px 还有前后文字），
+   公式会被当成可拆的行内内容，**从中间断成两行** —— 师生看到的就是「一半公式掉到下一行」。
+   实测 kp 页 10 处、section 页 13 处都是这个。
+   改成 inline-block 让整条公式成为一个原子：容器放不下就整条掉行 / 溢出，
+   但不会再被劈开。基线与 inline-block 最后一行一致，不会把公式顶高。 */
+.katex{font-size:1em;display:inline-block}
+.katex-display>.katex{font-size:1.1em}
+/* 根号观感。先分清是谁的账：out/katex_ref.html 里只挂官方 katex.min.js/css、不挂本项目
+   CSS，\sqrt{a} 量到的 SVG 高度同样是 1.08em（16.3px 字号时 17.64px）——所以「根号太大」
+   不是我们压坏了，是 KaTeX 的画法：横线画在 1.08em 高的顶边上，而字母墨迹只有 0.43em，
+   中间空出 0.65em，看着就是「根号很高、字母贴着下沿」。
+   压多少不能一刀切，由「根号里最高那点墨迹」决定（以底边为原点压，钩子底始终坐在基线上）：
+   · 纯字母/数字：墨迹顶约 0.67em，压到 .80 后横线落在 0.86em，缝隙约 3px，接近课本比例
+   · 里面带上标（\sqrt{a^2+b^2} 也是 1.08em 这一档）上标头顶 0.84em → 只能压 .93，
+     再多就把横线压到上标上；用 :has(.msupsub) 区分，不认 :has 的浏览器退回 KaTeX 原样
+   · 1.28em 那一档（\sqrt{(x-2)^2}）内容更高（墨迹顶约 0.97em），压 .88 后缝隙约 2px
+   KaTeX 升级后算出的高度变了，这些选择器自然不匹配，版面回到默认，不会坏。 */
+/* 默认值不许挂在高阶选择器上：`:not(:has(...))` 在旧内核里整条作废，根号会退回 KaTeX 原样——
+   于是我截图是对的、用户在同一个页面上看到的却是旧的，谁也没法自证。所以 1.08em 这一档无条件
+   先压 .80；「里面有上下标、不能再压」这种收窄，才放进 @supports 里。 */
+/* 根号不再压缩，回到 KaTeX 原生比例。
+   走过一段弯路，记下来：先用 scaleY 把根号压矮（.88 → .80 → .62），压的是「整条根号弧」——
+   横线跟着降，但斜钩也一起变矮变短，形状被压扁，看着不像课本上的根号。字体加载、字号都正常，
+   KaTeX 画出来的 1.08em 就是 TeX 的标准画法（横线留出上标的空），我们改不动它的形状，也不该改。
+   真正会让它显得「大」的是行内公式字号：这里已经在上面统一成 1em（与正文同号）。
+   若仍嫌比例不对，调 `.katex{font-size}` 一格即可，别再动 sqrt 的 svg。 */
+.dd-qnote{margin-top:7px;padding-top:7px;border-top:1px dashed var(--line);font-size:var(--fs-xs);color:var(--ink-mute)}
+.dd-note{font-size:var(--fs-xs);color:var(--ink-mute);line-height:var(--lh-read);margin:2px 0 4px}
+/* 素养（第 5 段）：一行一项，名称靠左、条数靠右，来路写在第二行小字 */
+.dd-cp{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;padding:7px 0;border-bottom:1px dashed var(--line)}
+.dd-cp:last-of-type{border-bottom:0}
+.dd-cp b{font-size:var(--fs-sm);color:var(--ink);font-weight:600}
+.dd-cp-n{font-size:var(--fs-xs);color:var(--ink-mute);margin-left:auto}
+.dd-cp-via{flex:0 0 100%;font-size:var(--fs-sm);color:var(--ink-mute);line-height:var(--lh-ui)}
+/* 「再往前 N 个」折叠里的小按钮：一行一个，比主关系按钮更紧 */
+.dd-more{margin-top:4px;background:transparent;border-style:dashed}
+.dd-more>summary{padding:4px 8px;font-size:var(--fs-xs);font-weight:400;color:var(--ink-mute);
+  display:flex;align-items:center;min-height:40px}
+/* 折叠行 32px 高、手指点不准（视觉断言 TAP 实测 348×31）。40px 是手指的尺子，
+   文字档也不例外：这一行本来就是「点开看更多」，是一个按钮。 */
+/* 折叠里列的是「间接关系」的整句定义（如「乘方：求 n 个相同因数的积的运算…」），
+   是正文，跟主关系按钮同一档；只有 summary 那一行仍按标签档。 */
+.dd-more .rel-btn{font-size:var(--fs-sm);padding:4px 7px;margin:3px 0}
+.dd-empty{font-size:var(--fs-sm);line-height:var(--lh-read);color:var(--ink-mute)}
+
+/* 宽屏改两栏：图在左、讲解在右，边看图边读解释，不用来回滚（旧仓三栏的要点在这里） */
+@media(min-width:1080px){
+  .mapwrap{
+    display:grid;grid-template-columns:minmax(0,1fr) 404px;
+    grid-template-areas:"bar bar" "stage detail" "lead detail" "note detail";
+    gap:0 16px;align-items:start;
+  }
+  .mapbar{grid-area:bar}
+  .mapstage{grid-area:stage}
+  .map-lead{grid-area:lead}
+  .map-note{grid-area:note}
+  #map-detail{
+    grid-area:detail;position:sticky;top:12px;
+    max-height:calc(100vh - 108px);overflow:auto;scrollbar-width:thin;
+    padding-right:2px;margin-top:0;
+  }
+  /* 讲解没打开时右栏不存在：全景档要的是「一屏看到六册」 */
+  .mapwrap.is-nodetail{
+    grid-template-columns:minmax(0,1fr);
+    grid-template-areas:"bar" "stage" "lead" "note";
+  }
+  #map-detail .map-detail-card{margin-top:0}
+  .dd-rel{grid-template-columns:1fr}
+  /* 阅读壳打开时右栏让位：同一份讲解不许同时出现两块（右栏 404px 会被 78vw 的壳压在底下） */
+  .mapwrap.is-reading{grid-template-columns:minmax(0,1fr);grid-template-areas:"bar" "stage" "lead" "note"}
+  .mapwrap.is-reading #map-detail{display:none}
+}
+
+/* 窄屏：讲解是从底部升起的一层（spec 4.2），图留在上层可见，关掉回到图。
+   旧做法「讲解在图下方、靠滚动阅读」在窄屏上等于把图滚没了。 */
+@media(max-width:1079px){
+  #map-detail:not(:empty){
+    position:fixed;left:0;right:0;bottom:0;z-index:40;
+    max-height:55vh;overflow:auto;scrollbar-width:thin;
+    background:var(--card);border-top:1px solid var(--line-strong);
+    border-radius:var(--r-lg) var(--r-lg) 0 0;box-shadow:0 -10px 28px rgba(12,26,36,.18);
+    padding:4px 12px 14px;margin:0;
+  }
+  #map-detail:not(:empty) .map-detail-card{margin:0;border:0;box-shadow:none;padding:6px 0 0}
+  .map-close{
+    display:inline-flex;align-items:center;position:fixed;right:12px;
+    bottom:calc(55vh + 8px);z-index:41;
+    min-height:40px;font-size:var(--fs-xs);padding:0 12px;border-radius:var(--r-pill);
+    background:var(--card);color:var(--ink-soft);border:1px solid var(--line-strong);
+    box-shadow:var(--sh-1);
+  }
+}
+.map-close[hidden]{display:none}
+#map-detail.is-hidden{display:none}
+/* 阅读壳开着时右栏一律让位：宽屏是 404px 侧栏，窄屏是从底部升起的那一层，
+   两处都得收，否则同一份讲解在屏幕上出现两次 */
+.mapwrap.is-reading #map-detail{display:none}
+.mapwrap.is-reading .mapsearch,
+.mapwrap.is-reading .map-close{display:none}
+/* 其他视角：不再是并列的五个按钮，收进「其他视角」里 */
+.seg-more{display:inline-block;position:relative}
+.seg-more>summary{
+  display:inline-flex;align-items:center;min-height:40px;
+  list-style:none;cursor:pointer;font-size:var(--fs-xs);color:var(--ink-soft);
+  padding:0 11px;border:1px solid var(--line);border-radius:var(--r-pill);background:var(--card);
+}
+.seg-more>summary::-webkit-details-marker{display:none}
+.seg-more[open]>summary{border-color:var(--line-strong);color:var(--ink)}
+.seg-more-list{
+  position:absolute;left:0;top:calc(100% + 6px);z-index:40;
+  display:flex;flex-direction:column;gap:4px;min-width:132px;
+  background:var(--card);border:1px solid var(--line-strong);border-radius:var(--r);
+  box-shadow:var(--sh-2);padding:6px;
+}
+.seg-more-list button{
+  display:flex;align-items:center;min-height:40px;text-align:left;font-size:var(--fs-sm);padding:6px 9px;border-radius:var(--r-sm);
+  background:transparent;border:0;color:var(--ink-soft);cursor:pointer;
+}
+.seg-more-list button:hover{background:var(--card-2)}
+.seg-more-list button.on{background:var(--green-soft);color:var(--green-strong);font-weight:600}
+
+.mapwrap.is-mind{display:block;position:relative}
+.mapwrap.is-mind .map-lead,
+.mapwrap.is-mind #map-cps,
+.mapwrap.is-mind .map-note{display:none}
+/* mind 档画的线最多（先修实线/虚线、教材顺序箭头、方法权重），藏掉图例等于让读者自己猜。
+   这里只管字距，位置由基础规则决定（静态、画布下方），不再靠 bottom 偏移躲 tab。 */
+.mapwrap.is-mind .maplegend{
+  display:flex;padding:6px 10px;gap:4px 10px;
+}
+.maplegend .k-noarrow{font-style:normal;color:var(--ink-faint);margin-left:2px}
+.maplegend .k-dep{color:var(--ink-mute)}
+.maplegend .k-dep b{font-weight:750}
+.maplegend .dep-m{color:var(--dom-geo)}
+.maplegend .dep-r{color:var(--dom-num)}
+.maplegend .dep-sk{color:var(--amber)}
+.mapwrap.is-mind .mapstage #cy{
+  height:calc(100vh - 178px);min-height:560px;
+  background:#f5f8fc;
+  background-image:none;
+}
+.thought-bar[hidden]{display:none !important}
+.mapwrap.is-mind .thought-bar{
+  display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+  margin:2px 0 8px;padding:0 4px;
+}
+.thought-bar .tb-lbl{font-size:var(--fs-xs);font-weight:750;color:#9f1239;margin-right:2px}
+.thought-bar .tb-item{
+  display:inline-flex;align-items:center;gap:6px;min-height:40px;
+  border:1px solid #f3d0d4;background:#fff;color:#9f1239;
+  border-radius:var(--r-pill);padding:0 12px 0 10px;font-size:var(--fs-sm);cursor:pointer;
+}
+.thought-bar .tb-item i{
+  width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;
+  border-bottom:8px solid #e23d4a;
+}
+.thought-bar .tb-item.on{background:#fff1f2;border-color:#e23d4a;font-weight:750}
+.mapwrap.is-mind #map-detail{
+  position:absolute;top:58px;right:14px;width:min(460px,42vw);
+  max-height:calc(100vh - 136px);z-index:8;margin:0;overflow:auto;
+  background:#fff;border:1px solid #e4ebf3;border-radius:var(--r-lg);
+  box-shadow:0 14px 40px rgba(16,32,51,.16);
+  padding:16px 18px 22px;
+}
+.mapwrap.is-mind #map-detail.is-hidden{display:none}
+/* 手机/窄屏上右栏那条 min(460px,42vw) 只剩 180px：字被挤成一列，还浮在画布中间盖住图。
+   窄屏改成排在画布下面的一整块（不浮层），点完自动滚到它——图不被遮，字也不用挤。 */
+@media(max-width:900px){
+  .mapwrap.is-mind #map-detail{
+    position:static;width:auto;max-width:none;max-height:none;margin:10px 0 0;
+    border:1px solid var(--line);border-radius:var(--r-md);box-shadow:none;
+    padding:12px 14px 16px;overflow:visible;
+  }
+}
+.map-key{display:none}
+.mapwrap.is-mind .map-key{
+  display:flex;gap:14px;flex-wrap:wrap;position:static;margin:10px 0 0;
+  background:var(--card-2);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:6px 12px;font-size:var(--fs-xs);color:#3d4c5f;
+}
+/* 它原先是浮在画布左下的胶囊：1280 宽实测压住图谱节点，又和下面那条图例叠在一起
+   （map-key y=846 h=37 正好落在 legend 779–895 里）。DOM 里已经排到画布之后，
+   就跟着页面走，谁都不挡；窄屏那条 @media 也不必再写一遍。 */
+.mapwrap.is-layers .map-key{display:none}
+.map-key .mk{display:inline-block;width:9px;height:9px;margin-right:5px;vertical-align:-1px;border:1.5px solid #fff;box-shadow:0 0 0 1px rgba(16,32,51,.25)}
+.map-key .mk-ch{background:#f0b429;transform:rotate(45deg);width:11px;height:11px}
+.map-key .mk-sn{background:#f6e2a4;transform:rotate(45deg);width:9px;height:9px;box-shadow:0 0 0 1px #8a5a00}
+.map-key .mk-kp{background:#2f7cf6;transform:rotate(45deg);width:8px;height:8px}
+.map-key .mk-sk{background:#17a34a;border-radius:50%}
+.map-key .mk-ext{background:#e08a2e;border-radius:50%}
+.map-key .mk-oly{background:#7c3aed;border-radius:50%}
+.map-key .mk-th{background:#e23d4a;clip-path:polygon(50% 0,100% 100%,0 100%);border:0;box-shadow:none;width:10px;height:9px}
+.mapwrap.is-layers #cy{visibility:hidden}
+.mapwrap.is-layers .mapsearch,
+.mapwrap.is-layers .map-hint{display:none}
+#map-layers{position:absolute;inset:0;overflow:auto;background:#f7fafc;border-radius:inherit;z-index:3}
+#map-layers[hidden]{display:none}
+.layers{padding:16px 18px 28px}
+.layers-sub{margin:0 0 12px;font-size:var(--fs-sm);color:var(--ink-soft)}
+.layers-row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;align-items:start}
+.layers-row h3{margin:0 0 8px;font-size:var(--fs-sm);display:flex;gap:8px;align-items:baseline}
+.layers-row h3 em{font-style:normal;font-weight:400;color:var(--ink-mute)}
+.layers-row h3 i{font-style:normal;font-weight:400;font-size:var(--fs-xs);color:var(--ink-faint)}
+.layer-card{display:flex;width:100%;justify-content:space-between;gap:8px;text-align:left;
+  background:#fff;border:1px solid #e3ebf3;border-radius:var(--r-lg);padding:10px 12px;margin:0 0 8px;
+  font-size:var(--fs-sm);color:var(--ink);cursor:pointer}
+.layer-card em{font-style:normal;color:var(--ink-mute);font-size:var(--fs-xs);flex:none}
+.layer-card.on{border-color:#9ec0a8;background:#f3faf6}
+.dd-counts{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 2px}
+.dd-count{
+  flex:1 1 0;min-width:62px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--r-sm);padding:6px 4px;text-align:center;font:inherit;font-size:var(--fs-xs);color:var(--ink-soft);cursor:pointer;
+}
+.dd-count b{display:block;font-size:var(--fs-h3);line-height:var(--lh-display);color:var(--ink);font-weight:750}
+.dd-count:hover{border-color:var(--green)}
+/* 四个计数各走自己那一域的色：前置=几何、后续=代数、方法=琥珀、例题=统计。
+   一展开就四格全绿的话，四色只是噪音。选中态只加粗边框，颜色仍由 data-jump 决定。 */
+.dd-count[data-jump="pre"]{background:color-mix(in oklab,var(--dom-geo) 10%,var(--card));border-color:color-mix(in oklab,var(--dom-geo) 42%,var(--line))}
+.dd-count[data-jump="pre"] b{color:var(--dom-geo)}
+.dd-count[data-jump="post"]{background:color-mix(in oklab,var(--dom-num) 10%,var(--card));border-color:color-mix(in oklab,var(--dom-num) 42%,var(--line))}
+.dd-count[data-jump="post"] b{color:var(--dom-num)}
+.dd-count[data-jump="skill"]{background:color-mix(in oklab,var(--amber) 12%,var(--card));border-color:color-mix(in oklab,var(--amber) 45%,var(--line))}
+.dd-count[data-jump="skill"] b{color:var(--amber)}
+.dd-count[data-jump="q"]{background:color-mix(in oklab,var(--dom-sta) 10%,var(--card));border-color:color-mix(in oklab,var(--dom-sta) 40%,var(--line))}
+.dd-count[data-jump="q"] b{color:var(--dom-sta)}
+.dd-count[data-jump]:disabled{background:var(--card);border-color:var(--line)}
+.dd-count[data-jump]:disabled b{color:var(--ink-faint)}
+.dd-count.on{border-width:2px;padding:5px 3px}
+.dd-count:disabled{cursor:default;opacity:.5}
+.dd-jump{margin:8px 0 4px}
+.mind-chain{margin:0 0 10px;font-size:var(--fs-sm);line-height:var(--lh-ui);color:var(--ink-soft)}
+.mind-picks .rel-btn{display:block;width:100%;text-align:left;margin:0 0 6px}
+@media(max-width:900px){.layers-row{grid-template-columns:1fr 1fr}}
+.mapwrap.is-mind .map-close{position:absolute;top:76px;right:28px;z-index:9}
+.mind-brief .dd-h h2{white-space:normal;overflow-wrap:anywhere;font-size:var(--fs-h2);line-height:var(--lh-ui);margin-top:8px}
+.map-callouts{position:absolute;inset:0;z-index:4;pointer-events:none}
+.map-callouts[hidden]{display:none !important}
+.map-callouts .call-lines{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.map-callouts .call-lines line{stroke-linecap:round}
+.call-chip{
+  position:absolute;z-index:1;max-width:168px;margin:0;padding:4px 8px;
+  font:600 var(--fs-xs)/var(--lh-ui) "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  text-align:left;white-space:normal;overflow-wrap:anywhere;
+  color:#102033;background:#fff;border:1px solid #c5d2e0;border-radius:var(--r-sm);
+  box-shadow:0 4px 14px rgba(16,32,51,.12);cursor:pointer;pointer-events:auto;
+}
+.call-chip.is-hot{max-width:232px;font-weight:750;border-color:#14324f;box-shadow:0 6px 18px rgba(16,32,51,.16)}
+.call-chip.call-kp{border-left:3px solid #2f7cf6}
+.call-chip.call-sk{border-left:3px solid #17a34a}
+.call-chip.call-ext{border-left:3px solid #e08a2e}
+.call-chip.call-oly{border-left:3px solid #7c3aed}
+.call-chip.call-th{border-left:3px solid #e23d4a}
+.unit-h{margin:14px 0 6px;font-size:var(--fs-xs);font-weight:750;letter-spacing:.04em;color:#64748b}
+.sec-head{
+  display:flex;justify-content:space-between;align-items:baseline;gap:8px;
+  width:100%;text-align:left;margin:0 0 6px;padding:8px 10px;
+  background:#fff;border:1px solid #e3ebf3;border-radius:var(--r);
+  font:600 var(--fs-sm)/var(--lh-ui) "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  color:#102033;cursor:pointer;
+}
+.sec-head span{min-width:0;white-space:normal;overflow-wrap:anywhere}
+.sec-head i{font-style:normal;font-size:var(--fs-xs);font-weight:600;color:#64748b;flex:none}
+.sec-head.on{border-color:#2f7cf6;background:#f3f7fd}
+.sec-body{margin:-2px 0 8px;padding:2px 4px 6px 10px;border-left:2px solid #d5e2f2}
+.sec-body .rel-btn i{font-style:normal;font-size:var(--fs-xs);color:#1c8c5a;margin-left:6px}
+.call-chip.call-sec{max-width:184px;border-left:3px solid #1a365d;font-weight:750}
+.call-chip.call-up{max-width:220px;border-left:3px solid #c48a12;font-weight:750;background:#fff8e8}
+.call-chip.call-sec.on{background:#f3f7fd;border-color:#2f7cf6}
+.mind-brief .mind-line{margin:0 0 8px;font-size:var(--fs);line-height:var(--lh-ui);color:var(--ink);white-space:normal;overflow-wrap:anywhere}
+.mind-brief .mind-line b{display:inline-block;min-width:3.2em;color:var(--ink-soft);font-weight:600}
+.mind-brief .mind-def{font-size:var(--fs);line-height:var(--lh-read);margin:12px 0 14px}
+.read-sheet[hidden]{display:none !important}
+.read-sheet{
+  position:fixed;top:0;right:0;bottom:0;z-index:40;
+  width:min(920px,78vw);overflow:auto;background:#fff;
+  border-left:1px solid #e4ebf3;
+  box-shadow:-18px 0 48px rgba(16,32,51,.12);
+  padding:22px 36px 56px;
+}
+.read-bar{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  position:sticky;top:0;background:#fff;padding:4px 0 12px;z-index:1;
+}
+.read-bar span{font-size:var(--fs-sm);font-weight:750;letter-spacing:.08em;color:#64748b}
+.read-loc{margin:0 0 8px;font-size:var(--fs-sm);color:#64748b}
+.read-sheet .dd-h h2{font-size:var(--fs-h1);line-height:var(--lh-ui)}
+.read-sheet .dd-def{font-size:var(--fs-h3);line-height:var(--lh-read)}
+.read-sheet .dd-block ul{font-size:var(--fs);line-height:var(--lh-read)}
+.read-sheet .dd-block>h3{font-size:var(--fs-h3);margin-top:18px}
+/* 手机上阅读壳整幅铺满：78vw 只剩一条缝，字被挤成一列还压在搜索框上 */
+@media(max-width:1079px){
+  .read-sheet{width:100%;border-left:0;box-shadow:none;padding:16px 16px 40px}
+}
+.mapwrap.is-mind #map-detail .map-detail-card{
+  border:0;box-shadow:none;margin:0;padding:0;background:transparent;
+}
+.mapwrap.is-mind .mind-brief .mind-line{font-size:var(--fs);line-height:var(--lh-read)}
+@media(max-width:640px){
+  .mapwrap.is-mind #map-detail{max-height:46vh}
+  .mapbar{padding:8px 10px}
+  /* 两个下拉并排时各约 200px，「第 12 章 二次根式」这类的选中项会被截成「第 1…」。
+     窄屏改成上下两行、各自占满宽，宁可多占一行也要读全。 */
+  .mapbar-2{margin-left:0;width:100%;flex-direction:column;align-items:stretch;gap:6px}
+  .mselect{flex:0 0 auto;width:100%;max-width:none;min-width:0}
+  .mapsearch{right:10px}
+  .mapsearch input[type=search]{min-width:0;flex:1;max-width:none}
+  .maplegend{padding:6px 10px;gap:4px 10px}
+  .mapstage #cy{height:min(58vh,460px)}
+  /* mind 档那条 height:calc(100vh - 178px); min-height:560px 在手机上会顶穿视口：
+     932 高的手机上画布底边到 1027，最后 94px 的节点被切在屏幕外。手机上让它跟随
+     map.js 算出的高度（顶边到视口底还剩多少），下限只留 320（再矮字就看不清）。 */
+  .mapwrap.is-mind .mapstage #cy{min-height:320px}
+}
+
+
+/* ---------- 19. 首页：状态带 / 在读节 / 待改 / 七天柱 ---------- */
+.today-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:0 0 14px}
+.today-stats .st{background:var(--card);border:1px solid var(--line);border-radius:var(--r-sm);
+  padding:10px 12px;box-shadow:var(--sh-1)}
+.today-stats .st b{display:block;font-size:var(--fs-h2);line-height:var(--lh-display);font-variant-numeric:tabular-nums}
+.today-stats .st b.warn{color:var(--amber)}
+.today-stats .st span{font-size:var(--fs-xs);color:var(--ink-mute)}
+@media(max-width:560px){.today-stats{grid-template-columns:repeat(2,1fr)}}
+.cur-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pick-sel{flex:1;min-width:200px;font:inherit;font-size:var(--fs-sm);color:var(--ink);
+  background:var(--card);border:1px solid var(--line-strong);border-radius:var(--r-sm);
+  padding:9px 12px;cursor:pointer}
+.pick-sel:hover{border-color:var(--green)}
+.prog{height:6px;border-radius:var(--r-pill);background:var(--line);overflow:hidden;flex:1;min-width:80px}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--green-strong));border-radius:inherit}
+.prog-line{display:flex;align-items:center;gap:10px;margin:2px 0 12px}
+.prog-line span{white-space:nowrap}
+.wrong-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 0;
+  border-bottom:1px dashed var(--line)}
+.wrong-row:last-of-type{border-bottom:0}
+.wrong-row .t{font-weight:600;font-size:var(--fs)}
+.wrong-row .s{font-size:var(--fs-sm);color:var(--ink-mute);margin-top:2px}
+.spark{display:flex;align-items:flex-end;gap:6px;height:60px}
+.spark i{flex:1;background:var(--line);border-radius:var(--r-sm) var(--r-sm) 0 0;transition:background var(--t-fast)}
+.spark i.on{background:linear-gradient(180deg,var(--green),var(--green-strong))}
+.spark-x{display:flex;gap:6px;margin-top:6px}
+.spark-x span{flex:1;text-align:center;font-size:var(--fs-xs);color:var(--ink-mute)}
+.spark-x span.on{color:var(--green);font-weight:600}
+.spark i{position:relative}
+.spark i b{position:absolute;top:-16px;left:0;right:0;text-align:center;font-size:var(--fs-xs);
+  font-weight:600;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+/* ---------- 19b. 今日页首屏（R3） ----------
+   首屏只回答一件事：今天点哪里开始。改前主按钮离顶 545px（430 宽）——
+   要先翻过 h1、两行导语、2×2 四格统计和一行下拉才看得见它。 */
+.today-lead{margin:2px 0 12px;color:var(--ink-soft);font-size:var(--fs-sm)}
+.ask-which h2{margin:0 0 4px}
+.ask-which .muted{margin:0 0 10px}
+.ask-which .pick-sel{width:100%;min-width:0;flex:0 0 auto}
+.rec-card .card-h{align-items:center}
+.rec-card .card-h h2{margin:0;flex:1;min-width:0}
+.rec-card .muted{margin:0 0 10px}
+/* 「已做 N」是补充信息，不比题量分布重要：同色但稍微压一档，不抢眼 */
+.rec-card .done-n{color:var(--ink-soft)}
+/* 今日页原来三块（推荐 / 还欠着的题 / 这一周）都挂 .card 的 --sh-1，等于三块一样重：
+   读者看不出「今天该点哪个」。海拔只给一个 —— 推荐卡用 --sh-2 + 左侧色条，
+   其余块靠边框分界、去掉阴影（设计评审 A7）。 */
+body[data-view="today"] .card.tight{box-shadow:none}
+body[data-view="today"] .today-stats .st{box-shadow:none}
+.rec-card{box-shadow:var(--sh-2);position:relative;padding-left:18px}
+.rec-card::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:4px;
+  border-radius:var(--r-pill);background:var(--green)}
+.btn-xs{padding:5px 10px;font-size:var(--fs-xs);border-radius:var(--r-pill)}
+.pick-wrap{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+/* hidden 属性默认只是 display:none，但上面把 .pick-wrap 设成 flex 会盖掉它 —— 折叠就失效了 */
+.pick-wrap[hidden]{display:none}
+.pick-wrap .pick-sel{flex:1;min-width:180px}
+@media(max-width:560px){.pick-wrap .btn{width:100%}}
+
+/* 方法详情里的例题条：一行能放几条，窄屏自己折 */
+.dd-qs { display: flex; flex-wrap: wrap; gap: 6px; }
+.dd-q { display: inline-block; padding: 3px 8px; border: 1px solid var(--line); border-radius: 999px;
+  font-size: var(--fs-xs); text-decoration: none; color: var(--ink); background: var(--bg2); }
+.dd-q:hover { border-color: var(--ink2); }
+/* 手机上这些胶囊是「去练哪一题」的入口，手指按的东西不能只有 31px 高。
+   桌面留原样：鼠标点 31px 的胶囊没有困难，撑到 40px 只是把列表拉长。 */
+@media (max-width: 560px) {
+  .dd-q { display: inline-flex; align-items: center; min-height: 40px; padding: 3px 10px; }
+}
+/* 「还有 N 道」是这一组的出口：它是链接不是胶囊，别做成第 11 个题号 */
+.dd-q-more { display: inline-block; padding: 3px 2px; color: var(--green-strong); font-size: var(--fs-sm);
+  text-decoration: underline; text-underline-offset: 2px; }
+.dd-q-more:hover { color: var(--green); }
+/* 空组的解释：比正文小一号、灰一点，它不是内容，是「为什么没有」 */
+.dd-why { margin: 4px 0 0; color: var(--ink-soft); font-size: var(--fs-sm); }
+/* 「你要的那道题没找到」这类说明条：琥珀色，跟正文区分开，又不当错误吓人 */
+.picknote { margin: 0 0 10px; padding: 8px 10px; border-radius: 10px;
+  background: var(--amber-soft); color: var(--amber); font-size: var(--fs-sm); }
+/* 预览态列出的选项不可点，只用来读题 */
+.opts.is-look .opt { cursor: default; }
+.opts.is-look .opt:hover { border-color: var(--line); background: transparent; }
+/* 思想总表：16 条思想各自在哪几册反复出现。数字是从边现算的，不是写死的统计。 */
+.th-page .th-intro{font-size:var(--fs-sm);color:var(--ink-soft);line-height:var(--lh-read);margin:2px 0 10px}
+.th-sec{display:flex;align-items:center;gap:8px;font-size:var(--fs-xs);color:var(--ink-soft);margin:14px 0 8px}
+.th-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px}
+.th-card{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--r-lg);padding:10px 11px;transition:border-color .15s,transform .15s}
+.th-card:hover{border-color:var(--sta);transform:translateY(-1px)}
+.th-h{display:flex;align-items:center;gap:7px;margin-bottom:4px}
+.th-h b{font-size:var(--fs);line-height:var(--lh-ui)}
+/* 思想卡里那段说明是给孩子读的正文（「把未知的量设成字母，用式子表示关系」），不是标签 */
+.th-desc{font-size:var(--fs-sm);color:var(--ink-soft);line-height:var(--lh-read);margin:0 0 7px}
+.th-nums{display:flex;gap:6px;flex-wrap:wrap}
+.th-nums span{font-size:var(--fs-xs);color:var(--ink-soft);background:var(--bg);border:1px solid var(--line);
+  border-radius:var(--r-sm);padding:1px 6px}
+.th-vols{font-size:var(--fs-sm);color:var(--ink-soft);margin-top:6px;line-height:var(--lh-ui)}
+
+/* 哪里不稳（#/weak）：按知识点看作答，只列有证据的 */
+.wk-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+.wk-stats .st{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:9px 12px;display:flex;flex-direction:column;gap:1px}
+.wk-stats .st b{font-size:var(--fs-h2);line-height:var(--lh-display)}
+.wk-stats .st b.warn{color:#b4482f}
+.wk-stats .st span{font-size:var(--fs-xs);color:var(--ink-faint)}
+.wk-row{border-top:1px solid var(--line);padding:10px 0 8px}
+.wk-row:first-of-type{border-top:0}
+.wk-h{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.wk-h a{font-weight:600;color:var(--ink);text-decoration:none}
+.wk-h a:hover{text-decoration:underline}
+.wk-sec{font-size:var(--fs-xs);color:var(--ink-faint)}
+/* 结论行给正文档（14.5），不再与标签同为 13px：填满数据时这一屏 61% 的字原本都在最小档上，
+   读者分不出哪句是结论、哪句是注释（2026-10-31 视觉断言 xs13=60.6% 抓出） */
+.wk-num{font-size:var(--fs-sm);color:var(--ink-soft);margin-top:2px}
+.wk-num b{font-weight:650;color:var(--ink)}
+/* 「看三列 / 练这一节 / 回到图上」原来只有 22px 高，手指点经常点偏。
+   热区抬到 40px 但字号仍是 --fs-xs：这一行是辅助动作，不该抢正文的注意力。 */
+.wk-links{display:flex;gap:14px;margin-top:6px;font-size:var(--fs-xs)}
+.wk-links a{display:inline-flex;align-items:center;min-height:40px;color:var(--green-strong);text-decoration:underline;text-underline-offset:2px}
+.wk-links a:hover{text-decoration:underline}
+.wk-foot{font-size:var(--fs-xs);color:var(--ink-faint);margin-top:14px}
+@media(max-width:520px){.wk-stats{grid-template-columns:repeat(2,1fr);gap:8px;margin:10px 0}
+  .wk-stats .st{padding:7px 10px}
+  .wk-stats .st b{font-size:var(--fs-h3);line-height:1.25}}
+
+/* 依据总览（#/evidence）：把「哪来的」摊开说，颜色一律走变量 */
+.ev-line{margin:0;font-size:var(--fs);line-height:var(--lh-read)}
+.ev-row{display:grid;grid-template-columns:132px 1fr;column-gap:14px;padding:9px 0;border-top:1px solid var(--line)}
+.ev-row:first-of-type{border-top:0}
+.ev-t{font-size:var(--fs);color:var(--ink-soft)}
+.ev-n{font-size:var(--fs-sm);font-weight:600;color:var(--ink)}
+.ev-n.ok{color:var(--green-strong)}
+.ev-n.warn{color:#b4482f}
+.ev-note{grid-column:1 / -1;font-size:var(--fs-sm);color:var(--ink-faint);margin-top:3px;line-height:var(--lh-ui)}
+.ev-cmd{display:inline-block;background:var(--card-2,rgba(0,0,0,.05));border:1px solid var(--line);border-radius:var(--r-sm);padding:1px 6px;margin:2px 0;font-size:var(--fs-xs);color:var(--ink)}
+/* 原来这里把 .ev-t 在窄屏降到 --fs-xs：整页 70% 是 13px 的元凶就是这一行。
+   窄屏该做的是把 132px 标签列改成一行，不是把字缩小。 */
+@media(max-width:520px){.ev-row{grid-template-columns:1fr}}
+
+/* 目录页的做题进度：宽度固定，百分比只做视觉提示，数字写在旁边 */
+.vol-prog{display:flex;align-items:center;gap:8px;padding:2px 2px 6px;font-size:var(--fs-xs)}
+.pbar{display:inline-block;width:72px;height:6px;border-radius:var(--r-pill);background:var(--line);overflow:hidden;flex:none}
+.pbar i{display:block;height:100%;background:var(--green);border-radius:var(--r-pill)}
+
+.figbox{margin:8px 0 2px;padding:8px 8px 2px;background:#f8fafc;border:1px solid var(--line,#e2e8f0);border-radius:var(--r-lg)}
+.figbox svg{width:100%;max-width:440px;height:auto;display:block;margin:0 auto;background:#fff;border-radius:var(--r-sm)}
+.figbox figcaption{font-size:var(--fs-sm);line-height:var(--lh-ui);color:var(--ink,#334155);margin:8px 4px 6px}
+
+/* ============ 22. 宽屏（>=1024px）排版与留白 ============
+   整段只在宽屏生效，手机/平板（<1024）一字不变。
+   三条诉求：①正文与题干一行封顶 48 个汉字；②图谱图例不再压画布，改到画布下方独立一行；
+   ③空态页（weak/retry/archive 无记录）垂直居中，不要首屏之后一片白。 */
+@media (min-width:1024px){
+  /* ---- ① 行宽封顶：48em 跟着字号走，15.5px 就是 744px、14px 就是 672px，
+     一行恒定约 48 个汉字（原来 practice 的题干跑到 65 字/行）。 ---- */
+  .stem,.qstem,.dd-def,.dd-ansbody,.lead{max-width:48em}
+
+  /* 练习页的题目屏是直接挂在 #app 下的裸 .card（没有 .wrap），宽屏下会吃满 1044px。
+     按全站同一列宽收口并居中，题干自然落到 48 字以内。 */
+  body[data-view="practice"] #app > .card{
+    max-width:var(--maxw);margin-left:auto;margin-right:auto;
+  }
+
+  /* ---- ①' 图谱区域与正文列对齐：左栏 236px 拿掉之后，其余页面的正文列是
+     居中收口的（1280 宽下左右各 142px），只有图谱区域一路顶到视口右边缘——
+     实测最右一行图例文字距屏幕右边只剩 18px，整块看着被推到了右边。
+     画布要紧的不是占满，是两边对称，所以给它 32px 对称内边距。 ---- */
+  .mapwrap{padding-inline:32px}
+
+  /* ---- ② 图例：画布下方独立一行（静态化已在基础规则里生效，这里只留一句凭据）----
+     .maplegend 在 DOM 里紧跟 #cy（mapstage 的最后一个孩子），static 后自然流到画布下方；
+     430 宽同样静态，所以窄屏也不会再盖住节点。 */
+  /* 图例离开浮层后约 38px 高，画布把这部分高度还回去，整页仍然一屏 */
+  .mapwrap.is-mind .mapstage #cy{height:calc(100vh - 216px);min-height:420px}
+
+  /* ---- ③ 空态页：垂直居中 + 内容块给点存在感 ---- */
+  body[data-view="weak"] .wrap,
+  body[data-view="retry"] .wrap,
+  body[data-view="archive"] .wrap{
+    min-height:calc(100vh - 120px);
+    display:flex;flex-direction:column;justify-content:center;
+  }
+  body[data-view="weak"] .wrap > .card,
+  body[data-view="retry"] .wrap > .card,
+  body[data-view="archive"] .wrap > .card{
+    padding:24px 26px;border-radius:var(--r-xl);box-shadow:var(--sh-2);
+  }
+}
+
+/* 版本串：正文末尾一行小字，核对「你看到的是哪一版」用 */
+.build-stamp{margin:18px 0 6px;font-size:var(--fs-xs);color:var(--ink-soft);opacity:.7;font-variant-numeric:tabular-nums}
+
+/* ---------- 宽屏导图档：画布吃满，讲解卡浮在上面 ----------
+   这里曾经是 grid 两列（minmax(0,1fr) min(404px,36vw)）：点开一个点就把画布从
+   1140 挤到 720（实测 out/ret_run.json 的 s1/s2），刚点中的那个点被挤进左边一条窄带，
+   与用户要的「总图全区域显示、详情卡浮在上面」正好相反。
+   现在宽屏也走基础规则那套：画布铺满内容区，讲解卡 absolute 浮在右上角（白底 + 投影）。
+   卡宽 min(420px,36vw)、最高一屏，卡内滚动；标签排布由 map.js 的 maxRight 让位。 */
+@media(min-width:1080px){
+  .mapwrap.is-mind{display:block;position:relative}
+  .mapwrap.is-mind #map-detail{
+    position:absolute;top:58px;right:14px;left:auto;
+    width:min(420px,36vw);max-height:calc(100vh - 136px);overflow:auto;
+  }
+  .mapwrap.is-mind.is-nodetail #map-detail{display:none}
+}
+
+/* ---------- 图谱局部档：十字方位（上=前置 / 中=当前 / 下=后续 / 右=方法 / 再下=同章） ----------
+   为什么不用画布排：一个点周围有二十来个点，画在画布上必然挤在角落，缩到 0.5 倍时名字只剩 5px，
+   而且方向全靠引线猜。改成 DOM 之后字号是真的、方向由版式给定，读者一眼能读出来。 */
+/* 画布上那些浮层（在图上找、图例、色标、提示）全是给「看网」用的；
+   十字方位不是网，留着它们只会压在版面标题上（实测「在图上找」的输入框盖住了「↑ 前置」）。 */
+.mapstage.is-cross #cy,
+.mapstage.is-cross .mapsearch,
+.mapstage.is-cross .map-tip,
+.mapstage.is-cross .thought-bar,
+.mapstage.is-cross .map-callouts,
+.mapstage.is-cross .map-key,
+.mapstage.is-cross .maplegend,
+.mapstage.is-cross .map-hint,
+/* 思想筛选条与「看全」都是给画布用的：十字档点思想没有对应动作，看全没有可看全的东西。 */
+.mapwrap.is-cross .mapbar-3,
+.mapwrap.is-cross #map-fit,
+/* 思想胶囊条挂在 .mapstage 外面，而且它的 display:flex 会盖掉 hidden 属性，
+   所以必须显式关掉——否则它横在「↑ 前置」上，看着像版面的一部分。 */
+.mapwrap.is-cross .thought-bar,
+/* 画法切换（网络/分层/导图/其他画法）在十字档里没有可切换的对象：
+   画布已经让位给版面了。留着它，「导图」实心与「网络」描边并排，又变成两个都像选中。 */
+/* 只收画法那三个按钮，不收「回到总图」—— 那是这一屏唯一的出口，收掉就成了死胡同。 */
+.mapwrap.is-cross #map-seg [data-lens],
+.mapwrap.is-cross #map-seg [data-up],
+.mapwrap.is-cross #map-seg .seg-more{display:none !important}
+.map-cross{padding:6px 0 2px;font-size:var(--fs-sm)}
+/* 4px 内边距：↑ / ↓ 这两个箭头字形的墨迹会越出文字框左边界，窄屏上贴着视口就被切掉半个。 */
+.mc-grid{display:grid;padding-inline:4px;gap:12px 18px;grid-template-columns:minmax(0,1fr) 304px;
+  grid-template-areas:"pre pre" "self sk" "post sk" "same same";align-items:start}
+.mc-pre-sec{grid-area:pre}
+.mc-self{grid-area:self}
+.mc-sk-sec{grid-area:sk}
+.mc-post-sec{grid-area:post}
+.mc-same-sec{grid-area:same}
+.mc-h{font-size:var(--fs-xs);color:var(--ink-soft);margin:0 0 7px;font-weight:600}
+/* 行内对齐用 start：默认 stretch 会把同一行所有卡拉成最高的那张的高度，
+   一句话介绍的长短会把整行顶高一倍（实测 4 张 63px 的卡被拉成 167px）。 */
+.mc-row{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start}
+/* 右栏只有 304px，3 张卡并排平均 96px，名字全折成一列字；竖着排才是这块该有的形状。 */
+.mc-sk .mc-row{flex-direction:column;align-items:stretch}
+.mc-card{flex:0 1 198px;min-width:0;display:flex;flex-direction:column;gap:2px;
+  /* 44px 是手指的尺子：卡在手机上会缩到 38px 高，一张卡只有一行名字时点不中。 */
+  min-height:44px;justify-content:center;
+  padding:8px 10px;border:1px solid var(--line);border-left-width:3px;border-radius:var(--r-lg);
+  background:var(--card);text-decoration:none;color:inherit}
+/* 同章 10 张：一行 5 张，两行收完；按 198 摆会变成三行、把整块顶出第一屏。 */
+.mc-same .mc-card{flex:1 1 148px}
+.mc-tag{font-style:normal;font-size:11px;font-weight:500;color:var(--ink-faint);
+  border:1px solid var(--line);border-radius:999px;padding:0 5px;margin-right:5px;white-space:nowrap}
+/* 名字用正文号，介绍用小一号：两档只差 1.5px（14.5/13）时读者看不出层级，
+   视线会平均落在每一行上。 */
+.mc-card b{font-size:var(--fs);font-weight:600;color:var(--ink);line-height:1.4}
+/* line-clamp 在 flex 子项上不生效（实测同一行第一张被撑到 164px，其余 79px，
+   整行跟着抬高 85px）。加 max-height 兜住：两行就是 2×line-height。 */
+.mc-card span{font-size:var(--fs-xs);color:var(--ink-soft);line-height:1.5;
+  max-height:3em;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mc-card:hover{background:var(--card-2)}
+.mc-pre .mc-card{border-left-color:var(--amber)}
+.mc-post .mc-card{border-left-color:var(--dom-geo)}
+.mc-sk .mc-card{border-left-color:var(--green)}
+.mc-same .mc-card{border-left-color:var(--dom-num)}
+.mc-same .mc-card span{-webkit-line-clamp:1}
+.mc-self{border:1px solid var(--line);border-radius:var(--r-lg);background:var(--card);padding:14px 16px}
+.mc-self h3{margin:2px 0 8px;font-size:var(--fs-h3);line-height:1.4}
+.mc-self .mc-desc{margin:0 0 8px;font-size:var(--fs);color:var(--ink-soft);line-height:1.7}
+.mc-self .mc-meta{font-size:var(--fs-xs);color:var(--ink-faint);margin-bottom:10px}
+.mc-acts{display:flex;gap:8px;flex-wrap:wrap}
+.mc-empty{margin:0;font-size:var(--fs-xs);color:var(--ink-faint);padding:6px 2px}
+@media (max-width:900px){
+  .mc-grid{grid-template-columns:minmax(0,1fr);
+    grid-template-areas:"pre" "self" "sk" "post" "same"}
+  .mc-card{flex:1 1 100%}
+}
+
+/* 六册全景在手机上走 DOM 列表：430 宽时画布只能缩到 0.37 倍，卡片上的字变成 4.8px */
+.map-cross.is-list{display:block;padding:12px 12px 72px;overflow:auto}
+.cl-wrap{display:flex;flex-direction:column;gap:6px}
+.cl-vol{margin:14px 0 2px;font-size:var(--fs-sm);color:var(--ink-soft);font-weight:600}
+.cl-vol:first-child{margin-top:0}
+.cl-group{display:flex;flex-direction:column;gap:8px}
+.mc-card.cl-ch{min-height:56px;padding:10px 12px;border-radius:12px;background:var(--card);border:1px solid var(--line)}
+.mc-card.cl-ch b{font-size:var(--fs);font-weight:650}
+.mc-card.cl-ch span{font-size:var(--fs-sm);color:var(--ink-soft)}
+
+/* 手机六册列表自己的引导句（画布那档的 .map-hint 在 .is-cross 下被收起） */
+.map-cross.is-list .cl-lead{margin:0 0 10px;font-size:var(--fs-sm);color:var(--ink-soft);line-height:1.7}
+
+/* ---- 章内档「点名」浮层 ------------------------------------------------
+   画布上的知识点是蓝菱形、没有名字：一章 176 个点挤在 517×409 里，
+   13px 的字会叠成一片（那是上一版被骂「文字显示不全」的真因）。
+   名字改放到画布右侧的浮层里，按节列出、可点，画布仍是全区域。 */
+.map-side{
+  position:absolute;top:10px;right:10px;bottom:10px;z-index:4;
+  width:min(300px,42vw);overflow:auto;overscroll-behavior:contain;
+  background:color-mix(in srgb,var(--card) 96%,transparent);
+  border:1px solid var(--line);border-radius:14px;box-shadow:var(--sh-2);
+  padding:10px 12px 12px;
+  font-size:var(--fs-sm);line-height:1.6;
+}
+.map-side[hidden]{display:none}
+.map-side .ms-h{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin:0 0 6px}
+.map-side .ms-h b{font-size:var(--fs);font-weight:650}
+.map-side h4{
+  margin:10px 0 2px;font-size:var(--fs-sm);font-weight:650;color:var(--ink);
+  padding-top:8px;border-top:1px solid var(--line);
+}
+.map-side h4:first-of-type{border-top:0;padding-top:2px}
+.map-side ul{margin:0;padding:0;list-style:none}
+.map-side li{padding:1px 0}
+.map-side a{color:var(--ink);text-decoration:none;border-bottom:1px solid transparent}
+.map-side a:hover{color:var(--green-strong);border-bottom-color:var(--green)}
+@media (max-width:719px){
+  .map-side{left:8px;right:8px;top:8px;bottom:8px;width:auto;max-height:none}
+}

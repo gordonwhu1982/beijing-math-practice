@@ -4,6 +4,16 @@
 
 线上地址：https://gordonwhu1982.github.io/beijing-math-practice/
 
+打开就是新版练习。页面顶部可以切到原来的站点。
+
+| 入口 | 地址 |
+| --- | --- |
+| 新版练习 | `/` 或 `/#new` |
+| 原来的站点 | `/#old`，也可以直接开 `/classic.html` |
+| 新版页面本身 | `/math-coach/design/ux-redesign/prototype/#/map` |
+
+`math-coach/` 是现在这套练习和图谱。公开页面要直接打开，所以把生成后的 `runtime/web/data/` 也放进了仓库。`out/` 没有放进来。
+
 ## 快速开始
 
 ```bash
@@ -13,7 +23,7 @@ python -m http.server 8000        # 或 dev/start-server.bat（页面靠 fetch �
 
 | 入口 | 地址 |
 | --- | --- |
-| 首页（数学） | `/` |
+| 原来的首页 | `/classic.html` |
 | 英语 / 物理 | `/?subject=english` · `/?subject=physics` |
 | 知识图谱 | `/explore/` |
 | 自适应诊断 | `/diagnose/`（演示 `/diagnose/?target=cnm_221&demo=1`） |

@@ -3,13 +3,14 @@
  * 改了 SHELL 或 DATA 列表、或数据结构变了，就把 VERSION 加一。 */
 'use strict';
 
-var VERSION = 'v1'; // 改 SHELL / DATA 或数据结构变化时加一
+var VERSION = 'v2'; // 改 SHELL / DATA 或数据结构变化时加一
 var CACHE = 'bmp-pwa-' + VERSION;
 var SCOPE = self.registration.scope;
 
 var SHELL = [
   './',
   'index.html',
+  'classic.html',
   'explore/',
   'explore/app.js',
   'diagnose/',

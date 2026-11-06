@@ -1,0 +1,12 @@
+#!/bin/sh
+# Read-only commit gate. Same relative depth from tools/hooks and from .git/hooks.
+root=$(CDPATH= cd -- "$(dirname "$0")/../.." && pwd) || exit 1
+cd "$root" || exit 1
+if command -v python >/dev/null 2>&1; then
+  exec python tools/check_commit.py
+fi
+if command -v py >/dev/null 2>&1; then
+  exec py -3 tools/check_commit.py
+fi
+echo "check_commit: python not found" >&2
+exit 1

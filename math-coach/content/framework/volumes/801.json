@@ -1,0 +1,270 @@
+{
+ "schema_version": 1,
+ "volume_id": "801",
+ "label": "八年级上册",
+ "grade": 8,
+ "term": 1,
+ "edition": {
+  "publisher": "北京出版社（北京版）",
+  "revision": "2024版新教材",
+  "note": "2024版新教材（北京出版社，ISBN 978-7-200-19495-1）",
+  "verified": true
+ },
+ "source": {
+  "kind": "pdf_local",
+  "filename": "（2024版新教材）北京版•数学八年级上册.pdf",
+  "sha1": "c00f27525d63b16c382ae903259c11215aafa704",
+  "bytes": 7034238,
+  "pdf_pages": 169,
+  "extracted_on": "2026-10-26",
+  "extractor": "pymupdf 1.28 text layer (TOC pages only)"
+ },
+ "chapters": [
+  {
+   "no": 10,
+   "title": "分式",
+   "page": 1,
+   "units": [
+    {
+     "label": "一",
+     "title": "分式及其性质",
+     "page": 2
+    },
+    {
+     "label": "二",
+     "title": "分式的运算",
+     "page": 10
+    },
+    {
+     "label": "三",
+     "title": "分式方程",
+     "page": 21
+    }
+   ],
+   "sections": [
+    {
+     "no": "10.1",
+     "title": "分式",
+     "page": 2
+    },
+    {
+     "no": "10.2",
+     "title": "分式的基本性质",
+     "page": 6
+    },
+    {
+     "no": "10.3",
+     "title": "分式的乘除法",
+     "page": 10
+    },
+    {
+     "no": "10.4",
+     "title": "分式的加减法",
+     "page": 14
+    },
+    {
+     "no": "10.5",
+     "title": "分式方程",
+     "page": 21
+    }
+   ],
+   "extras": []
+  },
+  {
+   "no": 11,
+   "title": "实数和二次根式",
+   "page": 39,
+   "units": [
+    {
+     "label": "一",
+     "title": "实数",
+     "page": 40
+    },
+    {
+     "label": "二",
+     "title": "二次根式",
+     "page": 53
+    }
+   ],
+   "sections": [
+    {
+     "no": "11.1",
+     "title": "平方根",
+     "page": 40
+    },
+    {
+     "no": "11.2",
+     "title": "立方根",
+     "page": 43
+    },
+    {
+     "no": "11.3",
+     "title": "用计算器开方",
+     "page": 44
+    },
+    {
+     "no": "11.4",
+     "title": "无理数与实数",
+     "page": 45
+    },
+    {
+     "no": "11.5",
+     "title": "二次根式及其性质",
+     "page": 53
+    },
+    {
+     "no": "11.6",
+     "title": "二次根式的乘除法",
+     "page": 56
+    },
+    {
+     "no": "11.7",
+     "title": "二次根式的加减法",
+     "page": 61
+    }
+   ],
+   "extras": []
+  },
+  {
+   "no": 12,
+   "title": "三角形",
+   "page": 73,
+   "units": [
+    {
+     "label": "一",
+     "title": "三角形及其性质",
+     "page": 74
+    },
+    {
+     "label": "二",
+     "title": "全等三角形",
+     "page": 84
+    },
+    {
+     "label": "三",
+     "title": "等腰三角形与直角三角形",
+     "page": 95
+    },
+    {
+     "label": "四",
+     "title": "尺规作图及轴对称",
+     "page": 106
+    },
+    {
+     "label": "五",
+     "title": "勾股定理",
+     "page": 120
+    }
+   ],
+   "sections": [
+    {
+     "no": "12.1",
+     "title": "三角形",
+     "page": 74
+    },
+    {
+     "no": "12.2",
+     "title": "三角形的性质",
+     "page": 75
+    },
+    {
+     "no": "12.3",
+     "title": "三角形中的主要线段",
+     "page": 81
+    },
+    {
+     "no": "12.4",
+     "title": "全等三角形",
+     "page": 84
+    },
+    {
+     "no": "12.5",
+     "title": "全等三角形的判定",
+     "page": 86
+    },
+    {
+     "no": "12.6",
+     "title": "等腰三角形",
+     "page": 95
+    },
+    {
+     "no": "12.7",
+     "title": "直角三角形",
+     "page": 101
+    },
+    {
+     "no": "12.8",
+     "title": "尺规作图",
+     "page": 106
+    },
+    {
+     "no": "12.9",
+     "title": "逆命题、逆定理",
+     "page": 112
+    },
+    {
+     "no": "12.10",
+     "title": "轴对称和轴对称图形",
+     "page": 113
+    },
+    {
+     "no": "12.11",
+     "title": "勾股定理",
+     "page": 120
+    },
+    {
+     "no": "12.12",
+     "title": "勾股定理的逆定理",
+     "page": 123
+    }
+   ],
+   "extras": []
+  },
+  {
+   "no": 13,
+   "title": "事件与可能性",
+   "page": 143,
+   "units": [
+    {
+     "label": "一",
+     "title": "事件",
+     "page": 144
+    },
+    {
+     "label": "二",
+     "title": "可能性",
+     "page": 147
+    }
+   ],
+   "sections": [
+    {
+     "no": "13.1",
+     "title": "必然事件与随机事件",
+     "page": 144
+    },
+    {
+     "no": "13.2",
+     "title": "随机事件发生的可能性",
+     "page": 147
+    },
+    {
+     "no": "13.3",
+     "title": "求简单随机事件发生的可能性的大小",
+     "page": 150
+    }
+   ],
+   "extras": []
+  }
+ ],
+ "counts": {
+  "chapters": 4,
+  "sections": 27,
+  "units": 12,
+  "extras": 0
+ },
+ "topic_coverage": {
+  "knowledge_points": 88,
+  "status": "seeded",
+  "note": "八上 88 个知识点来自既有 textbook_index.json"
+ }
+}

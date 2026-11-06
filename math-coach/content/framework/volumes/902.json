@@ -1,0 +1,205 @@
+{
+ "schema_version": 1,
+ "volume_id": "902",
+ "label": "九年级下册",
+ "grade": 9,
+ "term": 2,
+ "edition": {
+  "publisher": "北京出版社（北京版）",
+  "revision": "旧版",
+  "note": "旧版电子课本（网络流传版，印次待核）",
+  "verified": false
+ },
+ "source": {
+  "kind": "pdf_local",
+  "filename": "【北京版】九年级下册数学电子课本.pdf",
+  "sha1": "fea75bd263dd5fe7325d949e48e880f03e44eb54",
+  "bytes": 60724842,
+  "pdf_pages": 117,
+  "extracted_on": "2026-10-26",
+  "extractor": "pymupdf 1.28 text layer (TOC pages only)"
+ },
+ "chapters": [
+  {
+   "no": 23,
+   "title": "图形的变换",
+   "page": 1,
+   "units": [],
+   "sections": [
+    {
+     "no": "23.1",
+     "title": "平移变换",
+     "page": 2
+    },
+    {
+     "no": "23.2",
+     "title": "旋转变换",
+     "page": 10
+    },
+    {
+     "no": "23.3",
+     "title": "轴对称变换",
+     "page": 18
+    },
+    {
+     "no": "23.4",
+     "title": "位似变换",
+     "page": 24
+    }
+   ],
+   "extras": [
+    {
+     "kind": "综合与实践",
+     "title": "图案设计",
+     "page": 15
+    },
+    {
+     "kind": "阅读理解",
+     "title": "绝妙的证明",
+     "page": 30
+    }
+   ]
+  },
+  {
+   "no": 24,
+   "title": "投影、视图与展开图",
+   "page": 37,
+   "units": [],
+   "sections": [
+    {
+     "no": "24.1",
+     "title": "中心投影与平行投影",
+     "page": 38
+    },
+    {
+     "no": "24.2",
+     "title": "基本几何体的三视图",
+     "page": 43
+    },
+    {
+     "no": "24.3",
+     "title": "基本几何体的平面展开图",
+     "page": 48
+    }
+   ],
+   "extras": [
+    {
+     "kind": "回顾与整理",
+     "title": "回顾与整理",
+     "page": 31
+    },
+    {
+     "kind": "复习题",
+     "title": "复习题",
+     "page": 32
+    }
+   ]
+  },
+  {
+   "no": 25,
+   "title": "概率的求法与应用",
+   "page": 61,
+   "units": [],
+   "sections": [
+    {
+     "no": "25.1",
+     "title": "求概率的方法",
+     "page": 62
+    },
+    {
+     "no": "25.2",
+     "title": "概率的简单应用",
+     "page": 72
+    }
+   ],
+   "extras": [
+    {
+     "kind": "阅读理解",
+     "title": "视点、视线和盲区",
+     "page": 55
+    },
+    {
+     "kind": "回顾与整理",
+     "title": "回顾与整理",
+     "page": 56
+    },
+    {
+     "kind": "复习题",
+     "title": "复习题",
+     "page": 57
+    },
+    {
+     "kind": "探究学习",
+     "title": "模拟彩票中奖实验",
+     "page": 77
+    }
+   ]
+  },
+  {
+   "no": 26,
+   "title": "综合运用数学知识解决实际问题",
+   "page": 83,
+   "units": [],
+   "sections": [
+    {
+     "no": "26.1",
+     "title": "解决实际问题的一般思路",
+     "page": 84
+    },
+    {
+     "no": "26.2",
+     "title": "应用举例",
+     "page": 93
+    }
+   ],
+   "extras": [
+    {
+     "kind": "阅读理解",
+     "title": "历史上科学家掷币实验的记录",
+     "page": 78
+    },
+    {
+     "kind": "回顾与整理",
+     "title": "回顾与整理",
+     "page": 79
+    },
+    {
+     "kind": "复习题",
+     "title": "复习题",
+     "page": 80
+    },
+    {
+     "kind": "综合与实践",
+     "title": "复印纸和包装箱中的数学问题",
+     "page": 103
+    },
+    {
+     "kind": "阅读理解",
+     "title": "哥尼斯堡七桥问题",
+     "page": 104
+    },
+    {
+     "kind": "回顾与整理",
+     "title": "回顾与整理",
+     "page": 106
+    },
+    {
+     "kind": "复习题",
+     "title": "复习题",
+     "page": 107
+    }
+   ]
+  }
+ ],
+ "counts": {
+  "chapters": 4,
+  "sections": 11,
+  "units": 0,
+  "extras": 15
+ },
+ "topic_coverage": {
+  "knowledge_points": 0,
+  "status": "stub",
+  "note": "待从教材正文抽取"
+ }
+}

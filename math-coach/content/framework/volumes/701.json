@@ -1,0 +1,364 @@
+{
+ "schema_version": 1,
+ "volume_id": "701",
+ "label": "七年级上册",
+ "grade": 7,
+ "term": 1,
+ "edition": {
+  "publisher": "北京出版社（北京版）",
+  "revision": "旧版（2013 教育部审定，印次待核）",
+  "note": "旧版电子课本（2013 教育部审定；扫描件无文字层）",
+  "verified": false
+ },
+ "source": {
+  "kind": "pdf_local",
+  "filename": "义务教育教科书·数学七年级上册.pdf",
+  "sha1": "042a45cbb494e47f8a4af3369fd537450a96d1ae",
+  "bytes": 39058882,
+  "pdf_pages": 158,
+  "extracted_on": "2026-10-26",
+  "extractor": "manual vision read of TOC pages 4-6 (scanned PDF, no text layer)"
+ },
+ "chapters": [
+  {
+   "no": 1,
+   "title": "有理数",
+   "page": 1,
+   "units": [
+    {
+     "label": "一",
+     "title": "对有理数的认识",
+     "page": 2
+    },
+    {
+     "label": "二",
+     "title": "有理数的四则运算",
+     "page": 17
+    }
+   ],
+   "sections": [
+    {
+     "no": "1.1",
+     "title": "负数的引入",
+     "page": 2
+    },
+    {
+     "no": "1.2",
+     "title": "用数轴上的点表示有理数",
+     "page": 5
+    },
+    {
+     "no": "1.3",
+     "title": "相反数和绝对值",
+     "page": 8
+    },
+    {
+     "no": "1.4",
+     "title": "有理数的加法",
+     "page": 17
+    },
+    {
+     "no": "1.5",
+     "title": "有理数的减法",
+     "page": 23
+    },
+    {
+     "no": "1.6",
+     "title": "有理数加减法的混合运算",
+     "page": 26
+    },
+    {
+     "no": "1.7",
+     "title": "有理数的乘法",
+     "page": 36
+    },
+    {
+     "no": "1.8",
+     "title": "有理数的除法",
+     "page": 41
+    },
+    {
+     "no": "1.9",
+     "title": "有理数的乘方",
+     "page": 45
+    },
+    {
+     "no": "1.10",
+     "title": "有理数的混合运算",
+     "page": 50
+    },
+    {
+     "no": "1.11",
+     "title": "数的近似和科学记数法",
+     "page": 54
+    },
+    {
+     "no": "1.12",
+     "title": "用计算器做有理数的混合运算",
+     "page": 57
+    }
+   ],
+   "extras": [
+    {
+     "kind": "习题",
+     "title": "习题1-1",
+     "page": 14
+    },
+    {
+     "kind": "习题",
+     "title": "习题1-2",
+     "page": 34
+    },
+    {
+     "kind": "习题",
+     "title": "习题1-3",
+     "page": 52
+    },
+    {
+     "kind": "习题",
+     "title": "习题1-4",
+     "page": 59
+    },
+    {
+     "kind": "阅读理解",
+     "title": "我国古代数学家对负数的研究",
+     "page": 61
+    },
+    {
+     "kind": "回顾与整理",
+     "title": "回顾与整理",
+     "page": 62
+    },
+    {
+     "kind": "复习题",
+     "title": "复习题",
+     "page": 65
+    }
+   ]
+  },
+  {
+   "no": 2,
+   "title": "一元一次方程",
+   "page": 69,
+   "units": [
+    {
+     "label": "一",
+     "title": "等式和方程",
+     "page": 70
+    },
+    {
+     "label": "二",
+     "title": "一元一次方程和它的解法",
+     "page": 88
+    },
+    {
+     "label": "三",
+     "title": "一元一次方程的应用",
+     "page": 101
+    }
+   ],
+   "sections": [
+    {
+     "no": "2.1",
+     "title": "字母表示数",
+     "page": 70
+    },
+    {
+     "no": "2.2",
+     "title": "同类项与合并同类项",
+     "page": 76
+    },
+    {
+     "no": "2.3",
+     "title": "等式与方程",
+     "page": 80
+    },
+    {
+     "no": "2.4",
+     "title": "等式的基本性质",
+     "page": 83
+    },
+    {
+     "no": "2.5",
+     "title": "一元一次方程",
+     "page": 88
+    },
+    {
+     "no": "2.6",
+     "title": "列方程解应用问题",
+     "page": 101
+    }
+   ],
+   "extras": [
+    {
+     "kind": "习题",
+     "title": "习题2-1",
+     "page": 85
+    },
+    {
+     "kind": "探究学习",
+     "title": "绝对值方程",
+     "page": 99
+    },
+    {
+     "kind": "习题",
+     "title": "习题2-2",
+     "page": 100
+    },
+    {
+     "kind": "习题",
+     "title": "习题2-3",
+     "page": 110
+    },
+    {
+     "kind": "阅读理解",
+     "title": "“方程”名称的来源",
+     "page": 113
+    },
+    {
+     "kind": "回顾与整理",
+     "title": "回顾与整理",
+     "page": 115
+    },
+    {
+     "kind": "复习题",
+     "title": "复习题",
+     "page": 117
+    }
+   ]
+  },
+  {
+   "no": 3,
+   "title": "简单的几何图形",
+   "page": 119,
+   "units": [
+    {
+     "label": "一",
+     "title": "对图形的认识",
+     "page": 120
+    },
+    {
+     "label": "二",
+     "title": "直线、射线、线段",
+     "page": 125
+    },
+    {
+     "label": "三",
+     "title": "角",
+     "page": 135
+    },
+    {
+     "label": "四",
+     "title": "两条直线的位置关系",
+     "page": 143
+    }
+   ],
+   "sections": [
+    {
+     "no": "3.1",
+     "title": "平面图形与立体图形",
+     "page": 120
+    },
+    {
+     "no": "3.2",
+     "title": "某些立体图形的展开图",
+     "page": 121
+    },
+    {
+     "no": "3.3",
+     "title": "从不同方向观察立体图形",
+     "page": 122
+    },
+    {
+     "no": "3.4",
+     "title": "点、线、面、体",
+     "page": 125
+    },
+    {
+     "no": "3.5",
+     "title": "直线、射线、线段",
+     "page": 127
+    },
+    {
+     "no": "3.6",
+     "title": "角及其分类",
+     "page": 135
+    },
+    {
+     "no": "3.7",
+     "title": "角的度量与角的换算",
+     "page": 138
+    },
+    {
+     "no": "3.8",
+     "title": "角平分线",
+     "page": 140
+    },
+    {
+     "no": "3.9",
+     "title": "两条直线的位置关系",
+     "page": 143
+    },
+    {
+     "no": "3.10",
+     "title": "相交线与平行线",
+     "page": 144
+    },
+    {
+     "no": "3.11",
+     "title": "用计算机绘图",
+     "page": 148,
+     "optional": true
+    }
+   ],
+   "extras": [
+    {
+     "kind": "习题",
+     "title": "习题3-1",
+     "page": 124
+    },
+    {
+     "kind": "习题",
+     "title": "习题3-2",
+     "page": 133
+    },
+    {
+     "kind": "习题",
+     "title": "习题3-3",
+     "page": 141
+    },
+    {
+     "kind": "习题",
+     "title": "习题3-4",
+     "page": 149
+    },
+    {
+     "kind": "回顾与整理",
+     "title": "回顾与整理",
+     "page": 150
+    },
+    {
+     "kind": "复习题",
+     "title": "复习题",
+     "page": 151
+    },
+    {
+     "kind": "附录",
+     "title": "附录",
+     "page": 152
+    }
+   ]
+  }
+ ],
+ "counts": {
+  "chapters": 3,
+  "sections": 29,
+  "units": 9,
+  "extras": 21
+ },
+ "topic_coverage": {
+  "knowledge_points": 0,
+  "status": "stub",
+  "note": "待从教材正文抽取"
+ }
+}

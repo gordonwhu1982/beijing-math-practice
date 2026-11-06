@@ -1,0 +1,823 @@
+{
+  "registry_version": "3.1",
+  "id": "registry.math-coach.entities",
+  "review_status": "ai_draft",
+  "updated": "2026-10-27",
+  "purpose": "math-coach 权威内容层的实体与字段契约：校验器读它、构建器读它、前端按 capabilities 判断能力，而不是硬编码字段。",
+  "compat": {
+    "current": "3.1",
+    "min_readable": "3",
+    "policy": "只增不改义：字段一旦发布，含义与类型不得改变；改义必须新字段名 + 旧字段标 deprecated 至少一个大版本。旧记录缺新字段 = 覆盖率缺口，不算错误。",
+    "unknown_field_policy": "未登记字段记 warning 并在报告中列出，不阻断构建；但不得出现在 public 切片（白名单生成）。",
+    "ext_policy": "每个实体允许 ext 对象存放实验性字段，ext 内键名以 x- 开头，不参与校验、不进入 public 切片。"
+  },
+  "enums": {
+    "review_status": [
+      "stub",
+      "ai_draft",
+      "human_checked",
+      "disputed",
+      "retired"
+    ],
+    "kp_type": [
+      "concept",
+      "fact",
+      "property",
+      "theorem",
+      "formula",
+      "skill",
+      "method",
+      "model",
+      "representation",
+      "activity",
+      "context"
+    ],
+    "kp_status": [
+      "title_only",
+      "draft",
+      "reviewed",
+      "verified"
+    ],
+    "kp_cognitive": [
+      "remember",
+      "understand",
+      "apply",
+      "analyze",
+      "evaluate",
+      "create"
+    ],
+    "grade_band": [
+      "6",
+      "7",
+      "8",
+      "9"
+    ],
+    "relation": [
+      "is_part_of",
+      "prerequisite_of",
+      "supports",
+      "equivalent_to",
+      "contrast_with",
+      "applies_to",
+      "assessed_by",
+      "explained_by",
+      "misconception_of",
+      "sequence",
+      "belongs_to",
+      "uses_skill"
+    ],
+    "edge_strength": [
+      "hard",
+      "support",
+      "optional"
+    ],
+    "edge_confidence": [
+      "exact",
+      "manual",
+      "inferred",
+      "weak"
+    ],
+    "evidence_type": [
+      "textbook_page",
+      "item",
+      "curriculum_ref",
+      "external_kg",
+      "teacher_note"
+    ],
+    "ability": [
+      "explain",
+      "judge",
+      "compute",
+      "prove",
+      "model",
+      "apply",
+      "represent"
+    ],
+    "question_form": [
+      "choice",
+      "fill",
+      "numeric",
+      "short",
+      "solution",
+      "proof",
+      "judge",
+      "draw"
+    ],
+    "band": [
+      "basic",
+      "standard",
+      "advanced",
+      "challenge",
+      "competition"
+    ],
+    "difficulty_axis_course": [
+      "in_chapter",
+      "small_gap",
+      "needs_high_school",
+      "beyond"
+    ],
+    "answer_type": [
+      "exact",
+      "numeric",
+      "expression",
+      "set",
+      "interval",
+      "multi_answer",
+      "proof",
+      "open"
+    ],
+    "verdict": [
+      "correct",
+      "wrong",
+      "manual",
+      "blank"
+    ],
+    "judge_how": [
+      "exact",
+      "numeric",
+      "bag",
+      "sampled",
+      "manual"
+    ],
+    "license_class": [
+      "A_commercial_ok",
+      "B_open_with_terms",
+      "C_noncommercial",
+      "D_unverified",
+      "E_forbidden"
+    ],
+    "visibility": [
+      "stem_public",
+      "full_private",
+      "internal_only"
+    ],
+    "asset_type": [
+      "figure",
+      "svg",
+      "raster",
+      "video",
+      "audio",
+      "table"
+    ],
+    "resource_type": [
+      "explain",
+      "example",
+      "counterexample",
+      "figure",
+      "video",
+      "worksheet",
+      "method_note",
+      "index_page"
+    ],
+    "misconception_category": [
+      "concept",
+      "prerequisite_missing",
+      "method_choice",
+      "step_logic",
+      "computation_symbol",
+      "reading_modeling",
+      "expression",
+      "guess_overconfidence"
+    ],
+    "hint_level": [
+      "none",
+      "L1_restate",
+      "L2_locate",
+      "L3_method",
+      "L4_first_step",
+      "full_solution"
+    ],
+    "alias_type": [
+      "term",
+      "symbol",
+      "legacy_id",
+      "external_id",
+      "edition_name",
+      "pinyin"
+    ],
+    "coverage_cell": [
+      "missing_model",
+      "modeled_unreviewed",
+      "reviewed_no_item",
+      "item_without_solution",
+      "edition_unmapped",
+      "covered"
+    ],
+    "thought_level": [
+      "thought",
+      "family"
+    ],
+    "competency_code": [
+      "abstract",
+      "logic",
+      "compute",
+      "imagine",
+      "model",
+      "data"
+    ]
+  },
+  "id_rules": {
+    "note": "ID 一旦发布不可改写；改名、改册次、换版次都靠 alias / equivalent_to / supersedes 表达，不靠改字符串。语义信息仅作人读，程序不得从 ID 反解含义。",
+    "pattern_by_kind": {
+      "volume": "^V[0-9]{3}$",
+      "chapter": "^C[0-9]{3}-[0-9]{2}$",
+      "section": "^S[0-9]{3}-[0-9]{1,2}\\.[0-9]{1,2}$",
+      "knowledge_point": "^K[0-9]{3}-[0-9]{1,2}\\.[0-9]{1,2}-[0-9]{2}$",
+      "question": "^([0-9]{3}-)?[0-9]{1,2}\\.[0-9]{1,2}_(bas|std|adv|cha|com)_[0-9]{2,3}$",
+      "rubric_point": "^(RB|RP)-.+$",
+      "skill": "^SK-.+$",
+      "misconception": "^MC-.+$",
+      "resource": "^RS-.+$",
+      "asset": "^AS-.+$",
+      "edge": "^ED-.+$",
+      "alias": "^AL-.+$",
+      "curriculum_standard": "^CS-.+$",
+      "learner_evidence": "^EV-.+$"
+    },
+    "uid": {
+      "required_from": "v3",
+      "rule": "uid = kind 前缀 + 全局唯一主体键。存量记录（无 uid）视为 legacy，由 tools/schema_check.py 在有碰撞风险时提示；新记录必须带 uid。",
+      "legacy_examples": [
+        "12.1_bas_01（仅在本册内唯一）→ uid 801-12.1_bas_01"
+      ]
+    }
+  },
+  "entities": {
+    "volume": {
+      "storage": "content/framework/volumes/<vol>.json",
+      "desc": "册：教材对齐层的最外层，绑定 edition/版次。",
+      "legacy_required": [
+        "volume_id",
+        "chapters"
+      ],
+      "required": [
+        "uid",
+        "volume_id",
+        "edition_id",
+        "grade",
+        "term",
+        "title",
+        "provenance"
+      ],
+      "optional": [
+        "chapter_count",
+        "section_count",
+        "page_count",
+        "chapters",
+        "ext"
+      ],
+      "fields": {
+        "edition_id": "教材版次 ID，如 bj-2024（北京版 2024 新教材）/ bj-legacy（旧版扫描件）",
+        "provenance": "{kind: published|derived, from, verified_on, review_status}",
+        "ext": "预留扩展位：只放实验性字段，键名以 x- 开头"
+      },
+      "legacy_fields": [
+        "volume_id",
+        "chapters",
+        "units",
+        "extras"
+      ]
+    },
+    "chapter": {
+      "storage": "content/framework/volumes/<vol>.json#chapters[]",
+      "legacy_required": [
+        "no",
+        "title"
+      ],
+      "required": [
+        "uid",
+        "volume_id",
+        "no",
+        "title"
+      ],
+      "optional": [
+        "units",
+        "page",
+        "extras",
+        "review_status",
+        "ext"
+      ],
+      "legacy_fields": [
+        "no",
+        "title",
+        "units",
+        "extras"
+      ]
+    },
+    "section": {
+      "storage": "content/framework/volumes/<vol>.json#chapters[].sections[]",
+      "legacy_required": [
+        "no",
+        "title",
+        "page"
+      ],
+      "required": [
+        "uid",
+        "volume_id",
+        "chapter_no",
+        "no",
+        "title",
+        "page"
+      ],
+      "optional": [
+        "units",
+        "text_offset",
+        "objectives",
+        "review_status",
+        "ext"
+      ],
+      "fields": {
+        "page": "教材页码（印刷页，不是 PDF 页序；PDF 偏移见 tools/framework_extract/README.md）"
+      },
+      "legacy_fields": [
+        "no",
+        "title",
+        "page",
+        "units",
+        "text_offset"
+      ]
+    },
+    "knowledge_point": {
+      "storage": "content/framework/knowledge_points/<vol>.json",
+      "desc": "知识点主数据。八上第 12 章 99 条为 draft；其余 574 条只有标题，必须显式标 title_only，不得默认当成已建模。",
+      "legacy_required": [
+        "id",
+        "title"
+      ],
+      "required": [
+        "uid",
+        "canonical_name",
+        "volume_id",
+        "section_no",
+        "kp_type",
+        "status",
+        "provenance"
+      ],
+      "optional": [
+        "aliases",
+        "definition",
+        "conditions",
+        "boundaries",
+        "objectives",
+        "curriculum_refs",
+        "textbook",
+        "grade_band",
+        "cognitive_level",
+        "skill_refs",
+        "misconception_refs",
+        "resource_refs",
+        "edition_note",
+        "review_status",
+        "ext"
+      ],
+      "fields": {
+        "definition": "富文本 + LaTeX；允许 null，但 null 时 status 必须是 title_only",
+        "conditions": "适用前提数组，如「分母 B≠0」；docx A1 要求显式化",
+        "boundaries": "边界/失效情形数组，如「a≠0 时 0^0 无意义」",
+        "objectives": "[{ability, text}]，ability 取 enums.ability，动词必须是能解释/判断/计算/证明/建模",
+        "curriculum_refs": "课标条款 uid 数组；当前无课标数据时为 []，不得编造",
+        "textbook": "[{edition_id, volume_id, chapter_no, section_no, page, range|quote}]，多版次并存，2024 新版替换旧版时保留旧记录",
+        "kp_type": "学科知识本体分类：概念/事实/性质/定理/公式/技能/方法/模型/表示法/活动/情境",
+        "aliases": "术语别名与符号别名（解决「方差」搜到平方差这类检索错配）；跨库 ID 走 alias 表，不塞这里"
+      },
+      "legacy_fields": [
+        "id",
+        "title",
+        "volume_id",
+        "chapter_no",
+        "section_no",
+        "source",
+        "status"
+      ]
+    },
+    "knowledge_point_detail": {
+      "storage": "content/framework/knowledge_points/<vol>.detail.jsonl",
+      "desc": "知识点富化侧车：把 definition/conditions/boundaries/objectives/aliases 等建模内容与 title-only 骨架分离，按册一行一条。knowledge_point 本体仍是 <vol>.json 的轻量标题表，构建时合并成节点。",
+      "legacy_required": [],
+      "required": [
+        "uid",
+        "kp_type",
+        "definition"
+      ],
+      "optional": [
+        "conditions",
+        "boundaries",
+        "objectives",
+        "aliases",
+        "skill_refs",
+        "misconception_refs",
+        "textbook",
+        "grade_band",
+        "review_status",
+        "ext"
+      ],
+      "fields": {
+        "uid": "必须与 knowledge_points/<vol>.json 里生成的节点 id 完全一致（K<vol>-<节号>-<序号>），否则构建期拒绝",
+        "definition": "30–120 汉字，可用 LaTeX；纯教材覆盖内容，禁写超纲结论",
+        "objectives": "[{ability, text}] ability 用动词短语（判断/解释/计算/作出），不写课标套话",
+        "textbook": "{edition_id, volume_id, chapter_no, section_no, page}",
+        "skill_refs": "指向 content/skills skill.uid；必须与 skill.kp_refs 双向一致",
+        "misconception_refs": "指向 content/misconceptions mc.uid；必须与 mc.kp_refs 双向一致"
+      }
+    },
+    "skill": {
+      "storage": "content/skills/<vol>/<chapter>.jsonl",
+      "desc": "解题方法/技能实体（docx 表 5）。补学 L3 提示与「方法选择错误」错因靠它。按册按章分文件，一行一条。",
+      "legacy_required": [],
+      "required": [
+        "uid",
+        "name",
+        "steps",
+        "kp_refs"
+      ],
+      "optional": [
+        "alternatives",
+        "boundaries",
+        "conditions",
+        "desc",
+        "examples",
+        "ext",
+        "failure_signals",
+        "family",
+        "grade_band",
+        "review_status",
+        "strategies",
+        "thought_refs",
+        "tier"
+      ],
+      "fields": {
+        "steps": "[{ordinal, action, basis}] 每步写「依据」，供提示阶梯取用",
+        "failure_signals": "学生用错该方法时的可观察信号数组",
+        "alternatives": "可替代方法 uid 数组",
+        "tier": "难度层：core=教材内标准方法；extend=培优/中考压轴常用（教材不讲但同册可解）；olympiad=竞赛/拓展，常需额外结论或超前知识",
+        "family": "方法族名，如「全等辅助线」「整体代换」，用于同一族方法的对比与置换",
+        "desc": "一句定义式描述（方法页首段）；缺失时方法页只能列步骤。",
+        "boundaries": "这个方法不覆盖什么（强建议）；参考源明确要求方法页写边界。",
+        "thought_refs": "thought uid 数组，归属方法族/思想；取代原自由字符串 family。"
+      }
+    },
+    "misconception": {
+      "storage": "content/misconceptions/<vol>/<chapter>.jsonl",
+      "desc": "错因实例，category 用 docx 表 13 的 8 类；这是诊断与补学的桥。按册按章分文件，一行一条。",
+      "legacy_required": [],
+      "required": [
+        "uid",
+        "category",
+        "signal",
+        "kp_refs"
+      ],
+      "optional": [
+        "remedy",
+        "contrast_pairs",
+        "example_item_refs",
+        "review_status",
+        "ext"
+      ],
+      "fields": {
+        "signal": "可观察信号数组：错答模式、异常用时、提示依赖等",
+        "remedy": "{resource_refs: [], short_items: [], template: {}}",
+        "contrast_pairs": "[{right_item, wrong_item, why}] 成对正反例"
+      }
+    },
+    "resource": {
+      "storage": "content/resources/<area>.jsonl",
+      "desc": "教学内容（讲解/例题/反例/图/微课）。知识页与补学材料都由它出。",
+      "legacy_required": [],
+      "required": [
+        "uid",
+        "type",
+        "kp_refs",
+        "license"
+      ],
+      "optional": [
+        "title",
+        "body",
+        "assets",
+        "objectives",
+        "edition_id",
+        "version",
+        "review_status",
+        "ext"
+      ]
+    },
+    "asset": {
+      "storage": "content/assets/index.jsonl",
+      "desc": "图/SVG 等媒体索引；466 道必配图题的落点。文件本身按 license 分仓（public 目录 / private 目录）。",
+      "legacy_required": [],
+      "required": [
+        "uid",
+        "path",
+        "asset_type",
+        "sha256",
+        "license"
+      ],
+      "optional": [
+        "alt_text",
+        "width",
+        "height",
+        "source",
+        "redistributable",
+        "ext"
+      ],
+      "fields": {
+        "alt_text": "无障碍替代文本；缺失则不允许进入 public 切片"
+      }
+    },
+    "question": {
+      "storage": "content/questions/<vol>/*.jsonl",
+      "desc": "题目主数据，字段对齐 docx A2 并按本仓现实降级：answer_spec 允许 answer_status=missing，但 solution_steps/rubric 缺失必须能被覆盖率矩阵看见。",
+      "legacy_required": [
+        "id",
+        "stem",
+        "answer_status",
+        "license",
+        "visibility",
+        "review_status"
+      ],
+      "required": [
+        "uid",
+        "version",
+        "stem",
+        "answer_spec",
+        "kp_tags",
+        "difficulty",
+        "source",
+        "license",
+        "validation",
+        "visibility"
+      ],
+      "optional": [
+        "assets",
+        "solution_steps",
+        "rubric_ref",
+        "skill_tags",
+        "misconception_tags",
+        "stats",
+        "stats_note",
+        "form",
+        "band",
+        "star_source",
+        "figure",
+        "answer_note",
+        "trace_possible",
+        "ext",
+        "purpose"
+      ],
+      "sidecars": {
+        "ch<章>.meta.jsonl": "题目用途侧挂文件：[{uid, purpose, why, rule, review_status, generated_by}]。purpose 取 method_contrast|definition|example|method_apply|context，只写有证据的题（教材原题 / 题干明说多解 / 概念辨析正则 / 题→知识点→方法派生链 / 情境词），其余留空不猜；生成器 tools/question_purpose.py（现 490/2708 条，ai_draft）"
+      },
+      "fields": {
+        "answer_spec": "{canonical, equivalent[], tolerance, unit, unordered, answer_type}；unordered=true 覆盖 152 道多答案无序题，缺它就是把 3,2 判错",
+        "solution_steps": "[{ordinal, statement, basis, kp_refs[], rubric_refs[]}]；现 answer 是纯文本带「步骤N」，562 题可解析",
+        "kp_tags": "[{kp_uid, role: primary|secondary, weight}]；assessed_by 边的来源。侧挂 ch<章>.kp.jsonl 现已 243 条（12 章 auto 档，ai_draft），见 docs/question-kp-mapping.md",
+        "difficulty": "{course_level, cognitive(0-5), prereq_depth(0-5), computation(0-5), calibrated{}}；分轴不混一个分数",
+        "validation": "{machine, human, dispute} 三态分轴；不要用单一 review_status 兼表",
+        "stats": "{attempts, correct_rate, hint_rate, median_seconds, discrimination}；样本不足必须留空",
+        "band": "旧五档标签，保留兼容：basic/standard/advanced/challenge/competition",
+        "purpose": "method_contrast|definition|example|method_apply|context；回答「为什么这里有这道题」。只对有证据的题赋值，无证据不写——数据在侧挂 ch<章>.meta.jsonl"
+      },
+      "legacy_fields": [
+        "id",
+        "schema_version",
+        "volume_id",
+        "chapter_no",
+        "section_no",
+        "topics",
+        "topics_scheme",
+        "test_kind",
+        "sec_title",
+        "stem_plain",
+        "qtag_source",
+        "answer",
+        "answer_steps_declared",
+        "answer_status",
+        "group_source",
+        "figure",
+        "redistributable",
+        "review_status",
+        "band",
+        "star_source",
+        "trace_possible"
+      ],
+      "legacy_field_notes": {
+        "answer": "纯文本答案（含「步骤N」标记）：v3 由 solution_steps + answer_spec 取代，未解析前保留",
+        "review_status": "单一审核态：v3 拆成 validation.{machine,human,dispute} 三轴",
+        "star_source": "1–5 星人工标：v3 由 difficulty 四轴取代，保留作对照值，不参与计算",
+        "topics_scheme": "section|chapter：声明 topics 的粒度，v3 用 kp_tags[].role 表达"
+      }
+    },
+    "rubric_point": {
+      "storage": "content/rubric/<vol>/*.jsonl",
+      "desc": "评分点。546 题 3179 点已播种（每题合计 100）。",
+      "legacy_required": [
+        "qid",
+        "ordinal",
+        "criterion",
+        "points"
+      ],
+      "required": [
+        "uid",
+        "qid",
+        "ordinal",
+        "criterion",
+        "points",
+        "basis"
+      ],
+      "optional": [
+        "kp_refs",
+        "misconception_refs",
+        "partial_rules",
+        "review_status",
+        "ext"
+      ],
+      "fields": {
+        "basis": "{type: step|formula|theorem, ref} 该评分点的依据"
+      },
+      "legacy_fields": [
+        "schema_version",
+        "qid",
+        "ordinal",
+        "step_label",
+        "criterion",
+        "points",
+        "source",
+        "review_status"
+      ]
+    },
+    "curriculum_standard": {
+      "storage": "content/curriculum/standards.jsonl",
+      "desc": "课标条目（2022 版义务教育为主，含 2017 版高中）。2026-10-27 起有数据：数学 314 条（第四学段 157 条），由 tools/standards_import.py 从旧仓 cn-curriculum-standards.json 导入，review_status 一律 stub（条文是公开转写、未与教育部 PDF 逐页核对）。知识点经 assessed_by 边挂到条目上，映射表在 content/curriculum/kp_standards.json。",
+      "legacy_required": [],
+      "required": [
+        "uid",
+        "doc",
+        "subject",
+        "stage",
+        "code",
+        "text"
+      ],
+      "optional": [
+        "domain",
+        "grade_band",
+        "kp_refs",
+        "review_status",
+        "ext"
+      ]
+    },
+    "edge": {
+      "storage": "content/relations/edges.jsonl",
+      "desc": "统一关系表，权威。prerequisites.json / kp_prerequisites.json / framework_gen 规则边将来全部并进来；supports 与 prerequisite_of 禁止混统计。",
+      "legacy_required": [
+        "src",
+        "dst",
+        "kind"
+      ],
+      "required": [
+        "uid",
+        "src",
+        "dst",
+        "relation",
+        "strength",
+        "evidence",
+        "confidence",
+        "review"
+      ],
+      "optional": [
+        "direction",
+        "scope",
+        "supersedes",
+        "created_at",
+        "updated_at",
+        "ext"
+      ],
+      "fields": {
+        "relation": "11 种：is_part_of、sequence（教材顺序，与先修必须分开）、prerequisite_of、supports、equivalent_to、contrast_with、applies_to（方法→知识）、uses_skill（知识→方法）、belongs_to（→思想/素养）、assessed_by、misconception_of。",
+        "evidence": "[{type, ref, quote}]；type 取 enums.evidence_type。规则边用 type=teacher_note + ref=rule:<rule_id>",
+        "review": "{status, reviewer, at}",
+        "scope": "{curriculum_version, edition_id} 版本化，换教材不推翻历史",
+        "direction": "有向=src→dst；equivalent_to 对称"
+      },
+      "legacy_fields": [
+        "src",
+        "dst",
+        "kind",
+        "strength",
+        "evidence",
+        "confidence",
+        "review_status"
+      ]
+    },
+    "alias": {
+      "storage": "content/registry/aliases.jsonl",
+      "desc": "别名与跨库 ID 映射表：术语/符号/旧 ID/外部 ID/版次名/拼音。检索与外部源接入都走它。",
+      "legacy_required": [],
+      "required": [
+        "uid",
+        "target_uid",
+        "surface",
+        "alias_type",
+        "source"
+      ],
+      "optional": [
+        "confidence",
+        "review_status",
+        "ext"
+      ]
+    },
+    "learner_evidence": {
+      "storage": "private/records/<child>/evidence.jsonl（永不入 public 切片）",
+      "desc": "学习证据，只追加不修改（docx 表 5 学习证据 + 掌握度三件套）。",
+      "legacy_required": [],
+      "required": [
+        "uid",
+        "learner",
+        "item_uid",
+        "item_version",
+        "ts",
+        "response",
+        "verdict"
+      ],
+      "optional": [
+        "how",
+        "hint_level",
+        "seconds",
+        "self_confidence",
+        "session_id",
+        "device",
+        "app_version",
+        "ext"
+      ],
+      "fields": {
+        "learner": "假名化 ID；不写真实姓名/学校，不收集身份证、位置、通讯录",
+        "verdict": "correct/wrong/manual/blank；manual 绝不允许在界面上显示为错",
+        "hint_level": "取 enums.hint_level；L3/L4 做对记「带提示通过」，不计实测掌握"
+      }
+    },
+    "thought": {
+      "storage": "content/thoughts.jsonl",
+      "desc": "数学思想与方法族。level=thought 是上位思想（不直接解题），level=family 是可操作的方法族；方法（skill）通过 thought_refs 上卷到方法族，再由 parent 上卷到思想。",
+      "required": [
+        "uid",
+        "name",
+        "level",
+        "desc",
+        "review_status"
+      ],
+      "optional": [
+        "boundaries",
+        "parent",
+        "evidence",
+        "examples",
+        "ext"
+      ],
+      "fields": {
+        "desc": "一句定义式描述，方法/思想页首段。",
+        "boundaries": "不覆盖什么（与 knowledge_point.boundaries 同构）；参考源方法页的边界声明。",
+        "parent": "上位思想 uid（family 必填，thought 为 null）。",
+        "evidence": "[{type, ref, quote}]，type 取 enums.evidence_type。"
+      }
+    },
+    "competency": {
+      "storage": "content/registry/competencies.json",
+      "desc": "义务教育数学课程标准的六个核心素养，固定 6 条，不增不减。",
+      "required": [
+        "uid",
+        "code",
+        "name"
+      ],
+      "optional": [
+        "desc",
+        "note",
+        "ext"
+      ]
+    }
+  },
+  "capabilities": {
+    "note": "运行层切片在 manifest 里声明自己支持什么，前端按此降级，不猜字段。",
+    "list": [
+      "knowledge_page",
+      "practice",
+      "hint_ladder",
+      "rubric",
+      "review_queue",
+      "figure",
+      "method_hint",
+      "misconception_diagnosis",
+      "export_outbox"
+    ]
+  },
+  "interfaces": {
+    "adapter": "tools/adapters/<source>.py: fetch() -> [{record, provenance{url, sha256, license, fetched_at}}]；外部源一律先落 content/sources/registry.jsonl 再入库",
+    "judge": "judge(ref, student) -> {verdict, how, needsReview}；manual 优先于 wrong",
+    "slice": "build/slices/<vol>.<scope>.json.gz + manifest.json{capabilities, schema_version, hash}",
+    "export_graph": {
+      "note": "边表由 tools/edges_build.py 从各源派生生成，不手改；前端切片按 relation+strength 过滤。"
+    },
+    "evidence_sync": "private/records/<child>/outbox.jsonl 只追加 + inbox.jsonl 回执；M4a 用文件导出/导入，接口不变"
+  },
+  "enum_aliases": {
+    "edge_strength": {
+      "soft": "support"
+    }
+  }
+}

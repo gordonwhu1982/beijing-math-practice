@@ -1,0 +1,370 @@
+{"id": "13.1_adv_01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "事件分为确定事件与随机事件；确定事件再分为必然事件与不可能事件", "src": "事件分为确定事件与随机事件；确定事件再分为必然事件与不可能事件"}
+{"id": "13.1_adv_02", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "若 P=1 则一定发生，是必然事件；若 P=0 则一定不发生，是不可能事件", "src": "若 $P=1$ 则一定发生，是必然事件；若 $P=0$ 则一定不发生，是不可能事件"}
+{"id": "13.1_adv_03", "form": "solution", "answer_status": "present", "type": "judgement", "raw": "都不对", "polarity": "term", "values": [{"raw": "都不对", "kind": "text"}], "src": "都不对"}
+{"id": "13.1_adv_04", "form": "solution", "answer_status": "present", "type": "judgement", "raw": "都不一定", "polarity": "term", "values": [{"raw": "都不一定", "kind": "text"}], "src": "都不一定"}
+{"id": "13.1_adv_05", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "摸到红球为随机，说明既不是必然也不是不可能", "src": "摸到红球为随机，说明既不是必然也不是不可能"}
+{"id": "13.1_adv_06", "form": "solution", "answer_status": "present", "type": "judgement", "raw": "错误", "polarity": "term", "values": [{"raw": "错误", "kind": "text"}], "src": "错误"}
+{"id": "13.1_adv_07", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "示例：从全班 50 人（30 名男生）中随机点一名是男生", "src": "示例：从全班 $50$ 人（$30$ 名男生）中随机点一名是男生"}
+{"id": "13.1_adv_08", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "(1) 必然（重力）；(2) 必然（垂线段最短定理）；(3) 随机；(4) 必然（|-2|=2>0）", "src": "(1) 必然（重力）；(2) 必然（垂线段最短定理）；(3) 随机；(4) 必然（$|{-2}|=2\\gt{}0$）"}
+{"id": "13.1_adv_09", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "三角形内角和 180°（必然）；四边形内角和 360°（必然）；一个数的绝对值非负（必然）", "src": "三角形内角和 $180^\\circ$（必然）；四边形内角和 $360^\\circ$（必然）；一个数的绝对值非负（必然）"}
+{"id": "13.1_adv_10", "form": "solution", "answer_status": "present", "type": "judgement", "raw": "不对", "polarity": "term", "values": [{"raw": "不对", "kind": "text"}], "src": "不对"}
+{"id": "13.1_adv_11", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "(1) 实数平方 \\ge0，不可能为负——不可能；(2) 奇+奇=偶，必然；(3) 0 没有倒数，不可能；(4) 菱形对", "src": "(1) 实数平方 $\\ge0$，不可能为负——不可能；(2) 奇+奇=偶，必然；(3) $0$ 没有倒数，不可能；(4) 菱形对角线垂直，必然"}
+{"id": "13.1_adv_12", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "错在遗漏了随机事件", "src": "错在遗漏了随机事件"}
+{"id": "13.1_adv_13", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "都大于 4 有 5,6（随机），2 种；偶数有 2,4,6（3 种），也是随机", "src": "都大于 $4$ 有 $5,6$（随机），$2$ 种；偶数有 $2,4,6$（$3$ 种），也是随机"}
+{"id": "13.1_adv_14", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "加入红球后，可能摸到白也可能摸到红，由必然事件变为随机事件", "src": "加入红球后，可能摸到白也可能摸到红，由必然事件变为随机事件"}
+{"id": "13.1_adv_15", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "前者限定“标准大气压”，条件明确，必然沸腾；后者未说明气压，若气压升高沸点也升高，可能不沸腾，故只是随机事件", "src": "前者限定“标准大气压”，条件明确，必然沸腾；后者未说明气压，若气压升高沸点也升高，可能不沸腾，故只是随机事件"}
+{"id": "13.1_bas_01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "选 A", "src": "选 A"}
+{"id": "13.1_bas_02", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "选 B", "src": "选 B"}
+{"id": "13.1_bas_03", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "选 B", "src": "选 B"}
+{"id": "13.1_bas_04", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "选 D", "src": "选 D"}
+{"id": "13.1_bas_05", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "选 B", "src": "选 B"}
+{"id": "13.1_bas_06", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "选 C", "src": "选 C"}
+{"id": "13.1_bas_07", "form": "solution", "answer_status": "present", "type": "judgement", "raw": "必然事件", "polarity": "term", "values": [{"raw": "必然事件", "kind": "text"}], "src": "必然事件"}
+{"id": "13.1_bas_08", "form": "solution", "answer_status": "present", "type": "judgement", "raw": "随机事件", "polarity": "term", "values": [{"raw": "随机事件", "kind": "text"}], "src": "随机事件"}
+{"id": "13.1_bas_09", "form": "solution", "answer_status": "present", "type": "judgement", "raw": "随机事件", "polarity": "term", "values": [{"raw": "随机事件", "kind": "text"}], "src": "随机事件"}
+{"id": "13.1_bas_10", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "必然事件（就已知事实而言，地球确实存在生命）", "src": "必然事件（就已知事实而言，地球确实存在生命）"}
+{"id": "13.1_bas_11", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "选 B", "src": "选 B"}
+{"id": "13.1_bas_12", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "选 C", "src": "选 C"}
+{"id": "13.1_bas_13", "form": "solution", "answer_status": "present", "type": "judgement", "raw": "不可能事件", "polarity": "yes", "values": [{"raw": "不可能事件", "kind": "text"}], "src": "不可能事件"}
+{"id": "13.1_bas_14", "form": "solution", "answer_status": "present", "type": "judgement", "raw": "必然事件", "polarity": "term", "values": [{"raw": "必然事件", "kind": "text"}], "src": "必然事件"}
+{"id": "13.1_bas_15", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "选 B", "src": "选 B"}
+{"id": "13.1_bas_16", "form": "solution", "answer_status": "present", "type": "judgement", "raw": "随机事件", "polarity": "term", "values": [{"raw": "随机事件", "kind": "text"}], "src": "随机事件"}
+{"id": "13.1_bas_17", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "选 C", "src": "选 C"}
+{"id": "13.1_bas_18", "form": "solution", "answer_status": "present", "type": "judgement", "raw": "必然事件", "polarity": "term", "values": [{"raw": "必然事件", "kind": "text"}], "src": "必然事件"}
+{"id": "13.1_bas_19", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "选 B", "src": "选 B"}
+{"id": "13.1_bas_20", "form": "solution", "answer_status": "present", "type": "judgement", "raw": "不可能事件", "polarity": "yes", "values": [{"raw": "不可能事件", "kind": "text"}], "src": "不可能事件"}
+{"id": "13.1_cha_01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "仅有互斥不够。"}
+{"id": "13.1_cha_02", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤5 故甲组更可能对应一个稳定概率（约 0.5）。"}
+{"id": "13.1_cha_03", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "改造样本空间即可改变事件类型。"}
+{"id": "13.1_cha_04", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：判定事件类型看“在任何情况下是否一定发生 / 一定不发生 / 可能发生也可能不发生”。"}
+{"id": "13.1_cha_05", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤4 和为 18 只在 (6,6,6) 一种，故 P=1/216。"}
+{"id": "13.1_cha_06", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "0.99≠1，故非必然。"}
+{"id": "13.1_cha_07", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "用长序列频率是否均衡、波动是否自然来判别。"}
+{"id": "13.1_cha_08", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤2 反之 B 发生（抽到任一红桃）未必是人物牌（也可能是红桃 A/2~10），故 B 不包含于 A。"}
+{"id": "13.1_cha_09", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤4 故每人中奖可能性均为 1/5，与抽签顺序无关。"}
+{"id": "13.1_cha_10", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤4 故取 0.497≈0.5 作为概率估计。"}
+{"id": "13.1_cha_11", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤3（估计比例）：用 $f$ 估计红球所占比例，即 $P(红)\\approx\\frac{m}{n}$。"}
+{"id": "13.1_com_01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "结果等于各情况概率的加权平均。"}
+{"id": "13.1_com_02", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤2 第 k 个人对应第 k 个号位，故 P(第 k 人中奖)=1/n，与 k 无关。"}
+{"id": "13.1_com_03", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "趋势比单点更重要。"}
+{"id": "13.1_com_04", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤6 论证：事件类型由剩余样本空间决定，移除对立色即改变类型。"}
+{"id": "13.1_com_05", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "临界即“目标数=总数”或“=0”。"}
+{"id": "13.1_com_06", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "任何"}
+{"id": "13.1_com_07", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "中间波动对应随机。"}
+{"id": "13.1_com_08", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤7 所以应说“频率估计概率”“频率趋近概率”，而非“频率等于概率”。"}
+{"id": "13.1_int_01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "选 A", "src": "选 A"}
+{"id": "13.1_int_02", "form": "solution", "answer_status": "present", "type": "judgement", "raw": "随机事件", "polarity": "term", "values": [{"raw": "随机事件", "kind": "text"}], "src": "随机事件"}
+{"id": "13.1_int_03", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤 2 故是随机事件。"}
+{"id": "13.1_int_04", "form": "solution", "answer_status": "present", "type": "judgement", "raw": "必然事件", "polarity": "term", "values": [{"raw": "必然事件", "kind": "text"}], "src": "必然事件"}
+{"id": "13.1_int_05", "form": "solution", "answer_status": "present", "type": "judgement", "raw": "随机事件", "polarity": "term", "values": [{"raw": "随机事件", "kind": "text"}], "src": "随机事件"}
+{"id": "13.1_int_06", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤 2 该结果不必然也不不可能，故是随机事件。"}
+{"id": "13.1_int_07", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "说明该事件是随机事件，且其发生的概率约为 0.5（频率稳定值可作概率估计）", "src": "说明该事件是随机事件，且其发生的概率约为 $0.5$（频率稳定值可作概率估计）"}
+{"id": "13.1_int_08", "form": "solution", "answer_status": "present", "type": "judgement", "raw": "随机事件", "polarity": "term", "values": [{"raw": "随机事件", "kind": "text"}], "src": "随机事件"}
+{"id": "13.1_int_09", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "选 A", "src": "选 A"}
+{"id": "13.1_int_10", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "选 B", "src": "选 B"}
+{"id": "13.1_int_11", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "选 C", "src": "选 C"}
+{"id": "13.1_int_12", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "例如\"明天降水概率 99\\%\"：发生可能性极大，但仍有 1\\% 不降水，故非必然，是随机事件", "src": "例如\"明天降水概率 $99\\%$\"：发生可能性极大，但仍有 $1\\%$ 不降水，故非必然，是随机事件"}
+{"id": "13.1_int_13", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "例如\"买 1 张彩票中头奖\"：概率极小（如 10^-7），但不为 0，仍可能发生", "src": "例如\"买 1 张彩票中头奖\"：概率极小（如 $10^{-7}$），但不为 0，仍可能发生"}
+{"id": "13.1_int_14", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "例如\"一只普通的鸟在没有工具的情况下学会用人类语言写诗\"——在现实条件下不可能发生，是不可能事件", "src": "例如\"一只普通的鸟在没有工具的情况下学会用人类语言写诗\"——在现实条件下不可能发生，是不可能事件"}
+{"id": "13.1_int_15", "form": "solution", "answer_status": "present", "type": "judgement", "raw": "假命题", "polarity": "term", "values": [{"raw": "假命题", "kind": "text"}], "src": "假命题"}
+{"id": "13.1_int_16", "form": "solution", "answer_status": "present", "type": "judgement", "raw": "假命题", "polarity": "term", "values": [{"raw": "假命题", "kind": "text"}], "src": "假命题"}
+{"id": "13.1_int_17", "form": "solution", "answer_status": "present", "type": "judgement", "raw": "不对", "polarity": "term", "values": [{"raw": "不对", "kind": "text"}], "src": "不对"}
+{"id": "13.1_int_18", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：用频率估计概率时，样本量越大越可靠。"}
+{"id": "13.1_int_19", "form": "solution", "answer_status": "present", "type": "judgement", "raw": "不能", "polarity": "no", "values": [{"raw": "不能", "kind": "text"}], "src": "不能"}
+{"id": "13.1_int_20", "form": "solution", "answer_status": "present", "type": "judgement", "raw": "不正确", "polarity": "no", "values": [{"raw": "不正确", "kind": "text"}], "src": "不正确"}
+{"id": "EC-801-13-1-巩固-01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "（1）平面上三角形的内角和恒为 $180^\\circ$，不可能是 $360^\\circ$，所以“内角和为 $360^\\circ$”是不可能事件；"}
+{"id": "EC-801-13-1-巩固-02", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "（4）掷出 $6$ 点可能发生也可能不发生，是随机事件。"}
+{"id": "EC-801-13-1-拓展-01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "所以红球可能有 $2$ 个、$3$ 个或 $4$ 个。"}
+{"id": "EC-801-13-1-提升-01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "（3）若是随机事件，说明小说既存在又没有占满全部，小说有 $1$ 至 $9$ 本。"}
+{"id": "13.2_adv_01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "可能性大小与角度成正比：绿(180)>红(120)>黄(60)，故 绿>红>黄", "src": "可能性大小与角度成正比：绿(180)>红(120)>黄(60)，故 绿>红>黄"}
+{"id": "13.2_adv_02", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "只要红份数 > 黄份数即可，至少多 1 份", "src": "只要红份数 > 黄份数即可，至少多 1 份"}
+{"id": "13.2_adv_03", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "甲红 4/5，乙红 3/6=1/2，甲更大；差 =4/5-1/2=3/10", "src": "甲红 4/5，乙红 3/6=1/2，甲更大；差 $=4/5-1/2=3/10$"}
+{"id": "13.2_adv_04", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "3 的倍数 3,6,9（3 个）；非 3 的倍数 7 个", "src": "3 的倍数 3,6,9（3 个）；非 3 的倍数 7 个"}
+{"id": "13.2_adv_05", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "A 1 面、B 2 面，朝上为 B 可能性更大（2>1）", "src": "A 1 面、B 2 面，朝上为 B 可能性更大（2>1）"}
+{"id": "13.2_adv_06", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "改动前红 4/8，改动后红 5/8，红色可能性变大（5/8>4/8）", "src": "改动前红 4/8，改动后红 5/8，红色可能性变大（5/8>4/8）"}
+{"id": "13.2_adv_07", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "相同有 6 种（11,22,…,66），不同有 30 种，共 36 种", "src": "相同有 6 种（11,22,…,66），不同有 30 种，共 36 种"}
+{"id": "13.2_adv_08", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "总 \\mathrm C_5^2=10；含指定 1 本有 4 种，不含有 6 种", "src": "总 $\\mathrm C_5^2=10$；含指定 1 本有 4 种，不含有 6 种"}
+{"id": "13.2_adv_09", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "随机事件说明 m>4", "src": "随机事件说明 $m\\gt{}4$"}
+{"id": "13.2_adv_10", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "若边线归右边，则原本“落在线”的临界情况计入右边区域，会改变各区域的计入方式，但总结果数仍等分，比较时须按规则统一计数", "src": "若边线归右边，则原本“落在线”的临界情况计入右边区域，会改变各区域的计入方式，但总结果数仍等分，比较时须按规则统一计数"}
+{"id": "13.2_adv_11", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "总 \\mathrm C_5^2=10；全男 \\mathrm C_2^2=1，至少1女 =9", "src": "总 $\\mathrm C_5^2=10$；全男 $\\mathrm C_2^2=1$，至少1女 $=9$"}
+{"id": "13.2_adv_12", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "王 2 张，红桃 13 张，红桃可能性更大（13>2）", "src": "王 2 张，红桃 13 张，红桃可能性更大（13>2）"}
+{"id": "13.2_adv_13", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "1000 株最可信（样本最大、最稳定）；200 与 1000 株结果接近（0.82 与 0.83），收成率约 0.82", "src": "1000 株最可信（样本最大、最稳定）；200 与 1000 株结果接近（0.82 与 0.83），收成率约 0.82"}
+{"id": "13.2_adv_14", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "甲 P(雨)=10/30=1/3，乙 P(雨)=6/30=1/5", "src": "甲 $P(雨)=10/30=1/3$，乙 $P(雨)=6/30=1/5$"}
+{"id": "13.2_adv_15", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "50 粒偏离较大（样本小），200 与 1000 粒（0.76、0.78）相近且大样本更稳，发芽率约 0.77", "src": "50 粒偏离较大（样本小），200 与 1000 粒（0.76、0.78）相近且大样本更稳，发芽率约 0.77"}
+{"id": "13.2_bas_01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "红球 6 个 > 白球 4 个，故摸到红球的可能性更大", "src": "红球 6 个 > 白球 4 个，故摸到红球的可能性更大"}
+{"id": "13.2_bas_02", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "(1) 含 1 种（点 1）；(2)(3) 各含 3 种；(4) 含 4 种（点 3\\~6）", "src": "(1) 含 1 种（点 1）；(2)(3) 各含 3 种；(4) 含 4 种（点 3\\~6）"}
+{"id": "13.2_bas_03", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "(1) 2 张；(2)(3) 各 13 张；(4) 1 张", "src": "(1) 2 张；(2)(3) 各 13 张；(4) 1 张"}
+{"id": "13.2_bas_04", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "白糖水 4 杯 > 矿泉水 1 杯，取到白糖水的可能性更大", "src": "白糖水 4 杯 > 矿泉水 1 杯，取到白糖水的可能性更大"}
+{"id": "13.2_bas_05", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "人数越多可能性越大：中年人(5) > 小孩(3) > 老人(2)", "src": "人数越多可能性越大：中年人(5) > 小孩(3) > 老人(2)"}
+{"id": "13.2_bas_06", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "合格品 195 件 > 次品 5 件，抽到合格品的可能性更大", "src": "合格品 195 件 > 次品 5 件，抽到合格品的可能性更大"}
+{"id": "13.2_bas_07", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "甲 P(红)=(4)/(5)，乙 P(红)=(2)/(5)，故从甲袋摸到红球的可能性更大", "src": "甲 $P(红)=\\frac{4}{5}$，乙 $P(红)=\\frac{2}{5}$，故从甲袋摸到红球的可能性更大"}
+{"id": "13.2_bas_08", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "比例降序 0.9>0.7>0.4，故第三袋 > 第一袋 > 第二袋", "src": "比例降序 $0.9\\gt{}0.7\\gt{}0.4$，故第三袋 > 第一袋 > 第二袋"}
+{"id": "13.2_bas_09", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "比例降序 0.95>0.85>0.6>0.3，故第四罐 > 第一罐 > 第二罐 > 第三罐", "src": "比例降序 $0.95\\gt{}0.85\\gt{}0.6\\gt{}0.3$，故第四罐 > 第一罐 > 第二罐 > 第三罐"}
+{"id": "13.2_bas_10", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "绿占 160° > 红占 100°，故指向绿色的可能性更大", "src": "绿占 $160^{\\circ}$ > 红占 $100^{\\circ}$，故指向绿色的可能性更大"}
+{"id": "13.2_bas_11", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "绿色 3 个 > 红色 2 个，指向绿色的可能性更大", "src": "绿色 3 个 > 红色 2 个，指向绿色的可能性更大"}
+{"id": "13.2_bas_12", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "P(红红)=(3)/(6)*(2)/(6)=(1)/(6)；P(蓝绿)=(1)/(6)*(2)/(6)=(1)/(18)", "src": "$P(红红)=\\frac{3}{6}\\times\\frac{2}{6}=\\frac{1}{6}$；$P(蓝绿)=\\frac{1}{6}\\times\\frac{2}{6}=\\frac{1}{18}$"}
+{"id": "13.2_bas_13", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "和为 7 有 6 种有序对，和为 12 仅 (6,6) 1 种，故和为 7 的可能性更大", "src": "和为 7 有 6 种有序对，和为 12 仅 (6,6) 1 种，故和为 7 的可能性更大"}
+{"id": "13.2_bas_14", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "总 \\binom52=10；全男 1 种，至少 1 女 9 种，故至少 1 女可能性更大", "src": "总 $\\binom{5}{2}=10$；全男 1 种，至少 1 女 9 种，故至少 1 女可能性更大"}
+{"id": "13.2_bas_15", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "全男 \\binom32=3 种，全女 \\binom22=1 种，故全是男生的可能性更大", "src": "全男 $\\binom{3}{2}=3$ 种，全女 $\\binom{2}{2}=1$ 种，故全是男生的可能性更大"}
+{"id": "13.2_bas_16", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "甲降雨频率 (12)/(40)=0.3，乙 (8)/(40)=0.2；用频率估计，甲地明天降雨可能性更大", "src": "甲降雨频率 $\\frac{12}{40}=0.3$，乙 $\\frac{8}{40}=0.2$；用频率估计，甲地明天降雨可能性更大"}
+{"id": "13.2_bas_17", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "样本越大越稳定，1000 粒最可信；200 与 1000 粒结果接近（0.88、0.90），发芽率约在 0.88\\sim", "src": "样本越大越稳定，1000 粒最可信；200 与 1000 粒结果接近（$0.88$、$0.90$），发芽率约在 $0.88\\sim0.90$"}
+{"id": "13.2_bas_18", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "标红 4 个、黄 2 个、绿 2 个：则 P(红)=(4)/(8)=\\frac12，P(黄)=(2)/(8)=\\frac", "src": "标红 4 个、黄 2 个、绿 2 个：则 $P(红)=\\frac{4}{8}=\\frac12$，$P(黄)=\\frac{2}{8}=\\frac14$，满足红是黄的 2 倍"}
+{"id": "13.2_bas_19", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "两区面积相等，各占一半，故落在阴影区与非阴影区的可能性相等（均为 \\frac12）", "src": "两区面积相等，各占一半，故落在阴影区与非阴影区的可能性相等（均为 $\\frac12$）"}
+{"id": "13.2_bas_20", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "蓝占 210° > 红占 150°，指向蓝色的可能性更大", "src": "蓝占 $210^{\\circ}$ > 红占 $150^{\\circ}$，指向蓝色的可能性更大"}
+{"id": "13.2_cha_01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤4 比较：13/60 > 1/30 = 2/60，故“恰有两人红”可能性更大。"}
+{"id": "13.2_cha_02", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：跨总体合并后比例受各班权重影响，不等于各班比例的简单平均（此处权重偏向男生比例低的乙班）。"}
+{"id": "13.2_cha_03", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤4 故从甲厂取的那件更可能是次品。"}
+{"id": "13.2_cha_04", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "角度比即可能性比。"}
+{"id": "13.2_cha_05", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "注意无放回下用组合数。"}
+{"id": "13.2_cha_06", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "先算“路径概率”再求和。"}
+{"id": "13.2_cha_07", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：跨总体比较同类事件用各自比例（可能性大小），而非绝对人数。"}
+{"id": "13.2_cha_08", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：设计类配比先列约束方程，再按“目标最大/最小”取边界整数解。"}
+{"id": "13.2_cha_09", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤1 互斥 ⇒ A、B 不能同时发生，故“同时发生”P=0。"}
+{"id": "13.2_cha_10", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "绝对数有迷惑性。"}
+{"id": "13.2_cha_11", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "$$ P=\\frac{90+160}{100+200}=\\frac56 $$"}
+{"id": "13.2_cha_12", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "$$ P=\\frac{5+9+8}{10+15+20}=\\frac{22}{45} $$"}
+{"id": "13.2_com_01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：多盘独立复合，“恰 k 个”须枚举所有位置组合并相加分支概率。"}
+{"id": "13.2_com_02", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "大权重低比例会拉低整体。"}
+{"id": "13.2_com_03", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：几何概型中可能性由“目标角度总量”决定，细分区域不改变总量。"}
+{"id": "13.2_com_04", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "分配后比较。"}
+{"id": "13.2_com_05", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤3 故二者是同一事件，概率相同。"}
+{"id": "13.2_com_06", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "互斥分类相加，或补集法。"}
+{"id": "13.2_com_07", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "$$P(被3整除)=\\frac{4}{12}=\\frac13\\;.$$ 步骤4（比较）：$\\frac12>\\frac13$，故“是偶数”的可能性更大。"}
+{"id": "13.2_com_08", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤2 最大和 = 6+6 = 12，故 Y（和≥13）永不成立，是不可能事件 P=0。"}
+{"id": "13.2_int_01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤 3 故 乙 > 甲 > 丙。"}
+{"id": "13.2_int_02", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "与袋内总球数无关。"}
+{"id": "13.2_int_03", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤 2 两袋等可能被选（各 $\\frac12$），故来自甲袋红球概率 $\\frac12\\times0.4=0.2$，来自乙袋 $\\frac12\\times0.7=0.35$。"}
+{"id": "13.2_int_04", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "数量相同则概率相同。"}
+{"id": "13.2_int_05", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤 2 故 蓝 > 绿 > 红。"}
+{"id": "13.2_int_06", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：时间/角度均分则可能性相等。"}
+{"id": "13.2_int_07", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤 2 频率略高者估计概率略大，故甲正面的可能性略大。"}
+{"id": "13.2_int_08", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "样本量越大估计越可信。"}
+{"id": "13.2_int_09", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：频率估计概率时优先采用大样本频率。"}
+{"id": "13.2_int_10", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤 3 $\\frac16\\gt{}\\frac{1}{18}$，故\"a 红且 b 红\"可能性更大。"}
+{"id": "13.2_int_11", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤 2 故 和为 7 > 和为 11 > 和为 2。"}
+{"id": "13.2_int_12", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤 3 $169\\gt{}78$，故\"一张红桃一张黑桃\"可能性更大。"}
+{"id": "13.2_int_13", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤 3 $7\\gt{}3$，故至少 1 女可能性更大。"}
+{"id": "13.2_int_14", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤 3 $6\\gt{}3$，故\"2 男 1 女\"可能性更大。"}
+{"id": "13.2_int_15", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "本题恰好等可能。"}
+{"id": "13.2_int_16", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：设计 = 找满足约束的整数解 $a=3b$。"}
+{"id": "13.2_int_17", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：设计题按倍数分配扇区数。"}
+{"id": "13.2_int_18", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：连续型几何概率 = 目标角度 ÷ 总角度。"}
+{"id": "13.2_int_19", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：离散网格几何概率 = 目标格数 / 总格数。"}
+{"id": "13.2_int_20", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "或二项式 $(\\frac12)^n\\binom{n}{k}$。"}
+{"id": "EC-801-13-2-巩固-01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "所以选 B。"}
+{"id": "EC-801-13-2-巩固-03", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "比较得：抽到红色的可能性最大，黑桃与梅花的可能性相等，抽到方块 A 的可能性最小。"}
+{"id": "EC-801-13-2-拓展-01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "因为 $\\frac{3}{5}>\\frac{2}{5}$，所以找出“$2$ 名男生和 $2$ 名女生”的可能性大。"}
+{"id": "EC-801-13-2-提升-01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "因为 $\\frac{1}{49}>\\frac{1}{144}$，所以两个人同时出生在星期日的可能性大。"}
+{"id": "EC-801-13-2-提升-02", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "（1）两种可能性相等，则 $\\frac{x}{10}=\\frac{y}{10}$，即 $x=y$，所以 $x=5$，$y=5$；"}
+{"id": "13.3_adv_01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "设总数 m，则 (4)/(m)=\\frac13，解得 m=12", "src": "设总数 $m$，则 $\\frac{4}{m}=\\frac13$，解得 $m=12$"}
+{"id": "13.3_adv_02", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "标 3 个面为 A、另 3 个面为 B（无空白）", "src": "标 3 个面为 A、另 3 个面为 B（无空白）"}
+{"id": "13.3_adv_03", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "红 2 个、黄 1 个、绿 5 个（共 8）", "src": "红 2 个、黄 1 个、绿 5 个（共 8）"}
+{"id": "13.3_adv_04", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "总 21 区等可能", "src": "总 21 区等可能"}
+{"id": "13.3_adv_05", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤3 解得 $n=9\\times\\frac53=15$。"}
+{"id": "13.3_adv_06", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "(1) 必然 ⇒ 全为红 ⇒ m=4；(2) 随机 ⇒ 既有红又有非红 ⇒ m\\ge5（整数）；(3) (4)/(m)=", "src": "(1) 必然 ⇒ 全为红 ⇒ $m=4$；(2) 随机 ⇒ 既有红又有非红 ⇒ $m\\ge5$（整数）；(3) $\\frac{4}{m}=\\frac13 \\Rightarrow m=12$"}
+{"id": "13.3_adv_07", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "同生 10 月概率约 (1)/(12)，同生星期日约 (1)/(7)", "src": "同生 10 月概率约 $\\frac{1}{12}$，同生星期日约 $\\frac{1}{7}$"}
+{"id": "13.3_adv_08", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "P(A)=3/6=1/2，P(B)=2/6=1/3", "src": "$P(A)=3/6=1/2$，$P(B)=2/6=1/3$"}
+{"id": "13.3_adv_09", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "标 2 面 A、1 面 B、3 面空白", "src": "标 2 面 A、1 面 B、3 面空白"}
+{"id": "13.3_adv_10", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "标 1 面 A、3 面 B、2 面空白", "src": "标 1 面 A、3 面 B、2 面空白"}
+{"id": "13.3_adv_11", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "白子比例：A 8/10、B 5/10、C 2/10、D 9/10、E 1", "src": "白子比例：A $8/10$、B $5/10$、C $2/10$、D $9/10$、E $1$"}
+{"id": "13.3_adv_12", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤3 “点数为偶数”即 2、4、6，共 $3$ 种，故 $P=\\frac36=\\frac12$。"}
+{"id": "13.3_adv_13", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "总数 =4/\\frac12=8", "src": "总数 $=4\\div\\frac12=8$（即 4 红 4 白）"}
+{"id": "13.3_adv_14", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "辅音 =10*\\frac35=6 张", "src": "辅音 $=10\\times\\frac35=6$ 张"}
+{"id": "13.3_adv_15", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "取 5 张，其中 2 张偶数（如 2、4）、3 张奇数（如 1、3、5）", "src": "取 5 张，其中 2 张偶数（如 2、4）、3 张奇数（如 1、3、5）"}
+{"id": "13.3_bas_01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "所有等可能结果共 10 种，摸到黑子含 4 种，故 P=(4)/(10)=(2)/(5)", "src": "所有等可能结果共 10 种，摸到黑子含 4 种，故 $P=\\frac{4}{10}=\\frac{2}{5}$"}
+{"id": "13.3_bas_02", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "共 6 种等可能结果，红色面 1 种，故 P=(1)/(6)", "src": "共 6 种等可能结果，红色面 1 种，故 $P=\\frac{1}{6}$"}
+{"id": "13.3_bas_03", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "红桃花色共 13 张，故 P=(13)/(52)=\\frac14", "src": "红桃花色共 13 张，故 $P=\\frac{13}{52}=\\frac14$"}
+{"id": "13.3_bas_04", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "共 40 种等可能结果，男生 22 种，故 P=(22)/(40)=(11)/(20)", "src": "共 40 种等可能结果，男生 22 种，故 $P=\\frac{22}{40}=\\frac{11}{20}$"}
+{"id": "13.3_bas_05", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "共 100 种等可能结果，次品 2 种，故 P=(2)/(100)=(1)/(50)", "src": "共 100 种等可能结果，次品 2 种，故 $P=\\frac{2}{100}=\\frac{1}{50}$"}
+{"id": "13.3_bas_06", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "共 8 种等可能结果，红色扇面 4 种，故 P=(4)/(8)=\\frac12", "src": "共 8 种等可能结果，红色扇面 4 种，故 $P=\\frac{4}{8}=\\frac12$"}
+{"id": "13.3_bas_07", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "可能性大小与角度成正比，绿色占 180°，故 P=(180)/(360)=\\frac12", "src": "可能性大小与角度成正比，绿色占 $180^{\\circ}$，故 $P=\\frac{180}{360}=\\frac12$"}
+{"id": "13.3_bas_08", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "两段各占 3 小时即各 90°，故 P(12--3)=(90)/(360)=\\frac14，P(3--6)=\\frac1", "src": "两段各占 3 小时即各 $90^{\\circ}$，故 $P(12\\text{--}3)=\\frac{90}{360}=\\frac14$，$P(3\\text{--}6)=\\frac14$，两者相等"}
+{"id": "13.3_bas_09", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "每次 P(红)=\\frac35，有放回独立，故 P=\\frac35*\\frac35=(9)/(25)", "src": "每次 $P(红)=\\frac35$，有放回独立，故 $P=\\frac35\\times\\frac35=\\frac{9}{25}$"}
+{"id": "13.3_bas_10", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "等可能结果（正正、正反、反正、反反）共 4 种，\"恰好一次正面\"为正反、反正 2 种，故 P=(2)/(4)=\\frac", "src": "等可能结果（正正、正反、反正、反反）共 4 种，\"恰好一次正面\"为正反、反正 2 种，故 $P=\\frac{2}{4}=\\frac12$"}
+{"id": "13.3_bas_11", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "偶数点 2、4、6 共 3 种，单次 P(偶)=\\frac36=\\frac12；两次独立，故 P=\\frac12*\\fr", "src": "偶数点 2、4、6 共 3 种，单次 $P(偶)=\\frac36=\\frac12$；两次独立，故 $P=\\frac12\\times\\frac12=\\frac14$"}
+{"id": "13.3_bas_12", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "第一次 P(白)=\\frac37，第二次剩 2 白/6 总，P(白)=\\frac26；故 P=\\frac37*\\frac", "src": "第一次 $P(白)=\\frac37$，第二次剩 2 白/6 总，$P(白)=\\frac26$；故 $P=\\frac37\\times\\frac26=\\frac{1}{7}$"}
+{"id": "13.3_bas_13", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "总选法 \\binom52=10；1 男 1 女 \\binom21\\binom31=6，故 P=(6)/(10)=\\fra", "src": "总选法 $\\binom{5}{2}=10$；1 男 1 女 $\\binom{2}{1}\\binom{3}{1}=6$，故 $P=\\frac{6}{10}=\\frac35$"}
+{"id": "13.3_bas_14", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "总 \\binom52=10；全男 \\binom22=1，故至少 1 女 =10-1=9 种，P=(9)/(10)", "src": "总 $\\binom{5}{2}=10$；全男 $\\binom{2}{2}=1$，故至少 1 女 $=10-1=9$ 种，$P=\\frac{9}{10}$"}
+{"id": "13.3_bas_15", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "总 \\binom52=10；含指定 1 本则需再选其余 4 本中 1 本，共 4 种，故 P=(4)/(10)=\\fra", "src": "总 $\\binom{5}{2}=10$；含指定 1 本则需再选其余 4 本中 1 本，共 4 种，故 $P=\\frac{4}{10}=\\frac25$"}
+{"id": "13.3_bas_16", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "9 格等可能，目标 1 格，故 P=\\frac19", "src": "9 格等可能，目标 1 格，故 $P=\\frac19$"}
+{"id": "13.3_bas_17", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "16 格等可能，阴影 4 格，故 P=(4)/(16)=\\frac14", "src": "16 格等可能，阴影 4 格，故 $P=\\frac{4}{16}=\\frac14$"}
+{"id": "13.3_bas_18", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "频率 =(168)/(300)=0.56，用频率估计概率约为 0.56", "src": "频率 $=\\frac{168}{300}=0.56$，用频率估计概率约为 $0.56$"}
+{"id": "13.3_bas_19", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "发芽频率 =(465)/(500)=0.93，估计发芽概率约为 0.93", "src": "发芽频率 $=\\frac{465}{500}=0.93$，估计发芽概率约为 $0.93$"}
+{"id": "13.3_bas_20", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "设总数 m，则 (9)/(m)=\\frac37，解得 m=21，袋中共有 21 个球", "src": "设总数 $m$，则 $\\frac{9}{m}=\\frac37$，解得 $m=21$，袋中共有 21 个球"}
+{"id": "13.3_cha_01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "或组合计数（顺序无关时更快）。"}
+{"id": "13.3_cha_02", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：连续量几何概型 P = 目标区间长度 / 总区间长度。"}
+{"id": "13.3_cha_03", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "利用对称可免算具体边长。"}
+{"id": "13.3_cha_04", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "注意“同花色”含两种花色。"}
+{"id": "13.3_cha_05", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "常用于质量推断。"}
+{"id": "13.3_cha_06", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：频率估计下，“部分量 / 总量 = 频率”可解未知总量。"}
+{"id": "13.3_cha_07", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：设计使某结果可能性为指定值，只需让该结果数占总量的指定比例。"}
+{"id": "13.3_cha_08", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤4（缩小样本空间验证）：条件事件样本数 $=3$，有利 $=1$，故 $P=\\frac13$。"}
+{"id": "13.3_cha_09", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：并集计数用容斥原理，减去交集的重复部分，否则会多算。"}
+{"id": "13.3_cha_10", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：多类别可能性，用“其余 = 1 − 已知各类之和”或先算数量再求比。"}
+{"id": "13.3_cha_11", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "本题用组合计数总结果、分类计数有利结果。"}
+{"id": "13.3_cha_12", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤4（范围）：故 $p$ 的取值范围：$\\frac15\\le p\\le\\frac45$。"}
+{"id": "13.3_cha_13", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤2 红球比白球少 $3k-2k=k$ 个，已知少 $6$ 个，故 $k=6$。"}
+{"id": "13.3_cha_14", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤4 解得 $4k=4$，即 $k=1$，原总数 $=8\\times1=8$（块）。"}
+{"id": "13.3_cha_15", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤2 蓝票 $15$ 张对应整体的 $\\frac{5}{12}$，所以总票数 $=15\\div\\frac{5}{12}=15\\times\\frac{12}{5}=36$（张）。"}
+{"id": "13.3_cha_16", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "$$ P=\\frac{7-3}{10-0}=\\frac25 $$"}
+{"id": "13.3_cha_17", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "$$ P=\\frac{2}{4}=\\frac12 $$"}
+{"id": "13.3_com_01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "树状图适合验证但易漏分支。"}
+{"id": "13.3_com_02", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "连续量“区间/总量”思想同长度比、角度比。"}
+{"id": "13.3_com_03", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "分别数有利再相乘。"}
+{"id": "13.3_com_04", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "技巧2（分类枚举）：按个位（偶/奇）或十位（大小）分类，避免遗漏与重复计数。"}
+{"id": "13.3_com_05", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "独立两步用乘法。"}
+{"id": "13.3_com_06", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "有放回下样本空间不变。"}
+{"id": "13.3_com_07", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：两独立袋各取一球，同色 = 同红 + 同白（互斥分类相加）。"}
+{"id": "13.3_com_08", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "只要规则对称（正反面等可能分配），即公平。"}
+{"id": "13.3_com_09", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "$$ P(\\text{红})=\\frac12\\cdot\\frac25+\\frac12\\cdot\\frac45=\\frac35 $$"}
+{"id": "13.3_com_10", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "无放回：个位不能与十位相同，所以每种十位对应 $4$ 个个位。"}
+{"id": "13.3_com_11", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "$$ P=\\frac{\\frac12\\cdot2\\cdot2}{4\\times4}=\\frac18 $$"}
+{"id": "13.3_int_01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：有放回两步试验分\"顺序\"讨论，或用 $2pq$（一红一白两种顺序）。"}
+{"id": "13.3_int_02", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤 2 故 $P=\\frac{6}{36}=\\frac16$。"}
+{"id": "13.3_int_03", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤 2 故 $P=\\frac{3}{8}$。"}
+{"id": "13.3_int_04", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "也可直接数组合 $\\frac{\\binom{5}{2}}{\\binom{8}{2}}$。"}
+{"id": "13.3_int_05", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "或分步乘法并调整分母。"}
+{"id": "13.3_int_06", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：组合计数 $\\frac{\\binom{男}{2}}{\\binom{总}{2}}$。"}
+{"id": "13.3_int_07", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤 3 合计 $18+4=22$，故 $P=\\frac{22}{35}$。"}
+{"id": "13.3_int_08", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：先确定目标集合基数再组合计数。"}
+{"id": "13.3_int_09", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "恰 1 中即从 1 中奖者选 1、从 4 未中者选 1：$\\binom{1}{1}\\binom{4}{1}=4$。"}
+{"id": "13.3_int_10", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：连续型几何概率 = 目标角度 / 总角度。"}
+{"id": "13.3_int_11", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：时间占比即角度占比，连续量用\"目标区间/总区间\"。"}
+{"id": "13.3_int_12", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：离散网格几何概率 = 目标格数 / 总格数。"}
+{"id": "13.3_int_13", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：独立事件同时发生用乘法 $P(AB)=P(A)P(B)$。"}
+{"id": "13.3_int_14", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：\"至少 1\"几乎总用补集 $1-(1-p)^n$ 更简便。"}
+{"id": "13.3_int_15", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：独立重复试验\"至少一次\"用 $1-(1-p)^n$。"}
+{"id": "13.3_int_16", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：条件概率——已知前一步结果要更新\"剩余总体\"再算。"}
+{"id": "13.3_int_17", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：不放回抽样中，前一次结果改变后续样本空间。"}
+{"id": "13.3_int_18", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：已知可能性大小与一类具体数量，列方程反推总数。"}
+{"id": "13.3_int_19", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "总数 = 目标量 ÷ 比例。"}
+{"id": "13.3_int_20", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "20.【解】只要白子数 : 黑子数 $=3:1$ 即可。"}
+{"id": "EC-801-13-3-巩固-01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "（4）绿色或黄色共 $3+2=5$ 个面，$P=\\frac{5}{6}$。"}
+{"id": "EC-801-13-3-巩固-02", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "（4）“不是白糖水”即矿泉水或凉开水，共 $1+2=3$ 杯，$P=\\frac{3}{8}$。"}
+{"id": "EC-801-13-3-巩固-03", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "（3）不是老年人共 $5+3=8$ 人，$P=\\frac{8}{10}=\\frac{4}{5}$。"}
+{"id": "EC-801-13-3-巩固-04", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "所以第一次检验时能够找到次品的可能性大小为 $0.02$，即 $\\frac{1}{50}$。"}
+{"id": "EC-801-13-3-提升-01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "不中奖的可能性为 $\\frac{14}{21}=\\frac{2}{3}$。"}
+{"id": "EC-801-13-3-提升-02", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "（3）转盘试验：把转盘等分成 $4$ 个全等扇形，$2$ 个红、$1$ 个黄、$1$ 个其它颜色，则 $P(\\text{红})=\\frac{2}{4}=\\frac{1}{2}$，$P(\\text{黄})=\\frac{1}{4}$。"}
+{"id": "EC-801-13-3-提升-03", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "所以这批零件中有 $245$ 件合格品（也可验算 $\\frac{245}{250}=0.98$）。"}
+{"id": "EC-801-review-13-巩固-01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "（4）因为 $2+3=5<6$，两边之和小于第三边，$2$ cm、$3$ cm、$6$ cm 的木条不能组成三角形，是不可能事件。"}
+{"id": "EC-801-review-13-巩固-02", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "$10$ 万次仍是有限次，有限次都发生只能说明这件事发生的可能性很大，不能由此断定它以后一定发生，所以不能判定为必然事件。"}
+{"id": "EC-801-review-13-巩固-03", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "这道题要对照原教材第 156 页的图，本机没有图，A、B、C、D、E 五个罐子里白子、黑子各有多少枚看不到，所以摸到白子的可能性大小算不出来，哪个最大、哪个最小也就定不了。"}
+{"id": "EC-801-review-13-拓展-01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "参考设计（答案不唯一）：做一个转盘，等分成 $12$ 个全等扇形，其中一等奖 $1$ 个、二等奖 $2$ 个、三等奖 $3$ 个、其余 $6$ 个写“谢谢参与”；"}
+{"id": "EC-801-review-13-提升-01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "（4）A 为 $\\frac{1}{3}$ 即 $2$ 面，B 为 $\\frac{1}{2}$ 即 $3$ 面，余下 $1$ 面空白。"}
+{"id": "EC-801-review-13-提升-02", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "把本班实际数据代入即得，答案随各班数据不同而不唯一。"}
+{"id": "EC-801-review-13-提升-03", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "所以这位观众的说法不对。"}
+{"id": "EC-801-review-13-提升-04", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "（3）摸出红球是随机事件，说明既可能摸到红球又可能摸到非红球，需 $m>4$，故 $m$ 为大于 $4$ 的整数。"}
+{"id": "end13_adv_01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤3 解得 $n=180/0.9=200$。"}
+{"id": "end13_adv_02", "form": "solution", "answer_status": "present", "type": "value_set", "var": "m", "values": [{"raw": "4", "num": 4.0, "kind": "number"}, {"raw": "12", "num": 12.0, "kind": "number"}], "order_policy": "ordered", "src": "必然 $m=4$；随机 $m\\ge5$；$1/3$ 时 $m=12$"}
+{"id": "end13_adv_03", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "红4黄2绿2；P(红)=1/2，黄=绿=1/4，红最大", "src": "红4黄2绿2；$P(红)=1/2$，黄=绿=$1/4$，红最大"}
+{"id": "end13_adv_04", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "3A2B1空白；P(A)=1/2，P(B)=1/3", "src": "3A2B1空白；$P(A)=1/2$，$P(B)=1/3$"}
+{"id": "end13_adv_05", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "按 1 > 0.95 > 0.9 > 0.5 > 0.2 降序", "src": "按 1 > 0.95 > 0.9 > 0.5 > 0.2 降序"}
+{"id": "end13_adv_06", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤3 故 $P=\\frac{4}{16}=\\frac14$。"}
+{"id": "end13_adv_07", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "各 1/4，公平", "src": "各 $1/4$，公平"}
+{"id": "end13_adv_08", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "1/21、2/21、4/21、7/21=1/3", "src": "$1/21$、$2/21$、$4/21$、$7/21=1/3$"}
+{"id": "end13_adv_09", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "总 \\mathrm C_5^4=10；全男 1、至少1女 9，至少1女远大于全男", "src": "总 $\\mathrm C_5^4=10$；全男 1、至少1女 9，至少1女远大于全男"}
+{"id": "end13_adv_10", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "2A2B2空白；P(A)=P(B)=1/3", "src": "2A2B2空白；$P(A)=P(B)=1/3$"}
+{"id": "end13_adv_11", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "总数 6：红 2、黄 3、绿 1", "src": "总数 6：红 2、黄 3、绿 1"}
+{"id": "end13_adv_12", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "并据结果判定事件类型（仍 $\\lt{}1$，属随机）。"}
+{"id": "end13_adv_13", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "不对；甲胜可能性很大但 <1，仍可能逆转，是随机事件", "src": "不对；甲胜可能性很大但 <1，仍可能逆转，是随机事件"}
+{"id": "end13_adv_14", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "前 4/8=1/2，后 5/8，变大", "src": "前 $4/8=1/2$，后 $5/8$，变大"}
+{"id": "end13_adv_15", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "男生 22、总数 44，P=22/44=1/2", "src": "男生 22、总数 44，$P=22/44=1/2$"}
+{"id": "end13_bas_01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "选 B", "src": "选 B"}
+{"id": "end13_bas_02", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "选 C", "src": "选 C"}
+{"id": "end13_bas_03", "form": "solution", "answer_status": "present", "type": "judgement", "raw": "不可能", "polarity": "yes", "values": [{"raw": "不可能", "kind": "text"}], "src": "不可能"}
+{"id": "end13_bas_04", "form": "solution", "answer_status": "present", "type": "judgement", "raw": "必然", "polarity": "term", "values": [{"raw": "必然", "kind": "text"}], "src": "必然"}
+{"id": "end13_bas_05", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "P=(5)/(8)", "src": "$P=\\frac{5}{8}$"}
+{"id": "end13_bas_06", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "奇数 1,3,5 共 3 种，P=(3)/(6)=\\frac12", "src": "奇数 1,3,5 共 3 种，$P=\\frac{3}{6}=\\frac12$"}
+{"id": "end13_bas_07", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "P(红)=(4)/(8)=\\frac12", "src": "$P(红)=\\frac{4}{8}=\\frac12$"}
+{"id": "end13_bas_08", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "红桃 13 张，P=(13)/(52)=\\frac14", "src": "红桃 13 张，$P=\\frac{13}{52}=\\frac14$"}
+{"id": "end13_bas_09", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "P(男)=(22)/(40)=(11)/(20)", "src": "$P(男)=\\frac{22}{40}=\\frac{11}{20}$"}
+{"id": "end13_bas_10", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤3 故 $P=\\frac{2}{4}=\\frac12$。"}
+{"id": "end13_bas_11", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "P=(5)/(8)", "src": "$P=\\frac{5}{8}$"}
+{"id": "end13_bas_12", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "P=(2)/(10)=\\frac15", "src": "$P=\\frac{2}{10}=\\frac15$"}
+{"id": "end13_bas_13", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "P=(2)/(100)=(1)/(50)", "src": "$P=\\frac{2}{100}=\\frac{1}{50}$"}
+{"id": "end13_bas_14", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "P(绿)=(3)/(6)=\\frac12", "src": "$P(绿)=\\frac{3}{6}=\\frac12$"}
+{"id": "end13_bas_15", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "P=(3)/(5)", "src": "$P=\\frac{3}{5}$"}
+{"id": "end13_bas_16", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "质数 2,3,5,7 共 4 个，P=(4)/(10)=\\frac25", "src": "质数 2,3,5,7 共 4 个，$P=\\frac{4}{10}=\\frac25$"}
+{"id": "end13_bas_17", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "P=(7)/(21)=\\frac13", "src": "$P=\\frac{7}{21}=\\frac13$"}
+{"id": "end13_bas_18", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "P=(3)/(4)", "src": "$P=\\frac{3}{4}$"}
+{"id": "end13_bas_19", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "12 个（(4)/(m)=\\frac13\\Rightarrow m=12）", "src": "12 个（$\\frac{4}{m}=\\frac13\\Rightarrow m=12$）"}
+{"id": "end13_bas_20", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "3 个面（6*\\frac12=3）", "src": "3 个面（$6\\times\\frac12=3$）"}
+{"id": "end13_cha_01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "方法：有奖转盘可能性与区域数成正比。"}
+{"id": "end13_cha_02", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤3（指定概率）：要求 $P=\\frac13$，即 $\\frac{4}{m}=\\frac13$，交叉相乘得 $m=12$。"}
+{"id": "end13_cha_03", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "定理说明（无放回抽签顺序无关性）：有限无放回随机抽样中，每个位置抽到目标的概率相等，即“先抽后抽机会均等”，可由对称性或直接乘法原理证明。"}
+{"id": "end13_cha_04", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "总面数即分母的放大倍数。"}
+{"id": "end13_cha_05", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "用等可能纸条设计并以对称性论证。"}
+{"id": "end13_cha_06", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤3 因为 $1/4 \\gt{} 1/36$，所以“甲红且乙蓝”可能性更大。"}
+{"id": "end13_cha_07", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤3（估计概率）：大样本频率更稳定，故发芽概率约为 $0.90$（取 $0.90\\sim0.91$ 的集中值）。"}
+{"id": "end13_cha_08", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "改造即通过调整目标数与总数使概率相等。"}
+{"id": "end13_cha_09", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "故所求可能性大小为 $$P=\\frac{384}{1140}=\\frac{32}{95}.$$ 方法提炼：按“模 $3$ 余数”分类，是把“和为 $3$ 的倍数”转化为“余数组合计数”的常用技巧；"}
+{"id": "end13_cha_10", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤4（比较）：$\\frac12\\gt\\frac14=\\frac14$，故 $P(红)\\gt P(黄)=P(绿)$。"}
+{"id": "end13_cha_11", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "先抽到小点数反而更不利，故“先抽不一定有利”。"}
+{"id": "end13_cha_12", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "属“等可能路径”模型。"}
+{"id": "end13_cha_13", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤2 C 出现次数 = 总次数 $\\times P(C)$，即 $\\text{总}\\times\\frac{5}{12}=15$。"}
+{"id": "end13_cha_14", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤2 正确密码唯一 $1$ 种，故 $P=\\frac{1}{1000}$，与已知一致。"}
+{"id": "end13_cha_15", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "$$ P=\\frac{950+1350}{1000+1500}=\\frac{23}{25} $$"}
+{"id": "end13_cha_16", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "$$ P=\\frac{550+600}{2500}=0.46"}
+{"id": "end13_cha_17", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "$$ P=\\frac{18}{9\\pi}=\\frac{2}{\\pi} $$"}
+{"id": "end13_cha_18", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "$$ P=1-\\frac{6}{30}=\\frac45 $$"}
+{"id": "end13_com_01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "定理说明（抽签原理/对称性）：无放回随机抽样中每个位置抽到目标的概率相等，即“先抽后抽机会均等”；"}
+{"id": "end13_com_02", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "由频率稳定于概率，$P(红)=\\frac{2}{x+2}=\\frac13$，解得 $x+2=6$，$x=4$。"}
+{"id": "end13_com_03", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤4 （也可取 18 良 2 劣等，比例相同即可。"}
+{"id": "end13_com_04", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "定理说明（游戏公平性）：游戏公平 $\\iff$ 双方获胜概率相等，即均等于 $\\frac12$；"}
+{"id": "end13_com_05", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "跨总体排序即比例排序。"}
+{"id": "end13_com_06", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "公平设计即构造等基数配分。"}
+{"id": "end13_com_07", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤7（验证）：既存在幸运数（如 1）也存在非幸运数（如 2），故非必然也非不可能。"}
+{"id": "end13_com_08", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "技巧2（类比迁移）：时针(60分)、秒针(60秒)、分针(60分)的“某段占比”问题同构，统一用长度比求解。"}
+{"id": "end13_com_09", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤1（(1)）：总 $12$ 扇，红 $3$ 扇，$P(红)=\\frac{3}{12}=\\frac14$，故是 $4$ 分事件。"}
+{"id": "end13_com_10", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤3（(2)问一）：$p=\\frac12\\Rightarrow r=3$，即红 $3$ 白 $3$。"}
+{"id": "end13_com_11", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤4 符合条件共 $3$ 种，故 $P=\\frac{3}{36}=\\frac{1}{12}$。"}
+{"id": "end13_int_01", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "① 必然（最大和 18）；② 不可能（5 奇，正反不能相等）；③ 随机；④ 不可能（2+3<6）", "src": "① 必然（最大和 18）；② 不可能（5 奇，正反不能相等）；③ 随机；④ 不可能（$2+3\\lt{}6$）"}
+{"id": "end13_int_02", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "A（3绿1黄）绿>黄；B（2绿2黄）绿=黄", "src": "A（3绿1黄）绿>黄；B（2绿2黄）绿=黄"}
+{"id": "end13_int_03", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "红色 26、黑桃 13、梅花 13、方块 A 1", "src": "红色 26、黑桃 13、梅花 13、方块 A 1"}
+{"id": "end13_int_04", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "红>白 ⇒ x>y 且 x+y=10 ⇒ (6,4),(7,3),(8,2),(9,1)", "src": "红>白 ⇒ $x\\gt{}y$ 且 $x+y=10$ ⇒ $(6,4),(7,3),(8,2),(9,1)$"}
+{"id": "end13_int_05", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "和7 有 6 种、和2 仅 1 种，和为 7 更大", "src": "和7 有 6 种、和2 仅 1 种，和为 7 更大"}
+{"id": "end13_int_06", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "总 \\mathrm C_5^4=5；2男2女 3 种、1男3女 2 种，2男2女更大", "src": "总 $\\mathrm C_5^4=5$；2男2女 3 种、1男3女 2 种，2男2女更大"}
+{"id": "end13_int_07", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "乙 =4/5*1/4=1/5，三人相等，公平", "src": "乙 $=4/5\\times1/4=1/5$，三人相等，公平"}
+{"id": "end13_int_08", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "P=(4)/(21)", "src": "$P=\\frac{4}{21}$"}
+{"id": "end13_int_09", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "P(A)=(3)/(6)=\\frac12", "src": "$P(A)=\\frac{3}{6}=\\frac12$"}
+{"id": "end13_int_10", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "form=solution-no-explicit-answer", "src": "步骤3 故 $P=\\frac{3}{4}$。"}
+{"id": "end13_int_11", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "P=(5)/(50)=(1)/(10)", "src": "$P=\\frac{5}{50}=\\frac{1}{10}$"}
+{"id": "end13_int_12", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "P=(5)/(10)=\\frac12", "src": "$P=\\frac{5}{10}=\\frac12$"}
+{"id": "end13_int_13", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "P=(98)/(100)=(49)/(50)", "src": "$P=\\frac{98}{100}=\\frac{49}{50}$"}
+{"id": "end13_int_14", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "非绿 =1+2=3 面，P=(3)/(6)=\\frac12", "src": "非绿 $=1+2=3$ 面，$P=\\frac{3}{6}=\\frac12$"}
+{"id": "end13_int_15", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "P(黄)=(1)/(8)", "src": "$P(黄)=\\frac{1}{8}$"}
+{"id": "end13_int_16", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "P=(1)/(52)", "src": "$P=\\frac{1}{52}$"}
+{"id": "end13_int_17", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "P=(2)/(5)", "src": "$P=\\frac{2}{5}$"}
+{"id": "end13_int_18", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "3,6,9 共 3 个，P=(3)/(10)", "src": "3,6,9 共 3 个，$P=\\frac{3}{10}$"}
+{"id": "end13_int_19", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "P=(3)/(8)", "src": "$P=\\frac{3}{8}$"}
+{"id": "end13_int_20", "form": "solution", "answer_status": "present", "type": "unknown", "reason": "unclassified", "s": "4 个（10*0.4）", "src": "4 个（$10\\times0.4$）"}
+{"id": "end13_tt_01", "form": "choice", "answer_status": "missing", "type": "none"}
+{"id": "end13_tt_02", "form": "choice", "answer_status": "missing", "type": "none"}
+{"id": "end13_tt_03", "form": "choice", "answer_status": "missing", "type": "none"}
+{"id": "end13_tt_04", "form": "fill", "answer_status": "missing", "type": "none"}
+{"id": "end13_tt_05", "form": "fill", "answer_status": "missing", "type": "none"}
+{"id": "end13_tt_06", "form": "solution", "answer_status": "missing", "type": "none"}
+{"id": "end13_tt_07", "form": "choice", "answer_status": "missing", "type": "none"}
+{"id": "end13_tt_08", "form": "choice", "answer_status": "missing", "type": "none"}
+{"id": "end13_tt_09", "form": "fill", "answer_status": "missing", "type": "none"}
+{"id": "end13_tt_10", "form": "fill", "answer_status": "missing", "type": "none"}
+{"id": "end13_tt_11", "form": "solution", "answer_status": "missing", "type": "none"}
+{"id": "end13_tt_12", "form": "solution", "answer_status": "missing", "type": "none"}
+{"id": "end13_tt_13", "form": "choice", "answer_status": "missing", "type": "none"}
+{"id": "end13_tt_14", "form": "choice", "answer_status": "missing", "type": "none"}
+{"id": "end13_tt_15", "form": "fill", "answer_status": "missing", "type": "none"}
+{"id": "end13_tt_16", "form": "fill", "answer_status": "missing", "type": "none"}
+{"id": "end13_tt_17", "form": "solution", "answer_status": "missing", "type": "none"}
+{"id": "end13_tt_18", "form": "solution", "answer_status": "missing", "type": "none"}
+{"id": "end13_tt_19", "form": "choice", "answer_status": "missing", "type": "none"}
+{"id": "end13_tt_20", "form": "choice", "answer_status": "missing", "type": "none"}
+{"id": "end13_tt_21", "form": "fill", "answer_status": "missing", "type": "none"}
+{"id": "end13_tt_22", "form": "solution", "answer_status": "missing", "type": "none"}
+{"id": "end13_tt_23", "form": "solution", "answer_status": "missing", "type": "none"}
+{"id": "end13_tt_24", "form": "solution", "answer_status": "missing", "type": "none"}
+{"id": "end13_tt_25", "form": "choice", "answer_status": "missing", "type": "none"}
+{"id": "end13_tt_26", "form": "fill", "answer_status": "missing", "type": "none"}
+{"id": "end13_tt_27", "form": "fill", "answer_status": "missing", "type": "none"}
+{"id": "end13_tt_28", "form": "solution", "answer_status": "missing", "type": "none"}
+{"id": "end13_tt_29", "form": "solution", "answer_status": "missing", "type": "none"}
+{"id": "end13_tt_30", "form": "solution", "answer_status": "missing", "type": "none"}

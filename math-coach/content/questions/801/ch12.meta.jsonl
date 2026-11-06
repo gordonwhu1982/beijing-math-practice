@@ -1,0 +1,412 @@
+{"uid": "12.10_adv_03", "purpose": "method_apply", "why": "训练方法「用对称转化最短路径」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_adv_05", "purpose": "method_apply", "why": "训练方法「用对称转化最短路径」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_adv_06", "purpose": "method_apply", "why": "训练方法「用 SAS 证全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_adv_07", "purpose": "method_apply", "why": "训练方法「用对称转化最短路径」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_adv_10", "purpose": "method_apply", "why": "训练方法「用中线平分面积」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_adv_12", "purpose": "method_apply", "why": "训练方法「作点关于直线的对称点」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_adv_13", "purpose": "method_apply", "why": "训练方法「作点关于直线的对称点」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_adv_14", "purpose": "method_apply", "why": "训练方法「作点关于直线的对称点」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_bas_02", "purpose": "method_apply", "why": "训练方法「判轴对称并画对称轴」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_bas_06", "purpose": "method_apply", "why": "训练方法「判轴对称并画对称轴」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_bas_07", "purpose": "method_apply", "why": "训练方法「作点关于直线的对称点」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_bas_10", "purpose": "definition", "why": "题干在辨析概念的正误，训练的是定义边界", "rule": "概念辨析正则 + 选择/填空", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_bas_11", "purpose": "method_apply", "why": "训练方法「用对称转化最短路径」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_bas_17", "purpose": "method_apply", "why": "训练方法「判轴对称并画对称轴」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_bas_20", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_cha_01", "purpose": "method_apply", "why": "训练方法「用对称转化最短路径」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_cha_03", "purpose": "method_apply", "why": "训练方法「用对称转化最短路径」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_cha_05", "purpose": "method_apply", "why": "训练方法「用对称转化最短路径」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_cha_06", "purpose": "method_apply", "why": "训练方法「用对称转化最短路径」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_cha_08", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_cha_09", "purpose": "method_apply", "why": "训练方法「用三边关系判三角形」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_cha_11", "purpose": "method_apply", "why": "训练方法「用对称转化最短路径」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_cha_12", "purpose": "method_apply", "why": "训练方法「用对称转化最短路径」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_cha_13", "purpose": "method_apply", "why": "训练方法「用对称转化最短路径」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_cha_14", "purpose": "method_apply", "why": "训练方法「用对称转化最短路径」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_cha_15", "purpose": "method_apply", "why": "训练方法「作点关于直线的对称点」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_cha_16", "purpose": "method_apply", "why": "训练方法「用对称转化最短路径」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_com_01", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_com_05", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_err_02", "purpose": "method_apply", "why": "训练方法「判轴对称并画对称轴」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_int_02", "purpose": "method_apply", "why": "训练方法「用对称转化最短路径」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_int_03", "purpose": "method_apply", "why": "训练方法「半角模型（90° 内含 45°）」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_int_04", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_int_05", "purpose": "method_apply", "why": "训练方法「用对称转化最短路径」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_int_08", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_int_09", "purpose": "method_apply", "why": "训练方法「用对称转化最短路径」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_int_10", "purpose": "method_apply", "why": "训练方法「用全等转移边角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_int_18", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.10_int_21", "purpose": "method_apply", "why": "训练方法「用对称转化最短路径」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.11_adv_01", "purpose": "method_apply", "why": "训练方法「用勾股定理求边长」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.11_adv_02", "purpose": "method_apply", "why": "训练方法「用勾股定理求边长」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.11_adv_03", "purpose": "method_apply", "why": "训练方法「用对称转化最短路径」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.11_adv_05", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.11_adv_07", "purpose": "method_apply", "why": "训练方法「作点关于直线的对称点」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.11_adv_08", "purpose": "method_apply", "why": "训练方法「用勾股定理求边长」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.11_adv_10", "purpose": "method_apply", "why": "训练方法「用 HL 证直角三角形全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.11_bas_03", "purpose": "method_apply", "why": "训练方法「用 HL 证直角三角形全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.11_bas_07", "purpose": "method_apply", "why": "训练方法「用勾股定理求边长」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.11_bas_12", "purpose": "method_apply", "why": "训练方法「用 ASA 或 AAS 证全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.11_bas_13", "purpose": "method_apply", "why": "训练方法「用 HL 证直角三角形全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.11_bas_15", "purpose": "method_apply", "why": "训练方法「用 HL 证直角三角形全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.11_cha_04", "purpose": "method_apply", "why": "训练方法「作点关于直线的对称点」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.11_cha_05", "purpose": "method_apply", "why": "训练方法「用勾股定理求边长」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.11_cha_08", "purpose": "method_apply", "why": "训练方法「用勾股定理求边长」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.11_cha_10", "purpose": "method_contrast", "why": "题干要求两种以上做法，用途是比较解法而不是练一种", "rule": "题干明说要多解/比较解法", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.11_cha_13", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.11_com_08", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.11_com_09", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.11_com_10", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.11_com_11", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.11_int_01", "purpose": "method_apply", "why": "训练方法「用勾股定理求边长」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.11_int_08", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.11_int_09", "purpose": "method_apply", "why": "训练方法「半角模型（90° 内含 45°）」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.11_int_14", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.11_int_16", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.11_int_20", "purpose": "method_apply", "why": "训练方法「作高构造直角三角形」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.12_adv_01", "purpose": "method_apply", "why": "训练方法「用勾股数快速判断」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.12_adv_04", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.12_adv_05", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.12_adv_06", "purpose": "method_apply", "why": "训练方法「用逆定理判直角三角形」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.12_adv_08", "purpose": "method_apply", "why": "训练方法「用勾股数快速判断」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.12_adv_09", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.12_adv_10", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.12_adv_11", "purpose": "method_apply", "why": "训练方法「用勾股数快速判断」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.12_adv_12", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.12_adv_13", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.12_bas_01", "purpose": "method_apply", "why": "训练方法「用勾股数快速判断」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.12_bas_03", "purpose": "method_apply", "why": "训练方法「用逆定理判直角三角形」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.12_bas_08", "purpose": "method_apply", "why": "训练方法「用勾股数快速判断」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.12_bas_12", "purpose": "method_apply", "why": "训练方法「用勾股数快速判断」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.12_cha_07", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.12_cha_08", "purpose": "method_apply", "why": "训练方法「用三边关系判三角形」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.12_cha_10", "purpose": "method_apply", "why": "训练方法「用逆定理判直角三角形」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.12_cha_11", "purpose": "method_apply", "why": "训练方法「用逆定理判直角三角形」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.12_cha_13", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.12_com_10", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.12_com_12", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.12_err_01", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.12_err_03", "purpose": "method_apply", "why": "训练方法「用逆定理判直角三角形」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.12_int_07", "purpose": "method_apply", "why": "训练方法「用勾股数快速判断」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.12_int_16", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.12_int_19", "purpose": "method_apply", "why": "训练方法「用逆定理判直角三角形」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.1_adv_02", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.1_adv_07", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.1_adv_09", "purpose": "method_apply", "why": "训练方法「用三边关系判三角形」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.1_adv_10", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.1_adv_12", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.1_adv_13", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.1_adv_15", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.1_bas_02", "purpose": "method_apply", "why": "训练方法「用三边关系判三角形」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.1_bas_05", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.1_bas_06", "purpose": "method_apply", "why": "训练方法「用等边对等角求角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.1_bas_10", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.1_bas_11", "purpose": "method_apply", "why": "训练方法「按角与边给三角形分类」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.1_bas_12", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.1_bas_13", "purpose": "method_apply", "why": "训练方法「用三边关系判三角形」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.1_bas_18", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.1_cha_01", "purpose": "method_apply", "why": "训练方法「半角模型（90° 内含 45°）」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.1_cha_03", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.1_cha_05", "purpose": "method_apply", "why": "训练方法「用对称转化最短路径」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.1_cha_06", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.1_cha_10", "purpose": "method_apply", "why": "训练方法「用等边对等角求角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.1_cha_11", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.1_int_06", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.1_int_09", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.1_int_10", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.1_int_14", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.1_int_17", "purpose": "definition", "why": "题干在辨析概念的正误，训练的是定义边界", "rule": "概念辨析正则 + 选择/填空", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.1_int_18", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.2_adv_02", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.2_adv_06", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.2_adv_07", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.2_adv_08", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.2_adv_14", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.2_bas_03", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.2_bas_04", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.2_bas_06", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.2_bas_07", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.2_bas_10", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.2_bas_12", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.2_bas_15", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.2_cha_05", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.2_cha_07", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.2_cha_08", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.2_cha_11", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.2_err_01", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.2_err_03", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.2_int_03", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.2_int_07", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.2_int_10", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.2_int_12", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.2_int_15", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.2_int_16", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.2_int_17", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.2_int_18", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_adv_04", "purpose": "method_apply", "why": "训练方法「用中线平分面积」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_adv_06", "purpose": "method_apply", "why": "训练方法「用中线平分面积」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_adv_10", "purpose": "method_apply", "why": "训练方法「用中线平分面积」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_adv_11", "purpose": "method_apply", "why": "训练方法「用中线平分面积」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_adv_12", "purpose": "method_apply", "why": "训练方法「用中线平分面积」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_adv_16", "purpose": "method_apply", "why": "训练方法「用中线平分面积」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_bas_01", "purpose": "method_apply", "why": "训练方法「用中线平分面积」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_bas_05", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_bas_08", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_bas_09", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_bas_14", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_cha_01", "purpose": "method_apply", "why": "训练方法「用中线平分面积」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_cha_03", "purpose": "method_apply", "why": "训练方法「用中线平分面积」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_cha_04", "purpose": "method_apply", "why": "训练方法「作倍长中线构全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_cha_06", "purpose": "method_apply", "why": "训练方法「作倍长中线构全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_cha_07", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_cha_09", "purpose": "method_apply", "why": "训练方法「作倍长中线构全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_cha_10", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_cha_11", "purpose": "method_apply", "why": "训练方法「用中线平分面积」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_com_02", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_com_04", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_err_02", "purpose": "method_apply", "why": "训练方法「用中线平分面积」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_int_02", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_int_07", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_int_09", "purpose": "method_apply", "why": "训练方法「用等边对等角求角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_int_11", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_int_14", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_int_15", "purpose": "method_apply", "why": "训练方法「用中线平分面积」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_int_16", "purpose": "method_apply", "why": "训练方法「用中线平分面积」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.3_int_18", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.4_adv_05", "purpose": "method_apply", "why": "训练方法「用全等转移边角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.4_adv_14", "purpose": "method_apply", "why": "训练方法「用全等转移边角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.4_bas_01", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.4_bas_02", "purpose": "method_apply", "why": "训练方法「用全等转移边角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.4_bas_11", "purpose": "method_apply", "why": "训练方法「用全等转移边角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.4_bas_14", "purpose": "method_apply", "why": "训练方法「用全等转移边角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.4_bas_16", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.4_bas_17", "purpose": "method_apply", "why": "训练方法「用 HL 证直角三角形全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.4_bas_18", "purpose": "method_apply", "why": "训练方法「用全等转移边角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.4_bas_19", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.4_cha_08", "purpose": "method_apply", "why": "训练方法「用全等转移边角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.4_cha_09", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.4_cha_11", "purpose": "method_apply", "why": "训练方法「用 SSS 证全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.4_com_03", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.4_com_11", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.4_err_01", "purpose": "method_apply", "why": "训练方法「用全等转移边角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.4_int_02", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.4_int_08", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.4_int_16", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.5_adv_03", "purpose": "method_apply", "why": "训练方法「用 SSS 证全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.5_adv_11", "purpose": "method_apply", "why": "训练方法「用中线平分面积」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.5_adv_16", "purpose": "method_apply", "why": "训练方法「用 SAS 证全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.5_bas_01", "purpose": "method_apply", "why": "训练方法「用 SSS 证全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.5_bas_03", "purpose": "method_apply", "why": "训练方法「用 SSS 证全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.5_bas_06", "purpose": "method_apply", "why": "训练方法「用 SSS 证全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.5_bas_07", "purpose": "method_apply", "why": "训练方法「用 SSS 证全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.5_bas_09", "purpose": "method_apply", "why": "训练方法「用 SSS 证全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.5_bas_15", "purpose": "method_apply", "why": "训练方法「用 SSS 证全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.5_bas_17", "purpose": "method_apply", "why": "训练方法「用 SSS 证全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.5_cha_03", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.5_cha_12", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.5_int_08", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.6_adv_08", "purpose": "method_apply", "why": "训练方法「角平分线遇平行线得等腰」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.6_adv_11", "purpose": "method_apply", "why": "训练方法「用 SAS 证全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.6_adv_13", "purpose": "method_apply", "why": "训练方法「半角模型（90° 内含 45°）」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.6_bas_04", "purpose": "method_apply", "why": "训练方法「用等边对等角求角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.6_bas_06", "purpose": "method_apply", "why": "训练方法「半角模型（90° 内含 45°）」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.6_bas_09", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.6_cha_02", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.6_cha_08", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.6_cha_11", "purpose": "method_apply", "why": "训练方法「半角模型（90° 内含 45°）」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.6_int_03", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.6_int_07", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.6_int_17", "purpose": "method_apply", "why": "训练方法「用等边对等角求角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.6_int_22", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.7_adv_04", "purpose": "method_apply", "why": "训练方法「用 HL 证直角三角形全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.7_adv_06", "purpose": "method_apply", "why": "训练方法「用勾股定理求边长」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.7_adv_08", "purpose": "method_apply", "why": "训练方法「用 HL 证直角三角形全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.7_adv_11", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.7_adv_12", "purpose": "method_apply", "why": "训练方法「用 SSS 证全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.7_adv_15", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.7_bas_04", "purpose": "method_apply", "why": "训练方法「用 HL 证直角三角形全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.7_bas_06", "purpose": "method_apply", "why": "训练方法「用 HL 证直角三角形全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.7_bas_08", "purpose": "method_apply", "why": "训练方法「用 HL 证直角三角形全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.7_bas_19", "purpose": "method_apply", "why": "训练方法「用 HL 证直角三角形全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.7_cha_03", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.7_cha_08", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.7_cha_09", "purpose": "method_apply", "why": "训练方法「用 HL 证直角三角形全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.7_cha_12", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.7_com_01", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.7_com_04", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.7_int_05", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.7_int_10", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.7_int_20", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.8_adv_02", "purpose": "method_apply", "why": "训练方法「作线段与角等于已知」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.8_adv_04", "purpose": "method_apply", "why": "训练方法「用中线平分面积」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.8_adv_12", "purpose": "method_apply", "why": "训练方法「作倍长中线构全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.8_bas_01", "purpose": "method_apply", "why": "训练方法「作线段与角等于已知」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.8_bas_10", "purpose": "method_apply", "why": "训练方法「作线段与角等于已知」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.8_bas_16", "purpose": "method_apply", "why": "训练方法「作线段与角等于已知」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.8_bas_21", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.8_cha_03", "purpose": "method_apply", "why": "训练方法「作线段与角等于已知」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.8_cha_11", "purpose": "method_apply", "why": "训练方法「用 HL 证直角三角形全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.8_cha_13", "purpose": "method_apply", "why": "训练方法「作线段与角等于已知」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.9_adv_02", "purpose": "method_apply", "why": "训练方法「写逆命题并判真假」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.9_adv_06", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.9_bas_02", "purpose": "method_apply", "why": "训练方法「写逆命题并判真假」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.9_bas_05", "purpose": "method_apply", "why": "训练方法「写逆命题并判真假」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.9_bas_10", "purpose": "method_apply", "why": "训练方法「写逆命题并判真假」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.9_bas_11", "purpose": "method_apply", "why": "训练方法「写逆命题并判真假」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.9_bas_12", "purpose": "method_apply", "why": "训练方法「用全等转移边角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.9_bas_14", "purpose": "method_apply", "why": "训练方法「用两锐角互余转化」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.9_cha_01", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.9_cha_03", "purpose": "method_apply", "why": "训练方法「写逆命题并判真假」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.9_com_08", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.9_com_09", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "12.9_int_10", "purpose": "method_apply", "why": "训练方法「用三边关系判三角形」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-1-巩固-01", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-1-巩固-02", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-1-巩固-03", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-1-巩固-04", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-1-巩固-05", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-1-巩固-06", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-1-巩固-07", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-1-巩固-08", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-1-提升-01", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-1-提升-02", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-1-提升-03", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-1-提升-04", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-1-提升-05", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-1-提升-06", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-1-提升-07", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-1-提升-08", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-2-巩固-01", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-2-巩固-02", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-2-巩固-03", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-2-巩固-04", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-2-巩固-05", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-2-巩固-06", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-2-巩固-07", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-2-巩固-08", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-2-巩固-09", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-2-拓展-01", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-2-拓展-02", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-2-提升-01", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-2-提升-02", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-2-提升-03", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-2-提升-04", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-2-提升-05", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-2-提升-06", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-2-提升-07", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-2-提升-08", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-2-提升-09", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-3-巩固-01", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-3-巩固-02", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-3-巩固-03", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-3-巩固-04", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-3-巩固-05", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-3-巩固-06", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-3-巩固-07", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-3-巩固-08", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-3-巩固-09", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-3-巩固-10", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-3-巩固-11", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-3-巩固-12", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-3-巩固-13", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-3-巩固-14", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-3-拓展-01", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-3-提升-01", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-3-提升-02", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-3-提升-03", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-3-提升-04", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-3-提升-05", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-3-提升-06", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-3-提升-07", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-3-提升-08", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-4-巩固-01", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-4-巩固-02", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-4-巩固-03", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-4-巩固-04", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-4-巩固-05", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-4-巩固-06", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-4-拓展-01", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-4-拓展-02", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-4-拓展-03", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-4-提升-01", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-4-提升-02", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-4-提升-03", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-4-提升-04", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-4-提升-05", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-5-巩固-01", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-5-巩固-02", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-5-巩固-03", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-5-巩固-04", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-5-巩固-05", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-5-拓展-01", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-5-拓展-02", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-5-提升-01", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-5-提升-02", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-5-提升-03", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-5-提升-04", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-5-提升-05", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-5-提升-06", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-12-5-提升-07", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-12-巩固-01", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-12-巩固-02", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-12-巩固-03", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-12-巩固-04", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-12-巩固-05", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-12-巩固-06", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-12-巩固-07", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-12-巩固-08", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-12-巩固-09", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-12-巩固-10", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-12-巩固-11", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-12-拓展-01", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-12-拓展-02", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-12-拓展-03", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-12-拓展-04", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-12-提升-01", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-12-提升-02", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-12-提升-03", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-12-提升-04", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-12-提升-05", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-12-提升-06", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-12-提升-07", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-12-提升-08", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-12-提升-09", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-12-提升-10", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-12-提升-11", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "EC-801-review-12-提升-12", "purpose": "example", "why": "教材原题，用来对照课本要求与本校练习的落点", "rule": "教材原题", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "bt_calc_01", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "bt_calc_06", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "bt_fill_07", "purpose": "definition", "why": "题干在辨析概念的正误，训练的是定义边界", "rule": "概念辨析正则 + 选择/填空", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "bt_fill_08", "purpose": "method_apply", "why": "训练方法「判轴对称并画对称轴」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "bt_sel_01", "purpose": "method_apply", "why": "训练方法「用三边关系判三角形」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "bt_sel_02", "purpose": "method_apply", "why": "训练方法「按角与边给三角形分类」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "bt_sel_05", "purpose": "method_apply", "why": "训练方法「判轴对称并画对称轴」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "bt_sel_06", "purpose": "method_apply", "why": "训练方法「用逆定理判直角三角形」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "bt_sel_07", "purpose": "definition", "why": "题干在辨析概念的正误，训练的是定义边界", "rule": "概念辨析正则 + 选择/填空", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "bt_sel_08", "purpose": "method_apply", "why": "训练方法「用 SSS 证全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "bt_sel_10", "purpose": "definition", "why": "题干在辨析概念的正误，训练的是定义边界", "rule": "概念辨析正则 + 选择/填空", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "bt_solu_02", "purpose": "method_apply", "why": "训练方法「角平分线遇平行线得等腰」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "bt_solu_03", "purpose": "method_apply", "why": "训练方法「用逆定理判直角三角形」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "bt_solu_05", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "bt_solu_06", "purpose": "method_apply", "why": "训练方法「用等边对等角求角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "zm_adv_10", "purpose": "method_apply", "why": "训练方法「用逆定理判直角三角形」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "zm_bas_01", "purpose": "method_apply", "why": "训练方法「用三边关系判三角形」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "zm_bas_02", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "zm_bas_04", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "zm_bas_07", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "zm_bas_11", "purpose": "method_apply", "why": "训练方法「用中线平分面积」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "zm_bas_13", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "zm_bas_20", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "zm_cha_01", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "zm_cha_02", "purpose": "method_apply", "why": "训练方法「用中线平分面积」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "zm_cha_03", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "zm_cha_04", "purpose": "method_apply", "why": "训练方法「写逆命题并判真假」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "zm_cha_05", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "zm_cha_06", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "zm_com_07", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "zm_com_11", "purpose": "method_contrast", "why": "题干要求两种以上做法，用途是比较解法而不是练一种", "rule": "题干明说要多解/比较解法", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "zm_int_03", "purpose": "method_apply", "why": "训练方法「用全等转移边角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "zm_int_07", "purpose": "method_apply", "why": "训练方法「用 SSS 证全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "zm_int_10", "purpose": "method_apply", "why": "训练方法「用内角和求未知角」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "zm_int_13", "purpose": "method_apply", "why": "训练方法「用 SAS 证全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "zm_int_18", "purpose": "method_apply", "why": "训练方法「用 HL 证直角三角形全等」", "rule": "题→知识点→方法 派生链", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}

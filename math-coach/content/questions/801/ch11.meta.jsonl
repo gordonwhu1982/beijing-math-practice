@@ -1,0 +1,7 @@
+{"uid": "11.2_bas_12", "purpose": "definition", "why": "题干在辨析概念的正误，训练的是定义边界", "rule": "概念辨析正则 + 选择/填空", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "11.3_adv_04", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "11.3_adv_10", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "11.3_int_13", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "11.4_bas_10", "purpose": "definition", "why": "题干在辨析概念的正误，训练的是定义边界", "rule": "概念辨析正则 + 选择/填空", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "11.4_com_03", "purpose": "context", "why": "把知识放进现实情境，训练的是建模与读懂条件", "rule": "情境词 + 题干长度", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}
+{"uid": "11.4_int_16", "purpose": "definition", "why": "题干在辨析概念的正误，训练的是定义边界", "rule": "概念辨析正则 + 选择/填空", "review_status": "ai_draft", "generated_by": "tools/question_purpose.py"}

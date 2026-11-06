@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "review_status": "human_checked",
+  "note": "义务教育数学课程标准（2022）的六个核心素养，固定 6 条。",
+  "items": [
+    {
+      "uid": "CP-01",
+      "code": "abstract",
+      "name": "数学抽象"
+    },
+    {
+      "uid": "CP-02",
+      "code": "logic",
+      "name": "逻辑推理"
+    },
+    {
+      "uid": "CP-03",
+      "code": "compute",
+      "name": "数学运算"
+    },
+    {
+      "uid": "CP-04",
+      "code": "imagine",
+      "name": "直观想象"
+    },
+    {
+      "uid": "CP-05",
+      "code": "model",
+      "name": "数学建模"
+    },
+    {
+      "uid": "CP-06",
+      "code": "data",
+      "name": "数据分析"
+    }
+  ]
+}

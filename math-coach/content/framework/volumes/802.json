@@ -1,0 +1,304 @@
+{
+ "schema_version": 1,
+ "volume_id": "802",
+ "label": "八年级下册",
+ "grade": 8,
+ "term": 2,
+ "edition": {
+  "publisher": "北京出版社（北京版）",
+  "revision": "旧版",
+  "note": "旧版电子课本（网络流传版，印次待核）",
+  "verified": false
+ },
+ "source": {
+  "kind": "pdf_local",
+  "filename": "【北京版】八年级下册数学电子课本.pdf",
+  "sha1": "be9a7a978cdb23318b45e8e17692c4a50621077f",
+  "bytes": 58881091,
+  "pdf_pages": 154,
+  "extracted_on": "2026-10-26",
+  "extractor": "pymupdf 1.28 text layer (TOC pages only)"
+ },
+ "chapters": [
+  {
+   "no": 14,
+   "title": "一次函数",
+   "page": 1,
+   "units": [
+    {
+     "label": "一",
+     "title": "函数和函数的图象",
+     "page": 2
+    },
+    {
+     "label": "二",
+     "title": "一次函数",
+     "page": 19
+    }
+   ],
+   "sections": [
+    {
+     "no": "14.1",
+     "title": "函数",
+     "page": 2
+    },
+    {
+     "no": "14.2",
+     "title": "函数的表示法",
+     "page": 6
+    },
+    {
+     "no": "14.3",
+     "title": "函数图象的画法",
+     "page": 10
+    },
+    {
+     "no": "14.4",
+     "title": "一次函数",
+     "page": 19
+    },
+    {
+     "no": "14.5",
+     "title": "一次函数的图象",
+     "page": 21
+    },
+    {
+     "no": "14.6",
+     "title": "一次函数的性质",
+     "page": 24
+    },
+    {
+     "no": "14.7",
+     "title": "一次函数的应用",
+     "page": 27
+    }
+   ],
+   "extras": [
+    {
+     "kind": "阅读理解",
+     "title": "揭开一幅算图的奥秘",
+     "page": 32
+    }
+   ]
+  },
+  {
+   "no": 15,
+   "title": "四边形",
+   "page": 39,
+   "units": [
+    {
+     "label": "一",
+     "title": "多边形",
+     "page": 40
+    },
+    {
+     "label": "二",
+     "title": "平行四边形",
+     "page": 49
+    },
+    {
+     "label": "三",
+     "title": "中心对称图形",
+     "page": 78
+    }
+   ],
+   "sections": [
+    {
+     "no": "15.1",
+     "title": "多边形",
+     "page": 40
+    },
+    {
+     "no": "15.2",
+     "title": "平行四边形和特殊的平行四边形",
+     "page": 49
+    },
+    {
+     "no": "15.3",
+     "title": "平行四边形的性质与判定",
+     "page": 52
+    },
+    {
+     "no": "15.4",
+     "title": "特殊的平行四边形的性质与判定",
+     "page": 62
+    },
+    {
+     "no": "15.5",
+     "title": "三角形中位线定理",
+     "page": 72
+    },
+    {
+     "no": "15.6",
+     "title": "中心对称图形",
+     "page": 78
+    }
+   ],
+   "extras": [
+    {
+     "kind": "回顾与整理",
+     "title": "回顾与整理",
+     "page": 34
+    },
+    {
+     "kind": "复习题",
+     "title": "复习题",
+     "page": 35
+    },
+    {
+     "kind": "阅读理解",
+     "title": "换个角度看问题",
+     "page": 48
+    },
+    {
+     "kind": "探究学习",
+     "title": "“中点四边形”",
+     "page": 74
+    },
+    {
+     "kind": "阅读理解",
+     "title": "完美正方形",
+     "page": 77
+    },
+    {
+     "kind": "阅读理解",
+     "title": "对称的世界",
+     "page": 83
+    }
+   ]
+  },
+  {
+   "no": 16,
+   "title": "一元二次方程",
+   "page": 89,
+   "units": [
+    {
+     "label": "一",
+     "title": "一元二次方程和它的解法",
+     "page": 90
+    },
+    {
+     "label": "二",
+     "title": "一元二次方程的应用",
+     "page": 108
+    }
+   ],
+   "sections": [
+    {
+     "no": "16.1",
+     "title": "一元二次方程",
+     "page": 90
+    },
+    {
+     "no": "16.2",
+     "title": "一元二次方程的解法",
+     "page": 92
+    },
+    {
+     "no": "16.3",
+     "title": "列方程解应用问题",
+     "page": 108
+    }
+   ],
+   "extras": [
+    {
+     "kind": "回顾与整理",
+     "title": "回顾与整理",
+     "page": 84
+    },
+    {
+     "kind": "复习题",
+     "title": "复习题",
+     "page": 86
+    },
+    {
+     "kind": "阅读理解",
+     "title": "古代数学家对一元二次方程的贡献",
+     "page": 112
+    }
+   ]
+  },
+  {
+   "no": 17,
+   "title": "方差与频数分布",
+   "page": 119,
+   "units": [
+    {
+     "label": "一",
+     "title": "数据的波动",
+     "page": 120
+    },
+    {
+     "label": "二",
+     "title": "数据的分布",
+     "page": 128
+    }
+   ],
+   "sections": [
+    {
+     "no": "17.1",
+     "title": "方差",
+     "page": 120
+    },
+    {
+     "no": "17.2",
+     "title": "用科学计算器计算方差",
+     "page": 124
+    },
+    {
+     "no": "17.3",
+     "title": "频数分布表与频数分布图",
+     "page": 128
+    }
+   ],
+   "extras": [
+    {
+     "kind": "回顾与整理",
+     "title": "回顾与整理",
+     "page": 114
+    },
+    {
+     "kind": "复习题",
+     "title": "复习题",
+     "page": 116
+    },
+    {
+     "kind": "综合与实践",
+     "title": "空气质量状况调查",
+     "page": 136
+    },
+    {
+     "kind": "探究学习",
+     "title": "本班同学主要学科学习分化的调查与分析",
+     "page": 136
+    },
+    {
+     "kind": "阅读理解",
+     "title": "平均数趣谈",
+     "page": 138
+    },
+    {
+     "kind": "回顾与整理",
+     "title": "回顾与整理",
+     "page": 139
+    },
+    {
+     "kind": "复习题",
+     "title": "复习题",
+     "page": 142
+    }
+   ]
+  }
+ ],
+ "counts": {
+  "chapters": 4,
+  "sections": 19,
+  "units": 9,
+  "extras": 17
+ },
+ "topic_coverage": {
+  "knowledge_points": 0,
+  "status": "stub",
+  "note": "待从教材正文抽取"
+ }
+}
