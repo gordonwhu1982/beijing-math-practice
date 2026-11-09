@@ -1044,16 +1044,34 @@ function viewMethod() {
     ensureItems(item.vol, item.no);
   });
   const qTitle = rec && rec.qn
-    ? "标了 " + rec.qn + " 道，这里先列 " + qs.length + " 道。点一道就打开原题。"
-    : "这里先列 " + qs.length + " 道。点一道就打开原题。";
+    ? "练习标了 " + rec.qn + " 道，这里先列 " + qs.length + " 道。这些不是教材例题。点一道就打开原题。"
+    : "这里先列 " + qs.length + " 道练习。点一道就打开原题。";
   const qHtml = qs.length
     ? "<p class=\"muted\">" + qTitle + "</p>" + qs.map(function (item) {
       const packItems = window.MC["items:" + item.vol + "-" + item.no];
       const found = packItems && (packItems.items || []).filter(function (row) { return row.id === item.id; })[0];
-      const stem = found ? esc(plainMath(found.stem)) : esc(bandLabel(item.band) + " · " + (item.no || "") + " · " + String(item.id || "").split("_").pop());
+      const stem = found ? mathHtml(found.stem) : esc(bandLabel(item.band) + " · " + (item.no || "") + " · " + String(item.id || "").split("_").pop());
       return '<button type="button" class="kp-row q-row" data-open-q="' + esc(item.id) + '" data-q-vol="' + esc(item.vol || "") + '" data-q-no="' + esc(item.no || "") + '"><em>' + esc(bandLabel(item.band)) + "</em><span>" + stem + "</span></button>";
     }).join("")
-    : "<p>这一条还没有挂题。</p>";
+    : "<p>这一条还没有挂练习题。</p>";
+  const exPack = ensureEx(skill.vol, skill.sec);
+  let exampleHtml = "<p>正在打开这一节的教材例题。</p>";
+  if (exPack && exPack.missing) exampleHtml = "<p>这一节没有单独的教材例题。</p>";
+  else if (exPack) {
+    const linked = (exPack.items || []).filter(function (item) {
+      return (item.kps || []).some(function (kp) { return kp.m1 && kp.m1.uid === skill.id; });
+    });
+    if (!linked.length) {
+      exampleHtml = "<p>教材例题是单独一份数据，用「这道题的做法」标到方法上。这一条还没有被标上，所以不拿别的题来充。</p>";
+    } else {
+      const shown = linked.slice(0, 3);
+      exampleHtml = '<p class="muted">教材例题里有 ' + linked.length + " 道标了这个方法。先列 " + shown.length + " 道，解析原来就写在例题里。</p>" +
+        shown.map(function (item) {
+          return '<article class="ex-card"><p class="stem">' + mathHtml(item.stem || "") + '</p><details><summary>看这道例题的解析</summary><div class="stem">' +
+            mathHtml(item.ans || "这道例题的解析还没入库") + "</div></details></article>";
+        }).join("");
+    }
+  }
   const more = "<section><h2>换个做法</h2>" + altHtml + "</section>" +
     "<section><h2>它管不到的地方</h2>" + listHtml(rec && rec.boundaries, "还没有写下它不管的情况。") + "</section>" +
     "<section><h2>用在哪里</h2>" + kpLinks(pack.net.skillKps[skill.id] || []) + "</section>" +
@@ -1067,7 +1085,8 @@ function viewMethod() {
     '<div class="method-grid"><section class="card"><h2>怎么做</h2>' + stepHtml +
     "<h2>什么时候用</h2>" + listHtml(rec && rec.conditions, "还没有写下什么时候用。") +
     "<h2>做错的样子</h2>" + listHtml(rec && rec.signals, "还没有写下做错的样子。") +
-    '</section><section class="card"><h2>用它做过的题</h2>' + qHtml + "</section></div>" +
+    '</section><section class="card"><h2>教材例题</h2>' + exampleHtml +
+    "<h2>用它做过的题</h2>" + qHtml + "</section></div>" +
     '<details class="card method-more"><summary>其余说明</summary>' + more + "</details></div>";
 }
 
@@ -1224,6 +1243,10 @@ function ensureSec(vol, sec) {
 
 function ensureItems(vol, no) {
   return ensureSlice("items:" + vol + "-" + no, "../../../runtime/web/data/sec/" + vol + "-" + no + ".items.js");
+}
+
+function ensureEx(vol, no) {
+  return ensureSlice("ex:" + vol + "-" + no, "../../../runtime/web/data/sec/" + vol + "-" + no + ".ex.js");
 }
 
 function bandLabel(band) {
@@ -3245,8 +3268,8 @@ function layerScope() {
   return { books: books, chapters: cat.chByVol[vol] || [], sections: sections, points: points, methods: methods, ideas: ideas, chapter: chapter, sec: sec };
 }
 
-function layerCol(title, names, html) {
-  return '<div class="col"><h3>' + title + " " + names.length + "</h3>" + (html || '<p class="muted">这里没有</p>') + "</div>";
+function layerCol(title, names, html, extra) {
+  return '<div class="col' + (extra ? " " + extra : "") + '"><h3>' + title + " " + names.length + "</h3>" + (html || '<p class="muted">这里没有</p>') + "</div>";
 }
 
 function layerPile(title, count, html) {
@@ -3282,7 +3305,7 @@ function layerNodeButtons(nodes, attr, selected, bright) {
     const on = selected === node.id || selected === node.vol || selected === node.title ? " on" : "";
     const dim = bright && !bright(node) ? " dim" : "";
     const value = attr === "data-book" ? node.vol : node.id;
-    return '<button type="button" class="link' + on + dim + '" ' + attr + '="' + esc(value) + '">' + esc(plainMath(kpLabel(node.title))) + "</button>";
+    return '<button type="button" class="link' + on + dim + '" ' + attr + '="' + esc(value) + '">' + mathHtml(kpLabel(node.title)) + "</button>";
   }).join("");
 }
 
@@ -3310,12 +3333,6 @@ function viewMap() {
     } else if (!sets.chapter && !state.mapPoint && !state.mapMethod && !state.mapIdea) {
       side = '<aside class="side"><p class="muted">先选一册、一章，再点一节。知识点出现在右边可以往下翻。</p></aside>';
     }
-    const chapterHtml = sets.chapters.map(function (chapter) {
-      const key = chapter.vol + "-" + chapter.ch;
-      const on = activeChapterKey() === key ? " on" : "";
-      const count = ((catalog() && catalog().secsByCh[key]) || []).length;
-      return '<button type="button" class="link' + on + '" data-layer-ch="' + esc(key) + '"><b>' + esc(chapter.title) + '</b><span>' + count + " 节</span></button>";
-    }).join("");
     const sectionHtml = sets.chapter
       ? (sets.sections.length ? sets.sections.map(function (sec) {
         const on = state.mapSection === sec.sec ? " on" : "";
@@ -3333,20 +3350,17 @@ function viewMap() {
       ? (sets.points.length ? layerNodeButtons(sets.points, "data-point", state.mapPoint || "", pointOn) : '<p class="muted">这一节在图谱里还没有知识点。</p>')
       : '<p class="muted">先选一节。</p>';
     const methodHtml = sets.sec
-      ? (sets.methods.length ? layerNodeButtons(sets.methods, "data-method", state.mapMethod, function (skill) {
-        return !literacyNode() || !catNow || skillMatchesLiteracy(skill, catNow);
-      }) : '<p class="muted">这一节在图谱里还没有挂方法。</p>')
+      ? (sets.methods.length ? sets.methods.map(function (skill) {
+        const on = state.mapMethod === skill.id ? " on" : "";
+        const dim = literacyNode() && catNow && !skillMatchesLiteracy(skill, catNow) ? " dim" : "";
+        const thoughts = ((catNow && catNow.thoughtBySkill[skill.id]) || []).map(function (thought) { return thought.title; });
+        const sub = thoughts.length ? "<span>" + esc(thoughts.join(" · ")) + "</span>" : "";
+        return '<button type="button" class="link' + on + dim + '" data-method="' + esc(skill.id) + '"><b>' + mathHtml(kpLabel(skill.title)) + "</b>" + sub + "</button>";
+      }).join("") : '<p class="muted">这一节在图谱里还没有挂方法。</p>')
       : '<p class="muted">先选一节。</p>';
-    const ideaHtml = sets.sec
-      ? (sets.ideas.length ? layerNodeButtons(sets.ideas, "data-idea", state.mapIdea) : '<p class="muted">这一节的方法还没有标思想。</p>')
-      : '<p class="muted">先选一节。</p>';
-    const columns = layerCol("章", sets.chapters, chapterHtml || '<p class="muted">先选一册</p>') +
-      layerCol("节", sets.sections, sectionHtml) +
-      '<div class="col detail">' +
-      layerPile("知识", sets.points.length, pointHtml) +
-      layerPile("方法", sets.methods.length, methodHtml) +
-      layerPile("思想", sets.ideas.length, ideaHtml) +
-      "</div>";
+    const columns = layerCol("节", sets.sections, sectionHtml, "slim") +
+      layerCol("知识", sets.points, pointHtml, "main-col") +
+      layerCol("方法", sets.methods, methodHtml, "main-col");
     body = '<div class="map-page map-fill' + (state.mapSideOpen === false ? " side-collapsed" : "") + '"><div class="board pano-board"><div class="float-modes">' +
       modeButton("layer", "分层") + modeButton("panorama", "全景") + net + "</div>" +
       '<div class="layer-board">' + mapFilters() + '<div class="map' + (side ? " with-card" : "") + '">' + columns + withSideFold(side) + "</div></div></div></div>";
