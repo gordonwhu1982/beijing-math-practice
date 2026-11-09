@@ -1740,18 +1740,28 @@ function mathHtml(value) {
   const out = [];
   let last = 0;
   const re = /\$\$([\s\S]*?)\$\$|\$([^$]*)\$/g;
+  const punct = "、，。；：！？,.;:!?）)]】》」』";
   let match;
   while ((match = re.exec(text))) {
     out.push(esc(text.slice(last, match.index)));
     const tex = (match[1] != null ? match[1] : match[2]).trim();
     const display = match[1] != null;
+    let html;
     try {
-      const html = katex.renderToString(tex, { throwOnError: false, output: "html", strict: false, displayMode: display });
-      out.push(html.indexOf("katex-error") >= 0 ? esc(match[0]) : html);
+      html = katex.renderToString(tex, { throwOnError: false, output: "html", strict: false, displayMode: display });
+      if (html.indexOf("katex-error") >= 0) html = esc(match[0]);
     } catch (err) {
-      out.push(esc(match[0]));
+      html = esc(match[0]);
     }
-    last = match.index + match[0].length;
+    let end = match.index + match[0].length;
+    let tail = "";
+    while (end < text.length && punct.indexOf(text.charAt(end)) >= 0) {
+      tail += text.charAt(end);
+      end += 1;
+    }
+    out.push('<span class="math-keep">' + html + esc(tail) + "</span>");
+    last = end;
+    re.lastIndex = end;
   }
   out.push(esc(text.slice(last)));
   return out.join("");

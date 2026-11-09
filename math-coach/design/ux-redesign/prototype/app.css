@@ -231,7 +231,7 @@ aside.card.hint-side { align-items: stretch; }
   padding-bottom: 28px;
 }
 .col .link { display: block; width: 100%; text-align: left; white-space: normal; line-height: 1.35; }
-.layer-board .col .link { flex-direction: column; align-items: stretch; justify-content: center; gap: 2px; }
+.layer-board .col.slim .link { flex-direction: column; align-items: stretch; justify-content: center; gap: 2px; }
 .col .link b { display: block; font-weight: 650; }
 .col .link > span { display: block; margin-top: 2px; color: var(--c-text-2); font-size: var(--fs-small); }
 .col .link.dim { opacity: 0.45; }
@@ -1072,3 +1072,15 @@ textarea.process {
 .pick-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; }
 .pick-row label { display: flex; flex-direction: column; gap: 4px; font-size: var(--fs-small); color: var(--c-text-2); }
 .pick-row select { height: var(--btn-h); min-width: 148px; border: 1px solid var(--c-line); border-radius: var(--r-md); padding: 0 10px; font-size: var(--fs-body); background: #fff; }
+.math-keep { white-space: nowrap; }
+.layer-board .col.main-col .link { display: block; line-height: 1.45; text-align: left; }
+.layer-board .col.main-col .link > .katex,
+.layer-board .col.main-col .link > .math-keep {
+  display: inline;
+  width: auto;
+  margin-top: 0;
+  color: inherit;
+  font-size: 1em;
+  vertical-align: baseline;
+}
+.side .row h2 { flex: 1 0 100%; min-width: 0; line-height: 1.35; }
