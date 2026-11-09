@@ -194,12 +194,13 @@ function questionById(id) {
 }
 
 /** Turn real choice rows into questions this page can mark. Other forms stay out. */
-function gradableFrom(pack) {
+function gradableFrom(pack, uid) {
   const rows = (pack && pack.items) || [];
   const ids = [];
   rows.forEach(function (row) {
     if (ids.length >= 6) return;
     if (row.form !== "choice" || !row.opts || !row.opts.list || !row.opts.key) return;
+    if (uid && !((row.kps || []).some(function (kp) { return kp.uid === uid; }))) return;
     const options = row.opts.list.map(function (opt) { return opt.text; });
     const answer = row.opts.list.findIndex(function (opt) { return opt.key === row.opts.key; });
     if (answer < 0 || !options.length) return;
@@ -221,7 +222,7 @@ function gradableFrom(pack) {
 function ensureBank(id) {
   if (!id || BANK[id] || String(id).indexOf("bank-") !== 0) return;
   if (!state.practiceVol || !state.practiceNo) return;
-  gradableFrom(ensureItems(state.practiceVol, state.practiceNo));
+  gradableFrom(ensureItems(state.practiceVol, state.practiceNo), state.practiceKp || "");
 }
 
 /** Return whether a mark is already recorded for review. */
@@ -443,6 +444,7 @@ function saveDraft() {
     practiceTitle: state.practiceTitle,
     practiceVol: state.practiceVol,
     practiceNo: state.practiceNo,
+    practiceKp: state.practiceKp || "",
     key: key,
     savedAt: Date.now()
   };
@@ -482,6 +484,7 @@ function resumeDraft(source) {
   if (draft.practiceTitle) state.practiceTitle = draft.practiceTitle;
   if (draft.practiceVol) state.practiceVol = draft.practiceVol;
   if (draft.practiceNo) state.practiceNo = draft.practiceNo;
+  state.practiceKp = draft.practiceKp || "";
   Object.keys(state.setMarks).forEach(function (id) { state.answers[id] = state.setMarks[id]; });
   state.rail = true;
   go(setRoute(draft.mode));
@@ -1072,28 +1075,98 @@ function viewSection() {
     '<div class="chapter-side"><p class="muted">' + (demo && sectionDone() ? "示意题练过" : demo ? "示意题还没练" : "按这一节的选择题练") + "</p>" + actions + "</div></div>";
 }
 
+/** Put the breadcrumb on this point's own book, chapter and section. */
+function placeFromNode(node) {
+  if (!node || !node.vol) return;
+  state.volId = node.vol;
+  state.bookVol = node.vol;
+  state.chNo = String(node.ch);
+  state.secId = node.sec;
+}
+
+/** Crumb text for a point name or a graph id. */
+function kpCrumbLabel(name) {
+  const node = ensureNet() && ensureNet().byId[name];
+  return plainMath(kpLabel(node && node.title ? node.title : name));
+}
+
+/** Full knowledge page. Definition first, then neighbors, methods and practice. */
 function viewGraphKp(node) {
   const net = ensureNet();
-  function links(ids) {
+  const rec = kpRecord(node);
+  const full = String(node.title || "");
+  const cut = full.search(/[：:]/);
+  const rest = cut > 0 ? full.slice(cut + 1) : "";
+  let lead = "";
+  if (rec && rec.definition) lead = "<p>" + mathHtml(rec.definition) + "</p>";
+  else if (rec === undefined) lead = '<p class="muted">正在打开这个知识点的说明。</p>';
+  else if (rest) lead = "<p>" + mathHtml(rest) + "</p>";
+  const goals = rec && rec.objectives && rec.objectives.length
+    ? "<p><strong>要会</strong> " + rec.objectives.slice(0, 3).map(function (item) {
+      return mathHtml(item.text || "");
+    }).join("；") + "</p>"
+    : "";
+  const caution = rec && rec.boundaries && rec.boundaries.length
+    ? "<h2>别混成</h2>" + listHtml(rec.boundaries, "")
+    : "";
+  const when = rec && rec.conditions && rec.conditions.length
+    ? "<h2>成立的条件</h2>" + listHtml(rec.conditions, "")
+    : "";
+  const page = rec && rec.textbook && rec.textbook.page
+    ? '<p class="muted">课本第 ' + esc(rec.textbook.page) + " 页</p>"
+    : "";
+  function neighborButtons(ids, wantContext) {
     return (ids || []).map(function (id) { return net.byId[id]; }).filter(function (item) {
-      return item && item.kind === "knowledge_point";
-    }).slice(0, 8).map(function (item) {
+      if (!item || item.kind !== "knowledge_point") return false;
+      return wantContext ? item.kp_type === "context" : coreKp(item);
+    }).slice(0, 8);
+  }
+  function jumpList(items) {
+    return items.map(function (item) {
       return '<button type="button" class="link" data-kp-jump="' + esc(item.id) + '">' + mathHtml(kpLabel(item.title)) + "</button>";
     }).join("");
   }
-  const pres = links(net.pre[node.id]);
-  const posts = links(net.post[node.id]);
-  const skills = (net.skillByKp[node.id] || []).slice(0, 6).map(function (skill) {
-    return mathHtml(kpLabel(skill.title));
-  }).join("、");
+  const pres = jumpList(neighborButtons(net.pre[node.id], false));
+  const posts = jumpList(neighborButtons(net.post[node.id], false));
+  const examples = neighborButtons(net.post[node.id], true).map(function (item) {
+    const text = String(item.title || "");
+    const mark = text.search(/[：:]/);
+    return "<p>" + mathHtml(mark > 0 ? text.slice(mark + 1) : text) + "</p>";
+  }).join("");
+  const exampleHtml = examples ? "<h2>课本里的例子</h2>" + examples : "";
+  const methods = (net.skillByKp[node.id] || []).slice(0, 6).map(function (skill) {
+    return '<p><button type="button" class="link" data-open-skill="' + esc(skill.id) + '">' + mathHtml(kpLabel(skill.title)) + "</button></p>";
+  }).join("");
+  const thoughts = rec && rec.thoughts && rec.thoughts.length
+    ? rec.thoughts.map(function (item) { return "<p>" + mathHtml(item.name || "") + "</p>"; }).join("")
+    : "";
+  const ideaHtml = methods || thoughts
+    ? "<h2>方法和思想</h2>" + (methods || "<p>现有图谱里还没有挂方法。</p>") +
+      (thoughts ? "<p><strong>思想</strong></p>" + thoughts : "")
+    : "<h2>方法和思想</h2><p>现有图谱里还没有挂方法和思想。</p>";
+  const itemPack = ensureItems(node.vol, node.sec);
+  let qHtml = "";
+  let dock = '<div class="dock"><button class="btn" id="kp-map">回到图谱</button></div>';
+  if (!itemPack) qHtml = '<p class="muted">正在看这一节有没有题。</p>';
+  else if (!itemPack.missing) {
+    const rows = (itemPack.items || []).filter(function (row) {
+      return row.form === "choice" && row.opts && row.opts.key &&
+        (row.kps || []).some(function (kp) { return kp.uid === node.id; });
+    }).slice(0, 4);
+    if (rows.length) {
+      qHtml = "<h2>可以练的题</h2>" + rows.map(function (row) {
+        return '<p class="stem">' + mathHtml(row.stem || "") + "</p>";
+      }).join("");
+      dock = '<div class="dock"><button class="btn" id="redo-kp">再练这个知识点</button><button type="button" class="link" id="kp-map">在图里看</button></div>';
+    } else qHtml = "<p class=\"muted\">这一知识点还没有能交卷的选择题。</p>";
+  } else qHtml = "<p class=\"muted\">这一知识点还没有能交卷的选择题。</p>";
   return '<div class="kp-page"><p class="chip">从图谱来 · <button class="link" id="kp-map">回到图谱</button></p><h1>' +
-    mathHtml(node.title) + '</h1><section class="card"><p>第 ' + esc(node.ch) + " 章 · " + esc(node.sec) +
-    "</p><p>" + mathHtml(node.title) + "</p></section>" +
+    mathHtml(node.title) + '</h1><section class="card">' + lead + goals + page + "</section>" +
+    caution + when + exampleHtml +
     '<div class="kp-rel"><section><h3>前置</h3>' + (pres || '<span class="muted">这是起点</span>') + "</section>" +
     "<section><h3>当前</h3><strong>" + mathHtml(kpLabel(node.title)) + "</strong></section>" +
     "<section><h3>后置</h3>" + (posts || '<span class="muted">暂时没有接着学的</span>') + "</section></div>" +
-    "<h2>方法</h2><p>" + (skills || "现有图谱里还没有挂方法。") + "</p>" +
-    '<div class="dock"><button class="btn" id="kp-map">回到图谱</button></div></div>';
+    ideaHtml + qHtml + dock + "</div>";
 }
 
 function listHtml(items, empty) {
@@ -4195,6 +4268,7 @@ function bindHits(box) {
       if (sec) state.secId = sec;
       if (kp) {
         state.kpName = kp;
+        placeFromNode(ensureNet() && ensureNet().byId[kp]);
         state.kpFrom = state.route === "map" ? "map" : state.route === "review" ? "review" : state.route === "today" ? "today" : "section";
         state.kpMark = "";
         state.kpQid = "";
@@ -4228,6 +4302,7 @@ function bind() {
         state.practiceTitle = pack.title;
         state.practiceVol = pack.vol;
         state.practiceNo = pack.no;
+        state.practiceKp = "";
         if (source === "today" && pack.no) {
           const pick = todayPick();
           if (pick.sec) {
@@ -4373,6 +4448,7 @@ function bind() {
   document.querySelectorAll("[data-kp-name]").forEach(function (button) {
     button.onclick = function () {
       state.kpName = button.getAttribute("data-kp-name");
+      placeFromNode(ensureNet() && ensureNet().byId[state.kpName]);
       state.kpFrom = state.route === "today" ? "today" : "section";
       state.kpQid = "";
       state.kpSource = "";
@@ -4397,7 +4473,20 @@ function bind() {
   const backFrom = document.getElementById("back-from");
   if (backFrom) backFrom.onclick = function () { go(state.kpFrom === "review" ? "review" : "result"); };
   const redoKp = document.getElementById("redo-kp");
-  if (redoKp) redoKp.onclick = function () { startQueue(idsForKp(state.kpName), "wrong", "kp"); };
+  if (redoKp) redoKp.onclick = function () {
+    const node = ensureNet() && ensureNet().byId[state.kpName];
+    if (node && node.kind === "knowledge_point") {
+      const ids = gradableFrom(ensureItems(node.vol, node.sec), node.id);
+      state.practiceTitle = kpLabel(node.title) + " · 练习";
+      state.practiceVol = node.vol;
+      state.practiceNo = node.sec;
+      state.practiceKp = node.id;
+      startQueue(ids, "practice", "kp");
+      return;
+    }
+    state.practiceKp = "";
+    startQueue(idsForKp(state.kpName), "wrong", "kp");
+  };
   document.querySelectorAll("[data-source]").forEach(function (button) {
     button.onclick = function () {
       const key = button.getAttribute("data-source");
@@ -4437,6 +4526,7 @@ function bind() {
       if (at >= 0) state.kpTrail = state.kpTrail.slice(0, at);
       else state.kpTrail.push(state.kpName);
       state.kpName = next;
+      placeFromNode(ensureNet() && ensureNet().byId[next]);
       state.kpQid = "";
       state.kpSource = "";
       state.kpExplain = false;
@@ -4901,6 +4991,7 @@ function bind() {
   const mapKp = document.getElementById("map-kp");
   if (mapKp) mapKp.onclick = function () {
     state.kpName = state.mapPoint;
+    placeFromNode(ensureNet() && ensureNet().byId[state.mapPoint]);
     state.kpFrom = "map";
     state.kpQid = "";
     state.kpSource = "";
@@ -5378,11 +5469,26 @@ function crumbBar() {
   else if (state.route === "chapter") parts = [book, { label: (currentChapter() && currentChapter().title) || "这一章" }];
   else if (state.route === "section") parts = [book, { route: "chapter", label: (currentChapter() && currentChapter().title) || "这一章" }, { label: (currentSection() && currentSection().title) || "这一节" }];
   else if (state.route === "kp") {
-    parts = [book, chapter, section];
+    const point = ensureNet() && ensureNet().byId[state.kpName];
+    if (point && point.kind === "knowledge_point") {
+      const cat = catalog();
+      const vol = cat && (cat.volumes || []).filter(function (item) { return item.vol === point.vol; })[0];
+      const ch = cat && (cat.chapters || []).filter(function (item) {
+        return item.vol === point.vol && String(item.ch) === String(point.ch);
+      })[0];
+      const sec = cat && (cat.sections || []).filter(function (item) {
+        return item.vol === point.vol && item.sec === point.sec;
+      })[0];
+      parts = [
+        { route: "book", label: (vol && vol.title) || "课本" },
+        { route: "chapter", label: (ch && ch.title) || ("第 " + point.ch + " 章") },
+        { route: "section", label: (sec && sec.title) || point.sec }
+      ];
+    } else parts = [book, chapter, section];
     state.kpTrail.forEach(function (name, index) {
-      parts.push({ label: name, kpIndex: index });
+      parts.push({ label: kpCrumbLabel(name), kpIndex: index });
     });
-    parts.push({ label: state.kpName });
+    parts.push({ label: kpCrumbLabel(state.kpName) });
   }
   else if (state.route === "map") parts = [{ label: "图谱" }];
   else if (state.route === "method" || state.route === "q") {
