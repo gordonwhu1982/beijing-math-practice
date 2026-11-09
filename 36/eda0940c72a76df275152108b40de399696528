@@ -1,0 +1,23 @@
+math-coach/design/ux-redesign/prototype/app.css
+  s_f7fe7e394ee45d::t_f0da24016f4698 403-421
+math-coach/design/ux-redesign/prototype/app.js
+  s_f7fe7e394ee45d::t_086491c5c67b73 103-106,154-155,340-343,702-799,806,808-825,827,830,837-838,840-843,845-854,856-858,860,862-863,865-873,877,884-885,887,889,892,894-895,897-902,904-936,3193-3206,3208-3238,3240-3246,3248,3263-3268,3272-3284,3297,3302-3309,3311-3330,3350-3360,3743-3745,3747,3919-3921,3923-3928,4000-4018,4023-4029,4033-4050,4316-4332,4336-4356,4361-4366,4370,4372-4373,4380-4385,4394-4395,4401-4406,4415-4416,4419-4422,4506-4511,5047-5050,5053-5054,5086-5106,5108,5111,5325-5329
+math-coach/design/ux-redesign/prototype/index.html
+  s_f7fe7e394ee45d::t_a3220d47db6283 7,24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "36eda0940c72a76df275152108b40de399696528",
+  "prompts": {},
+  "sessions": {
+    "s_f7fe7e394ee45d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "445ce362-ceb0-4917-928b-14b30209f3d6",
+        "model": "unknown"
+      },
+      "human_author": "gordonwhu1982 <129141243+gordonwhu1982@users.noreply.github.com>"
+    }
+  }
+}
