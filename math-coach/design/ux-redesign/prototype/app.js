@@ -100,6 +100,10 @@ const state = {
   nav: "today",
   rail: false,
   bookOpen: true,
+  bookVol: "801",
+  volId: "801",
+  chNo: "12",
+  secId: "12.1",
   afterExplain: false,
   queue: [],
   index: 0,
@@ -134,7 +138,6 @@ const state = {
   mapMode: "layer",
   mapPoint: null,
   mapCard: false,
-  mapChapter: true,
   mapNetNo: 12,
   mapLevel: "course",
   mapSection: "",
@@ -148,7 +151,8 @@ const state = {
   qId: "",
   qVol: "",
   qNo: "",
-  mapBook: "八年级上册",
+  mapBook: "801",
+  mapChapter: "801-12",
   mapLiteracy: "",
   mapMethod: "",
   mapIdea: "",
@@ -333,6 +337,10 @@ function persistDrafts() {
     lastChange: state.lastChange,
     place: {
       bookOpen: state.bookOpen,
+      bookVol: state.bookVol,
+      volId: state.volId,
+      chNo: state.chNo,
+      secId: state.secId,
       mapMode: state.mapMode,
       mapPoint: state.mapPoint,
       mapCard: state.mapCard,
@@ -691,107 +699,241 @@ function sectionDone() {
   return QUESTIONS.some(function (item) { return isFinal(state.answers[item.id]); });
 }
 
-/** Textbook volume list. Only grade 8 volume is in this prototype. */
+let CATALOG = null;
+
+function catalog() {
+  if (CATALOG) return CATALOG;
+  const graph = window.MC && window.MC.graph;
+  if (!graph || !graph.nodes) return null;
+  const byId = {};
+  graph.nodes.forEach(function (node) { byId[node.id] = node; });
+  const volumes = graph.nodes.filter(function (node) { return node.kind === "volume"; })
+    .sort(function (a, b) { return String(a.vol).localeCompare(String(b.vol)); });
+  const chapters = graph.nodes.filter(function (node) { return node.kind === "chapter"; })
+    .sort(function (a, b) { return Number(a.ch) - Number(b.ch); });
+  const sections = graph.nodes.filter(function (node) { return node.kind === "section"; })
+    .sort(function (a, b) { return String(a.sec).localeCompare(String(b.sec), undefined, { numeric: true }); });
+  const competencies = graph.nodes.filter(function (node) { return node.kind === "competency"; })
+    .sort(function (a, b) { return String(a.id).localeCompare(String(b.id)); });
+  const thoughts = graph.nodes.filter(function (node) { return node.kind === "thought"; });
+  const chByVol = {};
+  const secsByCh = {};
+  const kpsBySec = {};
+  const skillsBySec = {};
+  chapters.forEach(function (node) { (chByVol[node.vol] = chByVol[node.vol] || []).push(node); });
+  sections.forEach(function (node) { (secsByCh[node.vol + "-" + node.ch] = secsByCh[node.vol + "-" + node.ch] || []).push(node); });
+  graph.nodes.forEach(function (node) {
+    if (node.kind === "knowledge_point" && node.sec) (kpsBySec[node.sec] = kpsBySec[node.sec] || []).push(node);
+    if (node.kind === "skill" && node.sec) (skillsBySec[node.sec] = skillsBySec[node.sec] || []).push(node);
+  });
+  const thoughtBySkill = {};
+  const compByThought = {};
+  (graph.edges || []).forEach(function (edge) {
+    const from = byId[edge.s];
+    const to = byId[edge.d];
+    if (!from || !to) return;
+    if (edge.r === "belongs_to") {
+      const skill = from.kind === "skill" ? from : to.kind === "skill" ? to : null;
+      const thought = from.kind === "thought" ? from : to.kind === "thought" ? to : null;
+      if (skill && thought && skill !== thought) (thoughtBySkill[skill.id] = thoughtBySkill[skill.id] || []).push(thought);
+    }
+    if (edge.r === "supports") {
+      const thought = from.kind === "thought" ? from : to.kind === "thought" ? to : null;
+      const comp = from.kind === "competency" ? from : to.kind === "competency" ? to : null;
+      if (thought && comp) (compByThought[thought.id] = compByThought[thought.id] || []).push(comp);
+    }
+  });
+  CATALOG = {
+    byId: byId, volumes: volumes, chapters: chapters, sections: sections,
+    competencies: competencies, thoughts: thoughts, chByVol: chByVol, secsByCh: secsByCh,
+    kpsBySec: kpsBySec, skillsBySec: skillsBySec, thoughtBySkill: thoughtBySkill, compByThought: compByThought
+  };
+  return CATALOG;
+}
+
+function activeVol() {
+  const cat = catalog();
+  if (!state.mapBook) return "";
+  if (!cat) return state.mapBook === "八年级上册" ? "801" : state.mapBook;
+  const hit = cat.volumes.filter(function (vol) { return vol.vol === state.mapBook || vol.title === state.mapBook; })[0];
+  return hit ? hit.vol : "";
+}
+
+function activeChapterKey() {
+  if (state.mapChapter === true) return "801-12";
+  if (typeof state.mapChapter === "string" && state.mapChapter) return state.mapChapter;
+  return "";
+}
+
+function currentChapter() {
+  const cat = catalog();
+  if (!cat) return null;
+  const vol = state.volId || "801";
+  const ch = String(state.chNo || "12");
+  return (cat.chByVol[vol] || []).filter(function (node) { return String(node.ch) === ch; })[0] || null;
+}
+
+function currentSection() {
+  const cat = catalog();
+  if (!cat) return null;
+  const sec = state.secId || "12.1";
+  return cat.sections.filter(function (node) { return node.sec === sec; })[0] || null;
+}
+
+function enterChapter(vol, ch, from) {
+  state.volId = vol;
+  state.chNo = String(ch);
+  state.bookVol = vol;
+  state.chapterFrom = from || "book";
+  go("chapter");
+}
+
+function openSection(vol, ch, sec) {
+  state.volId = vol;
+  state.chNo = String(ch);
+  state.secId = sec;
+  state.bookVol = vol;
+  go("section");
+}
+
+/** Textbook volumes, chapters and sections from the existing graph. */
 function viewBook() {
   state.nav = "book";
   if (hashParam("load") === "1") {
     return '<h1>课本</h1><section class="card"><p>正在打开……</p></section>';
   }
   if (hashParam("down") === "1") {
-    return '<h1>课本</h1><div class="book-list"><p class="vol">八年级上册 · 这一册暂时打不开</p></div>';
+    return '<h1>课本</h1><div class="book-list"><p class="vol">这一册暂时打不开</p></div>';
   }
-  const open = state.bookOpen !== false;
-  const progress = sectionDone() ? "6 个知识点 · 练过 1 / 1 节" : "6 个知识点 · 还没练";
-  const rows = [
-    ["第 10 章 分式", false],
-    ["第 11 章 实数和二次根式", false],
-    ["第 12 章 三角形", true],
-    ["第 13 章 事件与可能性", false]
-  ].map(function (row) {
-    if (row[1]) return '<button type="button" class="ch-row" id="open-ch"><span>第 12 章 三角形</span><span class="muted">' + progress + "</span></button>";
-    return '<p class="ch-row"><span>' + row[0] + '</span><span>还没放进这版原型</span></p>';
+  const cat = catalog();
+  if (!cat) return '<h1>课本</h1><section class="card"><p>图谱还在打开。</p></section>';
+  const openVol = state.bookVol || "801";
+  const html = cat.volumes.map(function (vol) {
+    const open = openVol === vol.vol;
+    const chapters = cat.chByVol[vol.vol] || [];
+    const body = open ? chapters.map(function (ch) {
+      const key = ch.vol + "-" + ch.ch;
+      const secs = cat.secsByCh[key] || [];
+      let kpCount = 0;
+      secs.forEach(function (sec) { kpCount += (cat.kpsBySec[sec.sec] || []).length; });
+      const secHtml = secs.map(function (sec) {
+        const count = (cat.kpsBySec[sec.sec] || []).length;
+        return '<button type="button" class="sec-row" data-book-sec="' + esc(sec.sec) + '" data-book-vol="' + esc(sec.vol) + '" data-book-ch="' + esc(sec.ch) + '"><span>' + esc(sec.title) + '</span><span class="muted">' + count + " 个知识点</span></button>";
+      }).join("");
+      return '<div class="ch-block"><button type="button" class="ch-row" data-book-ch="' + esc(ch.ch) + '" data-book-vol="' + esc(ch.vol) + '"><span>' + esc(ch.title) + '</span><span class="muted">' + secs.length + " 节 · " + kpCount + " 个知识点</span></button>" + secHtml + "</div>";
+    }).join("") : "";
+    return '<button type="button" class="vol" data-book-vol="' + esc(vol.vol) + '">' + esc(vol.title) + " · " + chapters.length + " 章 · " + (open ? "收起" : "展开") + "</button>" + body;
   }).join("");
-  return '<h1>课本</h1><div class="book-list"><button type="button" class="vol" id="toggle-vol">八年级上册 · ' +
-    (open ? "收起" : "展开") + "</button>" + (open ? rows : "") + "</div>";
+  return '<h1>课本</h1><div class="book-list">' + html + "</div>";
 }
 
-/** Chapter page. One solid action: open 12.1, unless a chapter test is still open. */
+/** Chapter page. Sections come from the graph. The playable test stays on chapter 12. */
 function viewChapter() {
   state.nav = "book";
   if (hashParam("missing") === "1") {
     return '<h1>找不到这一章</h1><section class="card"><p>找不到这一章。</p>' +
       '<button class="btn" id="to-book">回到课本</button></section>';
   }
+  const chapter = currentChapter();
+  const title = chapter ? chapter.title : "这一章";
   if (hashParam("load") === "1") {
-    return '<h1>第 12 章 三角形</h1><section class="card"><p>正在打开……</p></section>';
+    return "<h1>" + esc(title) + '</h1><section class="card"><p>正在打开……</p></section>';
   }
-  const done = sectionDone();
-  const secNote = done ? "课本第 74 页 · 练过" : "课本第 74 页 · 还没练过";
-  const testHere = stillOpen(state.drafts["test:chapter"]);
+  if (!chapter) {
+    return '<h1>找不到这一章</h1><section class="card"><p>找不到这一章。</p><button class="btn" id="to-book">回到课本</button></section>';
+  }
+  const cat = catalog();
+  const secs = (cat && cat.secsByCh[chapter.vol + "-" + chapter.ch]) || [];
+  const demo = chapter.vol === "801" && String(chapter.ch) === "12";
+  const rows = secs.map(function (sec) {
+    const count = (cat.kpsBySec[sec.sec] || []).length;
+    const note = demo && sec.sec === "12.1" ? (sectionDone() ? " · 示意题练过" : " · 有示意题") : "";
+    return '<button type="button" class="kp-row" data-book-sec="' + esc(sec.sec) + '" data-book-vol="' + esc(sec.vol) + '" data-book-ch="' + esc(sec.ch) + '"><strong>' + esc(sec.title) + '</strong><span class="muted">' + count + " 个知识点" + note + "</span></button>";
+  }).join("");
+  const first = secs[0];
+  const testHere = demo && stillOpen(state.drafts["test:chapter"]);
   const testLabel = testHere ? resumeLabel("test:chapter") : "";
+  const firstBtn = first
+    ? '<button class="btn" data-book-sec="' + esc(first.sec) + '" data-book-vol="' + esc(first.vol) + '" data-book-ch="' + esc(first.ch) + '">先看 ' + esc(first.sec) + "</button>"
+    : "";
   const actions = testLabel
-    ? '<button class="btn" id="test-chapter">' + testLabel + '</button>' +
-      '<button type="button" class="link" data-open-sec>先看 12.1</button>' +
+    ? '<button class="btn" id="test-chapter">' + testLabel + "</button>" + firstBtn +
       '<button type="button" class="link" id="abandon-test">放弃这次测试</button>'
-    : '<button class="btn" data-open-sec>先看 12.1</button>' +
-      '<button type="button" class="link" id="test-chapter">测一下这一章</button>' +
+    : firstBtn +
+      (demo ? '<button type="button" class="link" id="test-chapter">测一下这一章</button>' : "") +
       '<button type="button" class="link" id="see-map">在图里看本章</button>';
-  return '<h1>第 12 章 三角形</h1><div class="chapter-page"><div class="chapter-body"><section class="card"><h2>这一章的节</h2>' +
-    '<button type="button" class="kp-row" data-open-sec><strong>12.1 三角形</strong><span class="muted">' + secNote + "</span></button>" +
-    '</section><section class="card"><h2>主干</h2><p>定义、元素、三边关系。</p></section>' +
-    '<section class="card"><h2>方法和思想</h2><p>方法：三边关系。任意两边之和大于第三边。</p><p>思想：比较。</p></section>' +
-    '<section class="card"><h2>这一章哪里不稳</h2>' +
-    (weakPoints().length
-      ? weakPoints().map(function (point) { return "<p>" + esc(point.name) + " · " + point.why + "</p>"; }).join("")
-      : '<p class="muted">' + (Object.keys(state.answers).length ? "这一章还看不出哪里不稳。" : "还没练过这一章。") + "</p>") +
-    "</section></div>" +
+  let kpTotal = 0;
+  secs.forEach(function (sec) { kpTotal += (cat.kpsBySec[sec.sec] || []).length; });
+  const weak = demo ? (weakPoints().length
+    ? weakPoints().map(function (point) { return "<p>" + esc(point.name) + " · " + point.why + "</p>"; }).join("")
+    : '<p class="muted">' + (Object.keys(state.answers).length ? "这一章还看不出哪里不稳。" : "还没练过这一章。示意题只接在 12.1。") + "</p>")
+    : '<p class="muted">这一章的练习还没接到示意题上。节和知识点来自现有图谱。</p>';
+  return "<h1>" + esc(title) + '</h1><div class="chapter-page"><div class="chapter-body"><section class="card"><h2>这一章的节</h2><p class="muted">' +
+    secs.length + " 节 · " + kpTotal + ' 个知识点</p><div class="kp-rows scroll">' + rows + "</div></section>" +
+    '<section class="card"><h2>这一章哪里不稳</h2>' + weak + "</section></div>" +
     '<div class="chapter-side">' + actions + "</div></div>";
 }
 
-/** Section page. One solid action: start or resume practice, unless only a test is open. */
+/** Section page. Knowledge points come from the graph. Only 12.1 keeps the six demo questions. */
 function viewSection() {
   state.nav = "book";
   if (hashParam("missing") === "1") {
     return '<h1>找不到这一节</h1><section class="card"><p>找不到这一节。</p>' +
       '<button class="btn" id="to-book">回到课本</button></section>';
   }
+  const sec = currentSection();
+  const title = sec ? sec.title : "这一节";
   if (hashParam("empty") === "1") {
-    return '<h1>12.1 三角形</h1><section class="card"><p>这一节暂时没有能练的题。</p>' +
+    return "<h1>" + esc(title) + '</h1><section class="card"><p>这一节暂时没有能练的题。</p>' +
       '<button class="btn" disabled>开始练 · 6 题</button>' +
-      '<p><button type="button" class="link" id="back-ch">看下一节</button></p></section>';
+      '<p><button type="button" class="link" id="back-ch">回到这一章</button></p></section>';
   }
   if (hashParam("load") === "1") {
-    return '<h1>12.1 三角形</h1><section class="card"><p>正在打开……</p><button class="btn" disabled>开始练 · 6 题</button></section>';
+    return "<h1>" + esc(title) + '</h1><section class="card"><p>正在打开……</p></section>';
   }
-  const resume = resumeLabel("section");
-  const done = sectionDone();
-  const testHere = stillOpen(state.drafts["test:section"]);
-  const testLabel = testHere ? resumeLabel("test:section") : "";
-  let actions = "";
-  if (resume) {
-    actions = '<button class="btn" id="start">' + resume + '</button>' +
-      '<button type="button" class="link" id="abandon">放弃这一组</button>' +
-      (testLabel
-        ? '<button type="button" class="link" id="test-section">' + testLabel + '</button><button type="button" class="link" id="abandon-test">放弃这次测试</button>'
-        : '<button type="button" class="link" id="test-section">测一下这一节</button>');
-  } else if (testLabel) {
-    actions = '<button class="btn" id="test-section">' + testLabel + '</button>' +
-      '<button type="button" class="link" id="start">开始练 · 6 题</button>' +
-      '<button type="button" class="link" id="abandon-test">放弃这次测试</button>';
-  } else {
-    actions = '<button class="btn" id="start">开始练 · 6 题</button>' +
-      '<button type="button" class="link" id="test-section">测一下这一节</button>';
+  if (!sec) {
+    return '<h1>找不到这一节</h1><section class="card"><p>找不到这一节。</p><button class="btn" id="to-book">回到课本</button></section>';
   }
-  const points = ["三角形的定义", "三角形的元素", "三边关系", "三角形的记法"].map(function (name) {
-    return '<button type="button" class="kp-row" data-kp-name="' + name + '"><strong>' + name + "</strong></button>";
+  const cat = catalog();
+  const kps = (cat && cat.kpsBySec[sec.sec]) || [];
+  const skills = (cat && cat.skillsBySec[sec.sec]) || [];
+  const demo = sec.vol === "801" && sec.sec === "12.1";
+  const points = kps.map(function (kp) {
+    return '<button type="button" class="kp-row" data-kp-name="' + esc(kp.id) + '"><strong>' + mathHtml(kpLabel(kp.title)) + "</strong></button>";
   }).join("");
-  return '<h1>12.1 三角形</h1><div class="chapter-page"><div class="section-body">' +
-    '<section class="card"><h2>这一节讲什么</h2><p>课本第 74 页。讲三角形的定义、元素和记法。</p></section>' +
-    '<section class="card"><h2>知识点</h2><div class="kp-rows">' + points + "</div></section>" +
-    '<p class="chapter-notes">方法：三边关系，任意两边之和大于第三边。</p>' +
-    '<p class="chapter-notes">常见错因：三点在同一直线上时，不能围成三角形。</p>' +
-    '<p class="muted">这一节 6 道示意题。图上还有的题，这次不练。</p></div>' +
-    '<div class="chapter-side"><p class="muted">' + (done ? "练过" : "还没练") + "</p>" + actions + "</div></div>";
+  const skillLine = skills.length
+    ? skills.slice(0, 8).map(function (skill) { return mathHtml(kpLabel(skill.title)); }).join("、") + (skills.length > 8 ? " 等 " + skills.length + " 个" : "")
+    : "这一节在图谱里还没有挂方法。";
+  let actions = '<button class="btn" id="see-section-map">在图里看这一节</button>';
+  let note = '<p class="muted">这一节的知识点来自现有图谱。示意题还只接在 12.1。</p>';
+  if (demo) {
+    const resume = resumeLabel("section");
+    const testHere = stillOpen(state.drafts["test:section"]);
+    const testLabel = testHere ? resumeLabel("test:section") : "";
+    if (resume) {
+      actions = '<button class="btn" id="start">' + resume + '</button>' +
+        '<button type="button" class="link" id="abandon">放弃这一组</button>' +
+        (testLabel
+          ? '<button type="button" class="link" id="test-section">' + testLabel + '</button><button type="button" class="link" id="abandon-test">放弃这次测试</button>'
+          : '<button type="button" class="link" id="test-section">测一下这一节</button>') +
+        '<button type="button" class="link" id="see-section-map">在图里看这一节</button>';
+    } else if (testLabel) {
+      actions = '<button class="btn" id="test-section">' + testLabel + '</button>' +
+        '<button type="button" class="link" id="start">开始练 · 6 题</button>' +
+        '<button type="button" class="link" id="abandon-test">放弃这次测试</button>' +
+        '<button type="button" class="link" id="see-section-map">在图里看这一节</button>';
+    } else {
+      actions = '<button class="btn" id="start">开始练 · 6 题</button>' +
+        '<button type="button" class="link" id="test-section">测一下这一节</button>' +
+        '<button type="button" class="link" id="see-section-map">在图里看这一节</button>';
+    }
+    note = '<p class="muted">上面是这一节的全部知识点。能交卷的还是原来的 6 道示意题。</p>';
+  }
+  return "<h1>" + esc(title) + '</h1><div class="chapter-page"><div class="section-body">' +
+    '<section class="card"><h2>知识点</h2><p class="muted">' + kps.length + ' 个</p><div class="kp-rows scroll">' +
+    (points || "<p>这一节还没有知识点。</p>") + "</div></section>" +
+    '<p class="chapter-notes">方法：' + skillLine + "</p>" + note + "</div>" +
+    '<div class="chapter-side"><p class="muted">' + (demo && sectionDone() ? "示意题练过" : demo ? "示意题还没练" : "还没接到练习") + "</p>" + actions + "</div></div>";
 }
 
 function viewGraphKp(node) {
@@ -3048,30 +3190,62 @@ function fieldMarkup(network) {
 }
 
 /** What the six layer columns show after the current selection. */
-function layerSets() {
-  if (state.mapLiteracy === "数据分析") {
-    return { books: [], chapters: [], points: [], methods: [], ideas: [] };
+function literacyNode() {
+  const cat = catalog();
+  if (!cat || !state.mapLiteracy) return null;
+  return cat.competencies.filter(function (node) {
+    return node.id === state.mapLiteracy || node.title === state.mapLiteracy;
+  })[0] || null;
+}
+
+function skillMatchesLiteracy(skill, cat) {
+  const comp = literacyNode();
+  if (!comp) return true;
+  const thoughts = cat.thoughtBySkill[skill.id] || [];
+  return thoughts.some(function (thought) {
+    return (cat.compByThought[thought.id] || []).some(function (item) { return item.id === comp.id; });
+  });
+}
+
+function layerScope() {
+  const cat = catalog();
+  const empty = { books: [], chapters: [], sections: [], points: [], methods: [], ideas: [] };
+  if (!cat) return empty;
+  const vol = activeVol();
+  const books = cat.volumes;
+  if (!vol) return { books: books, chapters: [], sections: [], points: [], methods: [], ideas: [] };
+  const key = activeChapterKey();
+  const chapter = key && key.indexOf(vol + "-") === 0 ? (cat.chByVol[vol] || []).filter(function (node) {
+    return node.vol + "-" + node.ch === key;
+  })[0] : null;
+  const sections = chapter ? (cat.secsByCh[key] || []) : [];
+  const sec = sections.filter(function (node) { return node.sec === state.mapSection; })[0] || null;
+  let points = sec ? (cat.kpsBySec[sec.sec] || []).slice() : [];
+  const net = ensureNet();
+  if (state.mapPoint && net && net.byId[state.mapPoint]) {
+    points = points.filter(function (node) { return node.id === state.mapPoint; });
+    if (!points.length) points = [net.byId[state.mapPoint]];
   }
-  const books = ["八年级上册"];
-  if (!state.mapBook) return { books: books, chapters: [], points: [], methods: [], ideas: [] };
-  const chapters = ["第 12 章 三角形"];
-  if (!state.mapChapter) return { books: books, chapters: chapters, points: [], methods: [], ideas: [] };
-  const points = POINT_NAMES.slice();
-  const scoped = state.mapPoint ? [state.mapPoint] : points;
-  const methods = [];
-  scoped.forEach(function (name) {
-    const method = POINT_METHOD[name].method;
-    if (methods.indexOf(method) < 0) methods.push(method);
-  });
-  const ideaSource = state.mapMethod
-    ? scoped.filter(function (name) { return POINT_METHOD[name].method === state.mapMethod; })
-    : scoped;
+  if (literacyNode()) {
+    points = points.filter(function (kp) {
+      const skills = (net && net.skillByKp[kp.id]) || [];
+      return skills.some(function (skill) { return skillMatchesLiteracy(skill, cat); });
+    });
+  }
+  let methods = sec ? (cat.skillsBySec[sec.sec] || []).slice() : [];
+  if (state.mapPoint && net) methods = (net.skillByKp[state.mapPoint] || []).slice();
+  if (literacyNode()) methods = methods.filter(function (skill) { return skillMatchesLiteracy(skill, cat); });
+  if (state.mapMethod) methods = methods.filter(function (skill) { return skill.id === state.mapMethod; });
   const ideas = [];
-  ideaSource.forEach(function (name) {
-    const idea = POINT_METHOD[name].idea;
-    if (ideas.indexOf(idea) < 0) ideas.push(idea);
+  const seen = {};
+  methods.forEach(function (skill) {
+    (cat.thoughtBySkill[skill.id] || []).forEach(function (thought) {
+      if (seen[thought.id]) return;
+      seen[thought.id] = 1;
+      ideas.push(thought);
+    });
   });
-  return { books: books, chapters: chapters, points: points, methods: methods, ideas: ideas };
+  return { books: books, chapters: cat.chByVol[vol] || [], sections: sections, points: points, methods: methods, ideas: ideas, chapter: chapter, sec: sec };
 }
 
 function layerCol(title, names, html) {
@@ -3086,19 +3260,28 @@ function layerButtons(names, attr, selected) {
 }
 
 function methodCard() {
-  const found = POINT_NAMES.filter(function (name) { return POINT_METHOD[name].method === state.mapMethod; })[0];
-  const row = found ? POINT_METHOD[found] : null;
-  if (!row) return "";
-  return '<aside class="side"><div class="row"><h2>' + esc(row.method) + '</h2><button class="link" id="map-close">关闭</button></div>' +
-    "<p>" + row.line + '</p><button type="button" class="link" data-point="' + found + '">看' + found + "</button></aside>";
+  const cat = catalog();
+  const skill = cat && cat.byId[state.mapMethod];
+  if (!skill) return "";
+  state.mapSkill = skill.id;
+  return '<aside class="side"><div class="row"><h2>' + mathHtml(kpLabel(skill.title)) + '</h2><button class="link" id="map-close">关闭</button></div>' +
+    "<p>" + esc(skill.sec || "") + '</p><button class="btn" id="map-skill">看这个方法</button></aside>';
 }
 
 function ideaCard() {
-  const found = POINT_NAMES.filter(function (name) { return POINT_METHOD[name].idea === state.mapIdea; })[0];
-  const row = found ? POINT_METHOD[found] : null;
-  if (!row) return "";
-  return '<aside class="side"><div class="row"><h2>' + esc(row.idea) + '</h2><button class="link" id="map-close">关闭</button></div><p>' +
-    row.line + "</p></aside>";
+  const cat = catalog();
+  const thought = cat && cat.byId[state.mapIdea];
+  if (!thought) return "";
+  return '<aside class="side"><div class="row"><h2>' + esc(thought.title) + '</h2><button class="link" id="map-close">关闭</button></div>' +
+    "<p>这个思想挂在当前列出的方法上。</p></aside>";
+}
+
+function layerNodeButtons(nodes, attr, selected) {
+  return nodes.map(function (node) {
+    const on = selected === node.id || selected === node.vol || selected === node.title ? " on" : "";
+    const value = attr === "data-book" ? node.vol : node.id;
+    return '<button type="button" class="link' + on + '" ' + attr + '="' + esc(value) + '">' + esc(plainMath(kpLabel(node.title))) + "</button>";
+  }).join("");
 }
 
 /** Layered graph. The view switch stays above the point card. */
@@ -3111,22 +3294,40 @@ function viewMap() {
   let body = "";
   const net = hashParam("net") === "1" ? modeButton("network", "网络") : "";
   if (state.mapMode === "layer") {
-    const sets = layerSets();
+    const sets = layerScope();
     let side = "";
     if (state.mapCard && state.mapIdea) side = ideaCard();
     else if (state.mapCard && state.mapMethod) side = methodCard();
     else if (state.mapPoint && state.mapCard) side = graphPointSide(state.mapPoint, "") || pointCard();
-    else if (state.mapChapter && state.mapCard) {
-      side = '<aside class="side"><div class="row"><h2>第 12 章 三角形</h2><button class="link" id="map-close">关闭</button></div><button class="btn" id="open-chapter">打开这一章</button></aside>';
-    } else if (!state.mapChapter && !state.mapPoint && !state.mapMethod && !state.mapIdea) {
-      side = '<aside class="side"><p class="muted">点一个知识点，卡片出现在右边。</p></aside>';
+    else if (sets.sec && state.mapCard) {
+      side = '<aside class="side"><div class="row"><h2>' + esc(sets.sec.title) + '</h2><button class="link" id="map-close">关闭</button></div>' +
+        "<p>" + sets.points.length + ' 个知识点</p><button class="btn" id="open-layer-sec">打开这一节</button></aside>';
+    } else if (sets.chapter && state.mapCard) {
+      side = '<aside class="side"><div class="row"><h2>' + esc(sets.chapter.title) + '</h2><button class="link" id="map-close">关闭</button></div>' +
+        "<p>" + sets.sections.length + ' 节</p><button class="btn" id="open-chapter">打开这一章</button></aside>';
+    } else if (!sets.chapter && !state.mapPoint && !state.mapMethod && !state.mapIdea) {
+      side = '<aside class="side"><p class="muted">先选一册、一章，再点一节。知识点出现在右边可以往下翻。</p></aside>';
     }
-    const columns = layerCol("素养", ["直观想象", "数据分析"], layerButtons(["直观想象", "数据分析"], "data-literacy", state.mapLiteracy)) +
-      layerCol("教材", sets.books, layerButtons(sets.books, "data-book", state.mapBook)) +
-      layerCol("章节", sets.chapters, layerButtons(sets.chapters, "data-chapter", state.mapChapter ? "第 12 章 三角形" : "")) +
-      layerCol("知识", sets.points, layerButtons(sets.points, "data-point", state.mapPoint || "")) +
-      layerCol("方法", sets.methods, layerButtons(sets.methods, "data-method", state.mapMethod)) +
-      layerCol("思想", sets.ideas, layerButtons(sets.ideas, "data-idea", state.mapIdea));
+    const chapterHtml = sets.chapters.map(function (chapter) {
+      const key = chapter.vol + "-" + chapter.ch;
+      const on = activeChapterKey() === key ? " on" : "";
+      const count = ((catalog() && catalog().secsByCh[key]) || []).length;
+      const secs = activeChapterKey() === key ? sets.sections.map(function (sec) {
+        const son = state.mapSection === sec.sec ? " on" : "";
+        return '<button type="button" class="link sec' + son + '" data-layer-sec="' + esc(sec.sec) + '">' + esc(sec.title) + "</button>";
+      }).join("") : "";
+      return '<button type="button" class="link' + on + '" data-layer-ch="' + esc(key) + '">' + esc(chapter.title) + " · " + count + " 节</button>" + secs;
+    }).join("");
+    const pointHtml = sets.sec
+      ? (sets.points.length ? layerNodeButtons(sets.points, "data-point", state.mapPoint || "") : '<p class="muted">' + (literacyNode() ? "这个素养在这一节没有对上的知识点。" : "这一节还没有知识点。") + "</p>")
+      : '<p class="muted">先点一节。这一章的知识点按节分开，一节里可以往下翻。</p>';
+    const comps = (catalog() && catalog().competencies) || [];
+    const columns = layerCol("素养", comps, layerNodeButtons(comps, "data-literacy", state.mapLiteracy)) +
+      layerCol("教材", sets.books, layerNodeButtons(sets.books, "data-book", activeVol())) +
+      layerCol("章节", sets.chapters, chapterHtml || '<p class="muted">先选一册</p>') +
+      layerCol("知识", sets.points, pointHtml) +
+      layerCol("方法", sets.methods, sets.methods.length ? layerNodeButtons(sets.methods, "data-method", state.mapMethod) : '<p class="muted">先点一节</p>') +
+      layerCol("思想", sets.ideas, sets.ideas.length ? layerNodeButtons(sets.ideas, "data-idea", state.mapIdea) : '<p class="muted">先点一节</p>');
     body = '<div class="map-page map-fill' + (state.mapSideOpen === false ? " side-collapsed" : "") + '"><div class="board pano-board"><div class="float-modes">' +
       modeButton("layer", "分层") + modeButton("panorama", "全景") + net + "</div>" +
       '<div class="layer-board">' + mapFilters() + '<div class="map' + (side ? " with-card" : "") + '">' + columns + withSideFold(side) + "</div></div></div></div>";
@@ -3146,12 +3347,17 @@ function viewMap() {
 
 /** Book and chapter filters. The selected values stay the same as the columns. */
 function mapFilters() {
-  const bookOn = state.mapBook === "八年级上册" ? " selected" : "";
-  const chapterOn = state.mapChapter ? " selected" : "";
-  return '<div class="map-filters"><label>册 <select id="pick-book"><option value="">不选</option>' +
-    '<option value="八年级上册"' + bookOn + '>八年级上册</option></select></label>' +
-    '<label>章 <select id="pick-chapter"><option value="">不选</option>' +
-    '<option value="12"' + chapterOn + '>第 12 章 三角形</option></select></label></div>';
+  const cat = catalog();
+  const vol = activeVol();
+  const books = cat ? cat.volumes.map(function (item) {
+    return '<option value="' + esc(item.vol) + '"' + (item.vol === vol ? " selected" : "") + ">" + esc(item.title) + "</option>";
+  }).join("") : "";
+  const chapters = cat && vol ? (cat.chByVol[vol] || []).map(function (item) {
+    const key = item.vol + "-" + item.ch;
+    return '<option value="' + esc(key) + '"' + (activeChapterKey() === key ? " selected" : "") + ">" + esc(item.title) + "</option>";
+  }).join("") : "";
+  return '<div class="map-filters"><label>册 <select id="pick-book"><option value="">不选</option>' + books +
+    '</select></label><label>章 <select id="pick-chapter"><option value="">不选</option>' + chapters + "</select></label></div>";
 }
 
 /** One segment button for the graph mode. */
@@ -3534,11 +3740,11 @@ function viewRecord() {
   const change = state.lastChange
     ? "第 12 章上一回做对 " + state.lastChange.before + " 道，现在 " + state.lastChange.after + " 道。"
     : "还没有上一次的数可以比。";
-  const lines = CHAPTERS.map(function (name) {
-    if (name.indexOf("12") >= 0) {
-      return '<p><button type="button" class="link" id="open-record-ch">' + name + "</button> · 要重做 " + owed + " 道</p>";
+  const lines = ((catalog() && catalog().chapters) || []).map(function (chapter) {
+    if (chapter.vol === "801" && String(chapter.ch) === "12") {
+      return '<p><button type="button" class="link" id="open-record-ch">' + esc(chapter.title) + "</button> · 要重做 " + owed + " 道</p>";
     }
-    return '<p class="muted">' + name + " · 还没放进这版原型</p>";
+    return '<p class="muted">' + esc(chapter.title) + " · 还没练过</p>";
   }).join("");
   const note = state.exportNote ? "<p>" + state.exportNote + "</p>" : "";
   return '<div class="record-page"><h1>我的记录</h1><div class="stats">' +
@@ -3710,7 +3916,16 @@ function bindHits(box) {
   box.querySelectorAll("[data-go]").forEach(function (button) {
     button.onclick = function () {
       const kp = button.getAttribute("data-kp");
+      const vol = button.getAttribute("data-book-vol");
+      const ch = button.getAttribute("data-book-ch");
+      const sec = button.getAttribute("data-book-sec");
       state.query = "";
+      if (vol) state.bookVol = vol;
+      if (vol && ch) {
+        state.volId = vol;
+        state.chNo = ch;
+      }
+      if (sec) state.secId = sec;
       if (kp) {
         state.kpName = kp;
         state.kpFrom = state.route === "map" ? "map" : state.route === "review" ? "review" : state.route === "today" ? "today" : "section";
@@ -3782,20 +3997,57 @@ function bind() {
   if (resumeKp) resumeKp.onclick = function () { resumeDraft("kp"); };
   const resumeReview = document.getElementById("resume-review");
   if (resumeReview) resumeReview.onclick = function () { resumeDraft("review"); };
-  const toggleVol = document.getElementById("toggle-vol");
-  if (toggleVol) toggleVol.onclick = function () { state.bookOpen = state.bookOpen === false; render(); };
-  const openCh = document.getElementById("open-ch");
-  if (openCh) openCh.onclick = function () { state.chapterFrom = "book"; go("chapter"); };
+  document.querySelectorAll("[data-book-vol]").forEach(function (button) {
+    if (button.hasAttribute("data-book-ch") || button.hasAttribute("data-book-sec")) return;
+    button.onclick = function () {
+      const vol = button.getAttribute("data-book-vol");
+      state.bookVol = state.bookVol === vol ? "" : vol;
+      render();
+    };
+  });
+  document.querySelectorAll("[data-book-ch]").forEach(function (button) {
+    if (button.hasAttribute("data-book-sec")) return;
+    button.onclick = function () {
+      enterChapter(button.getAttribute("data-book-vol"), button.getAttribute("data-book-ch"), "book");
+    };
+  });
+  document.querySelectorAll("[data-book-sec]").forEach(function (button) {
+    button.onclick = function () {
+      openSection(button.getAttribute("data-book-vol"), button.getAttribute("data-book-ch"), button.getAttribute("data-book-sec"));
+    };
+  });
   const openSec = document.querySelectorAll("[data-open-sec]");
   openSec.forEach(function (button) { button.onclick = function () { go("section"); }; });
   const seeMap = document.getElementById("see-map");
   if (seeMap) seeMap.onclick = function () {
-    state.mapMode = "layer";
-    state.mapChapter = true;
+    const chapter = currentChapter();
+    state.mapMode = "panorama";
+    state.mapBook = chapter ? chapter.vol : state.volId || "801";
+    state.mapChapter = chapter ? chapter.vol + "-" + chapter.ch : activeChapterKey();
+    state.mapNetNo = chapter ? Number(chapter.ch) : state.mapNetNo;
+    state.mapLevel = "chapter";
+    state.mapSection = "";
     state.mapPoint = null;
     state.mapMethod = "";
     state.mapIdea = "";
-    state.mapCard = false;
+    state.mapSkill = "";
+    state.mapCard = true;
+    state.mapSideOpen = true;
+    go("map");
+  };
+  const seeSection = document.getElementById("see-section-map");
+  if (seeSection) seeSection.onclick = function () {
+    const sec = currentSection();
+    state.mapMode = "panorama";
+    state.mapSection = sec ? sec.sec : state.secId;
+    state.mapNetNo = sec ? Number(sec.ch) : state.mapNetNo;
+    state.mapBook = sec ? sec.vol : state.volId;
+    state.mapChapter = sec ? sec.vol + "-" + sec.ch : state.mapChapter;
+    state.mapLevel = "chapter";
+    state.mapPoint = null;
+    state.mapSkill = "";
+    state.mapCard = true;
+    state.mapSideOpen = true;
     go("map");
   };
   const backBook = document.getElementById("back-book");
@@ -4061,27 +4313,76 @@ function bind() {
     button.onclick = function () {
       const name = button.getAttribute("data-literacy");
       state.mapLiteracy = state.mapLiteracy === name ? "" : name;
-      if (state.mapLiteracy === "数据分析") {
+      state.mapPoint = null;
+      state.mapMethod = "";
+      state.mapIdea = "";
+      render();
+    };
+  });
+  document.querySelectorAll("[data-layer-ch]").forEach(function (button) {
+    button.onclick = function () {
+      const key = button.getAttribute("data-layer-ch");
+      if (activeChapterKey() === key) {
+        state.mapChapter = "";
+        state.mapSection = "";
+        state.mapPoint = null;
+        state.mapCard = false;
+      } else {
+        state.mapChapter = key;
+        state.mapSection = "";
         state.mapPoint = null;
         state.mapMethod = "";
         state.mapIdea = "";
-        state.mapCard = false;
+        state.mapCard = true;
+        const parts = key.split("-");
+        state.mapBook = parts[0];
+        state.mapNetNo = Number(parts[1]) || state.mapNetNo;
       }
       render();
     };
   });
+  document.querySelectorAll("[data-layer-sec]").forEach(function (button) {
+    button.onclick = function () {
+      const sec = button.getAttribute("data-layer-sec");
+      if (state.mapSection === sec) {
+        state.mapSection = "";
+        state.mapPoint = null;
+        state.mapCard = !!activeChapterKey();
+      } else {
+        state.mapSection = sec;
+        state.mapPoint = null;
+        state.mapMethod = "";
+        state.mapIdea = "";
+        state.mapCard = true;
+      }
+      render();
+    };
+  });
+  const openLayerSec = document.getElementById("open-layer-sec");
+  if (openLayerSec) openLayerSec.onclick = function () {
+    const key = activeChapterKey();
+    const parts = key.split("-");
+    openSection(parts[0] || state.volId, parts[1] || state.chNo, state.mapSection);
+  };
   document.querySelectorAll("[data-book]").forEach(function (button) {
     button.onclick = function () {
       const name = button.getAttribute("data-book");
-      if (state.mapBook === name) {
+      if (state.mapBook === name || activeVol() === name) {
         state.mapBook = "";
-        state.mapChapter = false;
+        state.mapChapter = "";
+        state.mapSection = "";
         state.mapPoint = null;
         state.mapMethod = "";
         state.mapIdea = "";
         state.mapCard = false;
       } else {
         state.mapBook = name;
+        state.mapChapter = "";
+        state.mapSection = "";
+        state.mapPoint = null;
+        state.mapMethod = "";
+        state.mapIdea = "";
+        state.mapCard = false;
       }
       render();
     };
@@ -4090,13 +4391,19 @@ function bind() {
   if (pickBook) pickBook.onchange = function () {
     if (!pickBook.value) {
       state.mapBook = "";
-      state.mapChapter = false;
+      state.mapChapter = "";
+      state.mapSection = "";
       state.mapPoint = null;
       state.mapSkill = "";
       state.mapMethod = "";
       state.mapIdea = "";
       state.mapCard = false;
-    } else state.mapBook = pickBook.value;
+    } else {
+      state.mapBook = pickBook.value;
+      state.mapChapter = "";
+      state.mapSection = "";
+      state.mapPoint = null;
+    }
     render();
   };
   const pickChapter = document.getElementById("pick-chapter");
@@ -4105,11 +4412,14 @@ function bind() {
     state.mapMethod = "";
     state.mapIdea = "";
     if (!pickChapter.value) {
-      state.mapChapter = false;
+      state.mapChapter = "";
+      state.mapSection = "";
       state.mapCard = false;
     } else {
-      state.mapBook = state.mapBook || "八年级上册";
-      state.mapChapter = true;
+      state.mapChapter = pickChapter.value;
+      state.mapSection = "";
+      state.mapBook = pickChapter.value.split("-")[0] || state.mapBook;
+      state.mapNetNo = Number(pickChapter.value.split("-")[1]) || state.mapNetNo;
       state.mapCard = true;
     }
     render();
@@ -4193,7 +4503,12 @@ function bind() {
     };
   });
   const openChapter = document.getElementById("open-chapter");
-  if (openChapter) openChapter.onclick = function () { state.chapterFrom = "map"; go("chapter"); };
+  if (openChapter) openChapter.onclick = function () {
+    const key = activeChapterKey();
+    const parts = key.split("-");
+    if (parts[0] && parts[1]) enterChapter(parts[0], parts[1], "map");
+    else { state.chapterFrom = "map"; go("chapter"); }
+  };
   document.querySelectorAll("[data-focus-point]").forEach(function (button) {
     button.onclick = function () {
       const pointId = button.getAttribute("data-focus-point");
@@ -4729,13 +5044,14 @@ function backTarget() {
 
 /** Breadcrumb for the shared top bar. The last item is the current page. */
 function crumbBar() {
-  const book = { route: "book", label: "八年级上册" };
-  const chapter = { route: "chapter", label: "第 12 章" };
-  const section = { route: "section", label: "12.1" };
+  const volTitle = (catalog() && (catalog().volumes.filter(function (vol) { return vol.vol === (state.volId || "801"); })[0] || {}).title) || "课本";
+  const book = { route: "book", label: volTitle };
+  const chapter = { route: "chapter", label: (currentChapter() && currentChapter().title) || "这一章" };
+  const section = { route: "section", label: (currentSection() && currentSection().title) || "这一节" };
   let parts = [{ label: "今天" }];
   if (state.route === "book") parts = [{ label: "课本" }];
-  else if (state.route === "chapter") parts = [book, { label: "第 12 章 三角形" }];
-  else if (state.route === "section") parts = [book, chapter, { label: "12.1 三角形" }];
+  else if (state.route === "chapter") parts = [book, { label: (currentChapter() && currentChapter().title) || "这一章" }];
+  else if (state.route === "section") parts = [book, { route: "chapter", label: (currentChapter() && currentChapter().title) || "这一章" }, { label: (currentSection() && currentSection().title) || "这一节" }];
   else if (state.route === "kp") {
     parts = [book, chapter, section];
     state.kpTrail.forEach(function (name, index) {
@@ -4766,23 +5082,33 @@ function crumbBar() {
 /** Search hits grouped the way the interaction spec asks. */
 function searchHits(text) {
   const word = (text || "").trim();
-  const catalog = [
-    { group: "章节", label: "第 12 章 三角形", route: "chapter" },
-    { group: "章节", label: "12.1 三角形", route: "section" },
-    { group: "知识点", label: "三角形的定义", route: "kp", kp: "三角形的定义" },
-    { group: "知识点", label: "三角形的元素", route: "kp", kp: "三角形的元素" },
-    { group: "知识点", label: "三边关系", route: "kp", kp: "三边关系" },
-    { group: "知识点", label: "三角形的记法", route: "kp", kp: "三角形的记法" }
-  ];
   if (!word) return "";
-  const found = catalog.filter(function (item) { return item.label.indexOf(word) >= 0; });
-  if (!found.length) return '<p class="muted">没找到。换个词试试，比如「三角形」。</p>';
+  const cat = catalog();
+  if (!cat) return '<p class="muted">图谱还在打开。</p>';
+  const rows = [];
+  const count = {};
+  function push(group, label, route, extra) {
+    if ((count[group] || 0) >= 8 || rows.length >= 24) return;
+    if (plainMath(label).indexOf(word) < 0 && label.indexOf(word) < 0) return;
+    count[group] = (count[group] || 0) + 1;
+    rows.push({ group: group, label: plainMath(kpLabel(label)), route: route, extra: extra || "" });
+  }
+  cat.volumes.forEach(function (vol) { push("册", vol.title, "book", '" data-book-vol="' + vol.vol); });
+  cat.chapters.forEach(function (ch) { push("章", ch.title, "chapter", '" data-book-vol="' + ch.vol + '" data-book-ch="' + ch.ch); });
+  cat.sections.forEach(function (sec) { push("节", sec.title, "section", '" data-book-vol="' + sec.vol + '" data-book-ch="' + sec.ch + '" data-book-sec="' + sec.sec); });
+  const net = ensureNet();
+  if (net) {
+    Object.keys(net.byId).forEach(function (id) {
+      const node = net.byId[id];
+      if (node.kind === "knowledge_point") push("知识点", node.title, "kp", '" data-kp="' + node.id);
+    });
+  }
+  if (!rows.length) return '<p class="muted">没找到。换个词试试，比如「三角形」。</p>';
   let last = "";
-  return found.map(function (item) {
+  return rows.map(function (item) {
     const head = item.group === last ? "" : '<p class="muted">' + item.group + "</p>";
     last = item.group;
-    const kp = item.kp ? '" data-kp="' + item.kp : "";
-    return head + '<button type="button" data-go="' + item.route + kp + '">' + item.label + "</button>";
+    return head + '<button type="button" data-go="' + item.route + item.extra + '">' + esc(item.label) + "</button>";
   }).join("");
 }
 
@@ -4996,7 +5322,11 @@ function applyPlace(data) {
   if (typeof place.mapMode === "string") state.mapMode = place.mapMode;
   if (place.mapPoint === null || typeof place.mapPoint === "string") state.mapPoint = place.mapPoint;
   if (typeof place.mapCard === "boolean") state.mapCard = place.mapCard;
-  if (typeof place.mapChapter === "boolean") state.mapChapter = place.mapChapter;
+  if (typeof place.bookVol === "string") state.bookVol = place.bookVol;
+  if (typeof place.volId === "string") state.volId = place.volId;
+  if (typeof place.chNo === "string" || typeof place.chNo === "number") state.chNo = String(place.chNo);
+  if (typeof place.secId === "string") state.secId = place.secId;
+  if (typeof place.mapChapter === "boolean" || typeof place.mapChapter === "string") state.mapChapter = place.mapChapter;
   if (typeof place.mapNetNo === "number" && place.mapNetNo >= 1 && place.mapNetNo <= 26) state.mapNetNo = place.mapNetNo;
   if (place.mapLevel === "course" || place.mapLevel === "chapter") state.mapLevel = place.mapLevel;
   if (typeof place.mapSection === "string") state.mapSection = place.mapSection;
