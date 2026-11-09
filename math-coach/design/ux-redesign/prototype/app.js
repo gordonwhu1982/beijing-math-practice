@@ -3452,8 +3452,31 @@ function methodCard() {
   const skill = cat && cat.byId[state.mapMethod];
   if (!skill) return "";
   state.mapSkill = skill.id;
+  const pack = skillBundle(skill.id);
+  const rec = pack && pack.rec;
+  const sec = pack && pack.sec;
+  const meta = skillMeta(skill, rec, sec);
+  const desc = rec && rec.desc
+    ? "<p>" + mathHtml(rec.desc) + "</p>"
+    : "<p class=\"muted\">" + (sec ? "这条方法还没有写说明。" : "正在打开这个方法的说明。") + "</p>";
+  const steps = rec && rec.steps ? rec.steps.slice().sort(function (a, b) { return (a.ordinal || 0) - (b.ordinal || 0); }) : [];
+  const stepHtml = steps.length
+    ? "<ol class=\"method-brief\">" + steps.slice(0, 3).map(function (step) {
+      return "<li>" + mathHtml(step.action || "") + "</li>";
+    }).join("") + "</ol>"
+    : "";
+  const kps = (pack && pack.net.skillKps[skill.id]) || [];
+  const used = kps.length
+    ? "<p><strong>用在</strong></p>" + kps.map(function (kp) {
+      return '<p><button type="button" class="link" data-point="' + esc(kp.id) + '">' + mathHtml(kpLabel(kp.title)) + "</button></p>";
+    }).join("")
+    : "";
+  const where = skill.sec
+    ? '<p><button type="button" class="link" data-layer-sec="' + esc(skill.sec) + '">' + esc(meta) + "</button></p>"
+    : "<p>" + esc(meta) + "</p>";
   return '<aside class="side"><div class="row"><h2>' + mathHtml(kpLabel(skill.title)) + '</h2><button class="link" id="map-close">关闭</button></div>' +
-    "<p>" + esc(skill.sec || "") + '</p><button class="btn" id="map-skill">看这个方法</button></aside>';
+    where + desc + stepHtml + used +
+    '<button class="btn" id="map-skill">看这个方法</button></aside>';
 }
 
 function ideaCard() {
@@ -4681,7 +4704,9 @@ function bind() {
   document.querySelectorAll("[data-method]").forEach(function (button) {
     button.onclick = function () {
       const name = button.getAttribute("data-method");
-      if (state.mapMethod === name) {
+      if (state.mapMethod === name && !state.mapCard) {
+        state.mapCard = true;
+      } else if (state.mapMethod === name) {
         state.mapMethod = "";
         state.mapIdea = "";
         state.mapCard = false;
@@ -4710,6 +4735,11 @@ function bind() {
   if (sideReopen) sideReopen.onclick = function () { state.mapCard = true; state.mapSideOpen = true; render(); };
   const mapClose = document.getElementById("map-close");
   if (mapClose) mapClose.onclick = function () {
+    if (state.mapMode === "layer") {
+      state.mapCard = false;
+      render();
+      return;
+    }
     if (state.mapSkill) {
       state.mapSkill = "";
       state.mapCard = !!(state.mapPoint || state.mapSection || state.mapLevel === "chapter");

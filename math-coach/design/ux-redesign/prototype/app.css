@@ -1084,3 +1084,5 @@ textarea.process {
   vertical-align: baseline;
 }
 .side .row h2 { flex: 1 0 100%; min-width: 0; line-height: 1.35; }
+.side .method-brief { margin: 6px 0 8px; padding-left: 1.2em; }
+.side .method-brief li { margin: 4px 0; }
