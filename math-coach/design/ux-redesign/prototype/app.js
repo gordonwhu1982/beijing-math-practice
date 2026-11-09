@@ -178,12 +178,50 @@ const state = {
   exportNote: "",
   flash: "",
   aboutData: false,
-  ignoreHash: false
+  ignoreHash: false,
+  todayVol: "801",
+  todayChapter: "12",
+  todaySec: "12.1",
+  practiceTitle: ""
 };
 
-/** Read a question by id. */
+/** Choice questions loaded from a section file, keyed by practice id. */
+const BANK = {};
+
+/** Read a question by id. The six handwritten items stay first. */
 function questionById(id) {
-  return QUESTIONS.find(function (item) { return item.id === id; });
+  return BANK[id] || QUESTIONS.find(function (item) { return item.id === id; });
+}
+
+/** Turn real choice rows into questions this page can mark. Other forms stay out. */
+function gradableFrom(pack) {
+  const rows = (pack && pack.items) || [];
+  const ids = [];
+  rows.forEach(function (row) {
+    if (ids.length >= 6) return;
+    if (row.form !== "choice" || !row.opts || !row.opts.list || !row.opts.key) return;
+    const options = row.opts.list.map(function (opt) { return opt.text; });
+    const answer = row.opts.list.findIndex(function (opt) { return opt.key === row.opts.key; });
+    if (answer < 0 || !options.length) return;
+    const id = "bank-" + row.id;
+    BANK[id] = {
+      id: id,
+      stem: row.stem,
+      options: options,
+      answer: answer,
+      kp: (row.kps && row.kps[0] && row.kps[0].name) || "",
+      explain: row.ans || ""
+    };
+    ids.push(id);
+  });
+  return ids;
+}
+
+/** Refill choice questions after a reload. The handwritten set does not use this. */
+function ensureBank(id) {
+  if (!id || BANK[id] || String(id).indexOf("bank-") !== 0) return;
+  if (!state.practiceVol || !state.practiceNo) return;
+  gradableFrom(ensureItems(state.practiceVol, state.practiceNo));
 }
 
 /** Return whether a mark is already recorded for review. */
@@ -362,7 +400,10 @@ function persistDrafts() {
       checked: state.checked,
       scrolls: state.scrolls,
       recordFrom: state.recordFrom,
-      chapterFrom: state.chapterFrom
+      chapterFrom: state.chapterFrom,
+      todayVol: state.todayVol,
+      todayChapter: state.todayChapter,
+      todaySec: state.todaySec
     }
   });
   try { sessionStorage.setItem("mc-proto-drafts", payload); } catch (error) { /* prototype only */ }
@@ -399,6 +440,9 @@ function saveDraft() {
     testScope: scope,
     chapterBefore: state.chapterBefore,
     kpName: state.kpName,
+    practiceTitle: state.practiceTitle,
+    practiceVol: state.practiceVol,
+    practiceNo: state.practiceNo,
     key: key,
     savedAt: Date.now()
   };
@@ -435,6 +479,9 @@ function resumeDraft(source) {
   state.liveScope = draft.source === "test" ? draft.testScope : "";
   state.chapterBefore = typeof draft.chapterBefore === "number" ? draft.chapterBefore : null;
   if (draft.kpName) state.kpName = draft.kpName;
+  if (draft.practiceTitle) state.practiceTitle = draft.practiceTitle;
+  if (draft.practiceVol) state.practiceVol = draft.practiceVol;
+  if (draft.practiceNo) state.practiceNo = draft.practiceNo;
   Object.keys(state.setMarks).forEach(function (id) { state.answers[id] = state.setMarks[id]; });
   state.rail = true;
   go(setRoute(draft.mode));
@@ -648,7 +695,63 @@ function resumeLabel(source) {
   return "接着做 · 还剩 " + left + " 题";
 }
 
-/** Today page with one section and a single primary action. */
+/** Knowledge points and methods that belong to this volume's section, not another book with the same number. */
+function sectionHeading(sec) {
+  const title = String(sec && sec.title || "");
+  if (!sec) return "";
+  if (title.indexOf(String(sec.sec)) === 0) return title;
+  return sec.sec + " " + title;
+}
+
+function nodesInSection(map, sec) {
+  if (!map || !sec) return [];
+  return (map[sec.sec] || []).filter(function (node) { return node.vol === sec.vol; });
+}
+
+/** The section chosen on the today page. The handwritten set stays on 12.1. */
+function todayPick() {
+  const cat = catalog();
+  const vol = state.todayVol || "801";
+  const chapters = cat ? (cat.chByVol[vol] || []) : [];
+  const chapter = chapters.filter(function (item) { return String(item.ch) === String(state.todayChapter); })[0] || chapters[0] || null;
+  const secs = chapter ? (cat.secsByCh[chapter.vol + "-" + chapter.ch] || []) : [];
+  const sec = secs.filter(function (item) { return item.sec === state.todaySec; })[0] || secs[0] || null;
+  return { cat: cat, vol: vol, chapters: chapters, chapter: chapter, secs: secs, sec: sec, demo: !!(sec && sec.vol === "801" && sec.sec === "12.1") };
+}
+
+/** Volume, chapter and section lists from the graph. */
+function todayPicker(pick) {
+  if (!pick.cat) return "";
+  const volOptions = pick.cat.volumes.map(function (item) {
+    return '<option value="' + esc(item.vol) + '"' + (item.vol === pick.vol ? " selected" : "") + ">" + esc(item.title) + "</option>";
+  }).join("");
+  const chOptions = pick.chapters.map(function (item) {
+    const title = String(item.title || "");
+    const label = title.indexOf("第") === 0 ? title : "第 " + item.ch + " 章 " + title;
+    return '<option value="' + esc(item.ch) + '"' + (pick.chapter && String(item.ch) === String(pick.chapter.ch) ? " selected" : "") + ">" + esc(label) + "</option>";
+  }).join("");
+  const secOptions = pick.secs.map(function (item) {
+    return '<option value="' + esc(item.sec) + '"' + (pick.sec && item.sec === pick.sec.sec ? " selected" : "") + ">" + esc(sectionHeading(item)) + "</option>";
+  }).join("");
+  return '<div class="pick-row"><label>册<select id="pick-vol">' + volOptions + '</select></label>' +
+    '<label>章<select id="pick-ch">' + chOptions + '</select></label>' +
+    '<label>节<select id="pick-sec">' + secOptions + "</select></label></div>";
+}
+
+/** Questions this page can mark for the open section. 12.1 keeps the six handwritten items. */
+function practicePack(source) {
+  const demoIds = QUESTIONS.map(function (item) { return item.id; });
+  if (source === "section") {
+    const sec = currentSection();
+    if (!sec || (sec.vol === "801" && sec.sec === "12.1")) return { ids: demoIds, title: "12.1 三角形 · 练习", vol: "801", no: "12.1" };
+    return { ids: gradableFrom(ensureItems(sec.vol, sec.sec)), title: sectionHeading(sec) + " · 练习", vol: sec.vol, no: sec.sec };
+  }
+  const pick = todayPick();
+  if (!pick.sec || pick.demo) return { ids: demoIds, title: "12.1 三角形 · 练习", vol: "801", no: "12.1" };
+  return { ids: gradableFrom(ensureItems(pick.sec.vol, pick.sec.sec)), title: sectionHeading(pick.sec) + " · 练习", vol: pick.sec.vol, no: pick.sec.sec };
+}
+
+/** Today page. Every chapter can be chosen. Only 12.1 uses the handwritten six. */
 function viewToday() {
   state.nav = "today";
   if (hashParam("load") === "1") {
@@ -658,40 +761,61 @@ function viewToday() {
     return '<h1>今天</h1><section class="card"><p>今天的推荐暂时出不来。</p>' +
       '<button class="btn" id="to-book">按课本目录挑一节</button></section>';
   }
+  const pick = todayPick();
+  const sec = pick.sec;
+  const demo = pick.demo;
+  const volNode = pick.cat && pick.cat.volumes.filter(function (item) { return item.vol === pick.vol; })[0];
+  const chip = pick.chapter ? esc((volNode && volNode.title) || "") + " · 第 " + esc(pick.chapter.ch) + " 章 " + esc(pick.chapter.title) : "";
+  const hero = sec ? esc(sectionHeading(sec)) : "选一节";
+  const kps = nodesInSection(pick.cat && pick.cat.kpsBySec, sec);
+  const pack = !demo && sec ? ensureItems(sec.vol, sec.sec) : null;
+  const bankIds = !demo && pack && !pack.missing ? gradableFrom(pack) : [];
   const owed = retryIds().length;
-  const resume = resumeLabel("today");
-  const started = Object.keys(state.answers).length > 0;
-  const blurb = started
-    ? "12.1 讲三角形的定义和记法。做错或跳过的可以回到回顾。"
-    : "还没开始练。先从 12.1《三角形》做 6 道题吧，课本第 74 页。";
+  const openToday = stillOpen(state.drafts.today);
+  const openNo = openToday ? (state.drafts.today.practiceNo || "12.1") : "";
+  const sameSet = openToday && openNo === (demo ? "12.1" : (sec && sec.sec));
+  const resume = sameSet ? resumeLabel("today") : "";
+  const started = demo && Object.keys(state.answers).some(function (id) { return QUESTIONS.some(function (item) { return item.id === id; }); });
+  let blurb = "还没开始练。先从 12.1《三角形》做 6 道题吧，课本第 74 页。";
+  if (demo && started) blurb = "12.1 讲三角形的定义和记法。做错或跳过的可以回到回顾。";
+  if (!demo && !pack) blurb = "正在看这一节有没有能交卷的题。";
+  else if (!demo && pack && (pack.missing || !(pack.items || []).length)) blurb = "这一节还没有题目。可以先看知识点和图谱。";
+  else if (!demo && !bankIds.length) blurb = "这一节还没有能自动判的选择题。填空和解答先不在这里交卷。";
+  else if (!demo) blurb = "这一节先练 " + bankIds.length + " 道选择题。填空和解答还不能在这里自动判。";
+  const startLabel = resume || (demo ? "开始练 · 6 题" : (bankIds.length ? "开始练 · " + bankIds.length + " 题" : "这一节还不能练"));
   const owedBar = owed
     ? '<div class="card owed"><span class="muted">有 ' + owed + ' 道要重做</span> <button class="link" id="to-review">去回顾 ›</button></div>'
     : "";
-  const progress = sectionDone()
+  const progress = demo && sectionDone()
     ? '<p class="progress"><button type="button" class="link" id="to-chapter">第 12 章 · 12.1 练过</button></p>'
     : "";
-  const extra = resume
-    ? '<button class="btn danger" id="abandon">放弃这一组</button>'
+  const extra = resume || (openToday && !sameSet)
+    ? '<button class="btn danger" id="abandon">' + (sameSet ? "放弃这一组" : "放弃没做完的一组") + "</button>"
     : '<button class="link" id="see-section">先看这一节</button>';
-  const points = [
-    ["三角形的定义", "课本第 74 页"],
-    ["三角形的元素", "边、角、顶点"],
-    ["三边关系", "两边之和大于第三边"],
-    ["三角形的记法", "△ABC"]
-  ];
-  const rows = points.map(function (pair) {
-    return '<button class="kp-row" data-kp-name="' + pair[0] + '"><strong>' + pair[0] + '</strong><span class="muted">' + pair[1] + "</span></button>";
-  }).join("");
-  return '<h1>今天练这一节</h1><div class="today"><div class="today-side"><section class="card task"><span class="chip">八年级上册 · 第 12 章 三角形</span>' +
-    '<div class="hero">12.1 三角形</div><p class="muted">课本第 74 页 · 6 个知识点</p><p>' + blurb + '</p>' +
-    '<div class="row"><button class="btn" id="start">' + (resume || "开始练 · 6 题") + "</button>" + extra +
-    '</div></section><section class="card points"><h2>这一节先看这 4 个</h2><div class="kp-rows">' + rows +
-    "</div></section>" + owedBar + progress + "</div>" +
-    '<section class="card qs"><h2>今天这 6 道</h2><div class="qgrid">' +
-    QUESTIONS.map(function (item, index) {
+  const rows = demo
+    ? [["三角形的定义", "课本第 74 页"], ["三角形的元素", "边、角、顶点"], ["三边关系", "两边之和大于第三边"], ["三角形的记法", "△ABC"]].map(function (pair) {
+      return '<button class="kp-row" data-kp-name="' + pair[0] + '"><strong>' + pair[0] + '</strong><span class="muted">' + pair[1] + "</span></button>";
+    }).join("")
+    : kps.map(function (kp) {
+      return '<button class="kp-row" data-kp-name="' + esc(kp.id) + '"><strong>' + mathHtml(kpLabel(kp.title)) + "</strong></button>";
+    }).join("");
+  const questions = demo
+    ? QUESTIONS.map(function (item, index) {
       return '<article class="qcell"><p class="stem">' + (index + 1) + ". " + item.stem + '</p><p class="muted">' +
         item.kp + (item.kind === "blank" ? " · 填空" : item.kind === "open" ? " · 自己判" : "") + "</p></article>";
-    }).join("") + "</div></section></div>";
+    }).join("")
+    : bankIds.map(function (id, index) {
+      const item = BANK[id];
+      return '<article class="qcell"><p class="stem">' + (index + 1) + ". " + mathHtml(item.stem) + '</p><p class="muted">' + mathHtml(item.kp) + "</p></article>";
+    }).join("");
+  const qTitle = demo ? "今天这 6 道" : (bankIds.length ? "这一节先练这 " + bankIds.length + " 道" : "这一节的题");
+  const qBody = questions || '<p class="muted">' + blurb + "</p>";
+  return '<h1>今天练这一节</h1>' + todayPicker(pick) + '<div class="today"><div class="today-side"><section class="card task"><span class="chip">' + chip + "</span>" +
+    '<div class="hero">' + hero + "</div><p class=\"muted\">" + (demo ? "课本第 74 页 · 6 个知识点" : kps.length + " 个知识点") + "</p><p>" + blurb + "</p>" +
+    '<div class="row"><button class="btn" id="start"' + (!resume && !demo && !bankIds.length ? " disabled" : "") + ">" + startLabel + "</button>" + extra +
+    '</div></section><section class="card points"><h2>' + (demo ? "这一节先看这 4 个" : "这一节的知识点") + '</h2><div class="kp-rows">' + (rows || "<p>这一节还没有知识点。</p>") +
+    "</div></section>" + owedBar + progress + "</div>" +
+    '<section class="card qs"><h2>' + qTitle + '</h2><div class="qgrid">' + qBody + "</div></section></div>";
 }
 
 /** True when any of the six demo questions already has a final mark. */
@@ -777,7 +901,8 @@ function currentSection() {
   const cat = catalog();
   if (!cat) return null;
   const sec = state.secId || "12.1";
-  return cat.sections.filter(function (node) { return node.sec === sec; })[0] || null;
+  const vol = state.volId || "801";
+  return cat.sections.filter(function (node) { return node.sec === sec && node.vol === vol; })[0] || null;
 }
 
 function enterChapter(vol, ch, from) {
@@ -815,9 +940,9 @@ function viewBook() {
       const key = ch.vol + "-" + ch.ch;
       const secs = cat.secsByCh[key] || [];
       let kpCount = 0;
-      secs.forEach(function (sec) { kpCount += (cat.kpsBySec[sec.sec] || []).length; });
+      secs.forEach(function (sec) { kpCount += nodesInSection(cat.kpsBySec, sec).length; });
       const secHtml = secs.map(function (sec) {
-        const count = (cat.kpsBySec[sec.sec] || []).length;
+        const count = nodesInSection(cat.kpsBySec, sec).length;
         return '<button type="button" class="sec-row" data-book-sec="' + esc(sec.sec) + '" data-book-vol="' + esc(sec.vol) + '" data-book-ch="' + esc(sec.ch) + '"><span>' + esc(sec.title) + '</span><span class="muted">' + count + " 个知识点</span></button>";
       }).join("");
       return '<div class="ch-block"><button type="button" class="ch-row" data-book-ch="' + esc(ch.ch) + '" data-book-vol="' + esc(ch.vol) + '"><span>' + esc(ch.title) + '</span><span class="muted">' + secs.length + " 节 · " + kpCount + " 个知识点</span></button>" + secHtml + "</div>";
@@ -846,7 +971,7 @@ function viewChapter() {
   const secs = (cat && cat.secsByCh[chapter.vol + "-" + chapter.ch]) || [];
   const demo = chapter.vol === "801" && String(chapter.ch) === "12";
   const rows = secs.map(function (sec) {
-    const count = (cat.kpsBySec[sec.sec] || []).length;
+    const count = nodesInSection(cat.kpsBySec, sec).length;
     const note = demo && sec.sec === "12.1" ? (sectionDone() ? " · 示意题练过" : " · 有示意题") : "";
     return '<button type="button" class="kp-row" data-book-sec="' + esc(sec.sec) + '" data-book-vol="' + esc(sec.vol) + '" data-book-ch="' + esc(sec.ch) + '"><strong>' + esc(sec.title) + '</strong><span class="muted">' + count + " 个知识点" + note + "</span></button>";
   }).join("");
@@ -863,11 +988,11 @@ function viewChapter() {
       (demo ? '<button type="button" class="link" id="test-chapter">测一下这一章</button>' : "") +
       '<button type="button" class="link" id="see-map">在图里看本章</button>';
   let kpTotal = 0;
-  secs.forEach(function (sec) { kpTotal += (cat.kpsBySec[sec.sec] || []).length; });
+  secs.forEach(function (sec) { kpTotal += nodesInSection(cat.kpsBySec, sec).length; });
   const weak = demo ? (weakPoints().length
     ? weakPoints().map(function (point) { return "<p>" + esc(point.name) + " · " + point.why + "</p>"; }).join("")
-    : '<p class="muted">' + (Object.keys(state.answers).length ? "这一章还看不出哪里不稳。" : "还没练过这一章。示意题只接在 12.1。") + "</p>")
-    : '<p class="muted">这一章的练习还没接到示意题上。节和知识点来自现有图谱。</p>';
+    : '<p class="muted">' + (Object.keys(state.answers).length ? "这一章还看不出哪里不稳。" : "还没练过这一章。整章测试只接在 12.1。") + "</p>")
+    : '<p class="muted">点进一节可以练这一节的选择题。整章测试还只接在第 12 章。</p>';
   return "<h1>" + esc(title) + '</h1><div class="chapter-page"><div class="chapter-body"><section class="card"><h2>这一章的节</h2><p class="muted">' +
     secs.length + " 节 · " + kpTotal + ' 个知识点</p><div class="kp-rows scroll">' + rows + "</div></section>" +
     '<section class="card"><h2>这一章哪里不稳</h2>' + weak + "</section></div>" +
@@ -895,8 +1020,8 @@ function viewSection() {
     return '<h1>找不到这一节</h1><section class="card"><p>找不到这一节。</p><button class="btn" id="to-book">回到课本</button></section>';
   }
   const cat = catalog();
-  const kps = (cat && cat.kpsBySec[sec.sec]) || [];
-  const skills = (cat && cat.skillsBySec[sec.sec]) || [];
+  const kps = nodesInSection(cat && cat.kpsBySec, sec);
+  const skills = nodesInSection(cat && cat.skillsBySec, sec);
   const demo = sec.vol === "801" && sec.sec === "12.1";
   const points = kps.map(function (kp) {
     return '<button type="button" class="kp-row" data-kp-name="' + esc(kp.id) + '"><strong>' + mathHtml(kpLabel(kp.title)) + "</strong></button>";
@@ -905,7 +1030,7 @@ function viewSection() {
     ? skills.slice(0, 8).map(function (skill) { return mathHtml(kpLabel(skill.title)); }).join("、") + (skills.length > 8 ? " 等 " + skills.length + " 个" : "")
     : "这一节在图谱里还没有挂方法。";
   let actions = '<button class="btn" id="see-section-map">在图里看这一节</button>';
-  let note = '<p class="muted">这一节的知识点来自现有图谱。示意题还只接在 12.1。</p>';
+  let note = '<p class="muted">这一节的知识点来自现有图谱。</p>';
   if (demo) {
     const resume = resumeLabel("section");
     const testHere = stillOpen(state.drafts["test:section"]);
@@ -928,12 +1053,23 @@ function viewSection() {
         '<button type="button" class="link" id="see-section-map">在图里看这一节</button>';
     }
     note = '<p class="muted">上面是这一节的全部知识点。能交卷的还是原来的 6 道示意题。</p>';
+  } else {
+    const pack = ensureItems(sec.vol, sec.sec);
+    const count = pack && !pack.missing ? gradableFrom(pack).length : 0;
+    if (!pack) note = '<p class="muted">正在看这一节有没有能交卷的题。</p>';
+    else if (pack.missing || !(pack.items || []).length) note = '<p class="muted">这一节还没有题目。</p>';
+    else if (!count) note = '<p class="muted">这一节还没有能自动判的选择题。</p>';
+    else {
+      actions = '<button class="btn" id="start">开始练 · ' + count + ' 题</button>' +
+        '<button type="button" class="link" id="see-section-map">在图里看这一节</button>';
+      note = '<p class="muted">先练 ' + count + " 道选择题。填空和解答还不能在这里自动判。</p>";
+    }
   }
   return "<h1>" + esc(title) + '</h1><div class="chapter-page"><div class="section-body">' +
     '<section class="card"><h2>知识点</h2><p class="muted">' + kps.length + ' 个</p><div class="kp-rows scroll">' +
     (points || "<p>这一节还没有知识点。</p>") + "</div></section>" +
     '<p class="chapter-notes">方法：' + skillLine + "</p>" + note + "</div>" +
-    '<div class="chapter-side"><p class="muted">' + (demo && sectionDone() ? "示意题练过" : demo ? "示意题还没练" : "还没接到练习") + "</p>" + actions + "</div></div>";
+    '<div class="chapter-side"><p class="muted">' + (demo && sectionDone() ? "示意题练过" : demo ? "示意题还没练" : "按这一节的选择题练") + "</p>" + actions + "</div></div>";
 }
 
 function viewGraphKp(node) {
@@ -1439,7 +1575,7 @@ function dotField(nodes, lines, note, tags, legendKind) {
     const float = node.dx || node.dy ? ' class="float" style="--dx:' + (node.dx || 0) + "px;--dy:" + (node.dy || 0) + 'px"' : "";
     return "<" + tag + type + ' class="' + cls + '" data-nid="' + esc(node.id) + '" style="left:' + node.x + "%;top:" + node.y + '%" title="' +
       esc(node.title || node.label) + '"' + attr + ">" + role + "<i></i><span" + float + ">" +
-      (node.math ? graphMathHtml(node.label) : node.card ? chapterLabelHtml(node) : node.full && !node.big && nodes.length > 14 ? esc(node.label).replace(" ", "<br>") : esc(node.label)) +
+      (node.math ? mathHtml(node.label) : node.card ? chapterLabelHtml(node) : node.full && !node.big && nodes.length > 14 ? esc(node.label).replace(" ", "<br>") : esc(node.label)) +
       "</span></" + tag + ">";
   }).join("");
   const legend = legendKind === "course"
@@ -1595,44 +1731,6 @@ function texPlain(tex) {
     .replace(/\\cdot/g, "·").replace(/\\times/g, "×").replace(/\\perp/g, "⊥");
   text = text.replace(/\\[a-zA-Z]+/g, "");
   return text.replace(/[{}]/g, "").replace(/\s+/g, "");
-}
-
-function graphMathHtml(value) {
-  const text = String(value == null ? "" : value);
-  if (text.indexOf("$") < 0) return esc(text);
-  const out = [];
-  let last = 0;
-  const re = /\$\$([\s\S]*?)\$\$|\$([^$]*)\$/g;
-  let match;
-  while ((match = re.exec(text))) {
-    out.push(esc(text.slice(last, match.index)));
-    out.push(texGraph(match[1] != null ? match[1] : match[2]));
-    last = match.index + match[0].length;
-  }
-  out.push(esc(text.slice(last)));
-  return out.join("");
-}
-
-function texGraph(tex) {
-  const text = String(tex || "");
-  const parts = [];
-  const re = /\\sqrt\{([^{}]*)\}|\\sqrt\s*([0-9A-Za-z]+)|\\cdot|\\times|\\frac\{([^{}]*)\}\{([^{}]*)\}|\\geq|\\ge|\\leq|\\le|\\neq|\\pm/g;
-  let last = 0;
-  let match;
-  while ((match = re.exec(text))) {
-    parts.push(esc(text.slice(last, match.index).replace(/\s+/g, "")));
-    if (match[0].indexOf("\\sqrt") === 0) parts.push('<span class="rad"><span>' + texGraph(match[1] != null ? match[1] : match[2]) + "</span></span>");
-    else if (match[0] === "\\cdot") parts.push("·");
-    else if (match[0] === "\\times") parts.push("×");
-    else if (match[0].indexOf("\\frac") === 0) parts.push(texGraph(match[3]) + "/" + texGraph(match[4]));
-    else if (match[0] === "\\geq" || match[0] === "\\ge") parts.push("≥");
-    else if (match[0] === "\\leq" || match[0] === "\\le") parts.push("≤");
-    else if (match[0] === "\\neq") parts.push("≠");
-    else if (match[0] === "\\pm") parts.push("±");
-    last = match.index + match[0].length;
-  }
-  parts.push(esc(text.slice(last).replace(/[{}\\]/g, "").replace(/\s+/g, "")));
-  return parts.join("");
 }
 
 function mathHtml(value) {
@@ -3496,15 +3594,16 @@ function viewPractice() {
   const testNav = state.source === "test" && state.testScope === "review";
   state.nav = testNav || state.source === "review" ? "review" : state.source === "today" ? "today" : "book";
   if (hashParam("load") === "1") {
-    const head = state.mode === "test" ? "测试" : "12.1 三角形 · 练习";
+    const head = state.mode === "test" ? "测试" : (state.practiceTitle || "12.1 三角形 · 练习");
     return '<div class="practice-fit"><h1>' + head + '</h1><div class="work"><section class="card"><p>正在打开……</p></section>' +
       '<aside class="card"><h2>' + (state.mode === "test" ? "题号" : "提示") + '</h2><p>正在打开……</p></aside></div></div>';
   }
+  ensureBank(state.queue[state.index]);
   const item = questionById(state.queue[state.index]);
   if (!item) return '<h1>这一组没有题</h1><button class="btn" id="to-today">回到今天</button>';
   const title = state.mode === "test"
     ? "测试 · 第 " + (state.index + 1) + " / " + state.queue.length + " 题 · 不能看提示"
-    : state.mode === "wrong" ? "只练错的" : state.mode === "skip" ? "把跳过的做完" : "12.1 三角形 · 练习";
+    : state.mode === "wrong" ? "只练错的" : state.mode === "skip" ? "把跳过的做完" : (state.practiceTitle || "12.1 三角形 · 练习");
   const openSkips = state.skippedIds.filter(function (id) { return !isFinal(state.setMarks[id]); });
   const skipNote = openSkips.length ? " · 跳过 " + openSkips.length : "";
   const backNote = openSkips.indexOf(item.id) >= 0 ? " · 回来做跳过的题" : "";
@@ -3532,7 +3631,7 @@ function viewPractice() {
   } else {
     answerBlock = '<div class="list">' + item.options.map(function (text, index) {
       const picked = chosen === index ? " picked" : "";
-      return '<button class="choice' + picked + '" data-choice="' + index + '">' + text + "</button>";
+      return '<button class="choice' + picked + '" data-choice="' + index + '">' + mathHtml(text) + "</button>";
     }).join("") + "</div>";
   }
   const processBox = item.kind === "open" ? "" : '<button type="button" class="link" id="toggle-process">写过程（可不写）</button>' +
@@ -3549,15 +3648,15 @@ function viewPractice() {
       feedback = '<div class="feedback">' + named + "</div>";
     }
   } else if (state.revealed && state.mode !== "test") {
-    const right = item.kind === "blank" ? item.answer : item.options[item.answer];
+    const right = item.kind === "blank" ? esc(item.answer) : mathHtml(item.options[item.answer]);
     const correct = item.kind === "blank" ? String(state.blank || "").trim() === String(item.answer) : state.picked === item.answer;
     const seen = state.afterExplain || state.setMarks[item.id] === "peek";
     const extra = seen
-      ? "<p>" + esc(item.explain || HINTS[4]) + "</p>"
+      ? "<p>" + mathHtml(item.explain || HINTS[4]) + "</p>"
       : ' <button type="button" class="link" id="after-peek">看完整解析</button>';
     feedback = correct
       ? '<div class="feedback ok">对了</div>'
-      : '<div class="feedback bad">不对，正确答案是 ' + esc(right) + extra + "</div>";
+      : '<div class="feedback bad">不对，正确答案是 ' + right + extra + "</div>";
   }
   let hints = "";
   if (state.mode !== "test" && !state.revealed) {
@@ -3593,7 +3692,7 @@ function viewPractice() {
     : '<div class="muted">第 ' + (state.index + 1) + " / " + state.queue.length + " 题" + skipNote + backNote + peekNote + '</div><div class="dots">' + dots + "</div>";
   return '<div class="practice-fit"><div class="head"><button class="link" id="leave">‹ 返回</button><div><strong>' + title +
     "</strong>" + progress + "</div>" + (state.mode === "test" ? "" : '<button class="btn secondary" id="finish">交卷</button>') + "</div>" +
-    '<div class="work"><section class="card"><p class="stem">' + item.stem + "</p>" + answerBlock +
+    '<div class="work"><section class="card"><p class="stem">' + mathHtml(item.stem) + "</p>" + answerBlock +
     processBox + feedback + '</section><aside class="card hint-side"><h2>' + (state.mode === "test" ? "题号" : "提示") + "</h2>" + hintBlock + "</aside></div>" +
     '<div class="dock"><button class="btn" id="submit">' + primary + "</button>" +
     (canSkip ? '<button class="btn secondary" id="skip">先跳过</button>' : "") +
@@ -4047,15 +4146,60 @@ function bind() {
   if (start) {
     start.onclick = function () {
       const source = state.route === "today" ? "today" : "section";
-      if (stillOpen(state.drafts[source])) resumeDraft(source);
-      else startQueue(QUESTIONS.map(function (item) { return item.id; }), "practice", source);
+      const packPreview = practicePack(source);
+      const open = state.drafts[source];
+      const same = stillOpen(open) && (open.practiceNo || (source === "today" ? "12.1" : state.secId)) === packPreview.no;
+      if (same) resumeDraft(source);
+      else {
+        const pack = practicePack(source);
+        state.practiceTitle = pack.title;
+        state.practiceVol = pack.vol;
+        state.practiceNo = pack.no;
+        if (source === "today" && pack.no) {
+          const pick = todayPick();
+          if (pick.sec) {
+            state.volId = pick.sec.vol;
+            state.chNo = String(pick.sec.ch);
+            state.secId = pick.sec.sec;
+          }
+        }
+        startQueue(pack.ids, "practice", source);
+      }
     };
   }
   bindAbandon("abandon", state.route === "today" ? "today" : "section");
   bindAbandon("abandon-review", "review");
   bindAbandon("abandon-test", state.route === "chapter" ? "test:chapter" : state.route === "section" ? "test:section" : "test:review");
   const see = document.getElementById("see-section");
-  if (see) see.onclick = function () { go("section"); };
+  if (see) see.onclick = function () {
+    if (state.route === "today") {
+      const pick = todayPick();
+      if (pick.sec) { openSection(pick.sec.vol, pick.sec.ch, pick.sec.sec); return; }
+    }
+    go("section");
+  };
+  const pickVol = document.getElementById("pick-vol");
+  if (pickVol) pickVol.onchange = function () {
+    state.todayVol = pickVol.value;
+    const cat = catalog();
+    const first = cat && (cat.chByVol[state.todayVol] || [])[0];
+    state.todayChapter = first ? String(first.ch) : "";
+    const firstSec = first && ((cat.secsByCh[first.vol + "-" + first.ch] || [])[0]);
+    state.todaySec = firstSec ? firstSec.sec : "";
+    render();
+  };
+  const pickCh = document.getElementById("pick-ch");
+  if (pickCh) pickCh.onchange = function () {
+    state.todayChapter = pickCh.value;
+    const pick = todayPick();
+    state.todaySec = pick.sec ? pick.sec.sec : "";
+    render();
+  };
+  const pickSec = document.getElementById("pick-sec");
+  if (pickSec) pickSec.onchange = function () {
+    state.todaySec = pickSec.value;
+    render();
+  };
   const toReview = document.getElementById("to-review");
   if (toReview) toReview.onclick = function () { go("review"); };
   const toToday = document.getElementById("to-today");
@@ -5444,6 +5588,9 @@ function applyPlace(data) {
   if (place.checked && typeof place.checked === "object") state.checked = place.checked;
   if (place.scrolls && typeof place.scrolls === "object") state.scrolls = place.scrolls;
   if (typeof place.recordFrom === "string" && place.recordFrom) state.recordFrom = place.recordFrom;
+  if (typeof place.todayVol === "string") state.todayVol = place.todayVol;
+  if (typeof place.todayChapter === "string" || typeof place.todayChapter === "number") state.todayChapter = String(place.todayChapter);
+  if (typeof place.todaySec === "string") state.todaySec = place.todaySec;
   if (place.chapterFrom === "book" || place.chapterFrom === "map" || place.chapterFrom === "record") {
     state.chapterFrom = place.chapterFrom;
   }

@@ -1059,24 +1059,16 @@ textarea.process {
 .focus-net .seed.formula > span .katex,
 .book-net .seed.formula > span .katex {
   font-size: 1em;
+  font-weight: 400;
   line-height: 1.15;
   white-space: nowrap;
 }
-.seed > span .rad {
-  display: inline-flex;
-  align-items: flex-end;
-  vertical-align: -0.05em;
-  line-height: 1;
-  margin: 0 0.04em;
+.field .katex path {
+  fill: currentColor;
+  stroke: none;
+  stroke-width: 0;
+  opacity: 1;
 }
-.seed > span .rad::before {
-  content: "√";
-  font-weight: 400;
-  line-height: 1;
-  margin-right: -0.02em;
-}
-.seed > span .rad > span {
-  border-top: 1.5px solid currentColor;
-  padding: 1px 0.16em 0 0.08em;
-  line-height: 1.05;
-}
+.pick-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; }
+.pick-row label { display: flex; flex-direction: column; gap: 4px; font-size: var(--fs-small); color: var(--c-text-2); }
+.pick-row select { height: var(--btn-h); min-width: 148px; border: 1px solid var(--c-line); border-radius: var(--r-md); padding: 0 10px; font-size: var(--fs-body); background: #fff; }
