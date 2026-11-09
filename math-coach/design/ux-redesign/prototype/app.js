@@ -1331,26 +1331,66 @@ function viewKp() {
     '<div class="dock">' + primary + '<button type="button" class="link" id="kp-map">在图里看</button></div></div>';
 }
 
-/** Side card for the selected point. It stays under the mode switch. */
+/** Section record for one knowledge point. Undefined while the file is still opening. */
+function kpRecord(node) {
+  const sec = ensureSec(node.vol, node.sec);
+  if (!sec) return undefined;
+  if (sec.missing) return null;
+  return (sec.kps || []).filter(function (item) { return item.uid === node.id; })[0] || null;
+}
+
+/** Clickable knowledge points, skipping textbook examples. */
+function pointLinks(ids, net) {
+  const rows = [];
+  (ids || []).forEach(function (otherId) {
+    const other = net.byId[otherId];
+    if (!other || !coreKp(other)) return;
+    rows.push('<p><button type="button" class="link" data-point="' + esc(other.id) + '">' + mathHtml(kpLabel(other.title)) + "</button></p>");
+  });
+  return rows.join("");
+}
+
+/** Side card for the selected point. Chapter and section stay in the filters, not here. */
 function graphPointSide(id, extra) {
   const net = ensureNet();
   const node = net && net.byId[id];
   if (!node || node.kind !== "knowledge_point") return "";
-  const preN = (net.pre[node.id] || []).length;
-  const postN = (net.post[node.id] || []).length;
+  const rec = kpRecord(node);
+  const heading = kpLabel(node.title);
+  const full = String(node.title || "");
+  const cut = full.search(/[：:]/);
+  const rest = cut > 0 ? full.slice(cut + 1) : "";
+  let body = "";
+  if (rec && rec.definition) body = "<p>" + mathHtml(rec.definition) + "</p>";
+  else if (rec === undefined) body = '<p class="muted">正在打开这个知识点的说明。</p>';
+  else if (rest && rest !== heading) body = "<p>" + mathHtml(rest) + "</p>";
+  const caution = rec && rec.boundaries && rec.boundaries.length
+    ? "<p><strong>别混成</strong> " + mathHtml(rec.boundaries[0]) + "</p>"
+    : "";
   const examples = (net.post[node.id] || []).map(function (otherId) { return net.byId[otherId]; }).filter(function (other) {
     return other && other.kp_type === "context";
   });
   const exampleHtml = examples.map(function (other) {
     const text = String(other.title || "");
-    const cut = text.search(/[：:]/);
-    return "<p>课本里的例子：" + mathHtml(cut > 0 ? text.slice(cut + 1) : text) + "</p>";
+    const mark = text.search(/[：:]/);
+    return "<p>课本里的例子：" + mathHtml(mark > 0 ? text.slice(mark + 1) : text) + "</p>";
   }).join("");
   const contextNote = node.kp_type === "context" ? "<p>这是课本里的例子，不单独算一个知识点。</p>" : "";
-  return '<aside class="side"><div class="row"><h2>' + mathHtml(kpLabel(node.title)) + '</h2><button class="link" id="map-close">关闭</button></div>' +
-    "<p>" + mathHtml(node.title) + "</p>" + contextNote + exampleHtml +
-    "<p>第 " + node.ch + " 章 · " + esc(node.sec) + "</p>" +
-    "<p>前置 " + preN + " 个，后置 " + postN + " 个。关系来自现有图谱。</p>" +
+  const page = rec && rec.textbook && rec.textbook.page
+    ? '<p class="muted">课本第 ' + esc(rec.textbook.page) + " 页</p>"
+    : "";
+  const before = pointLinks(net.pre[node.id], net);
+  const after = pointLinks(net.post[node.id], net);
+  const rel = (before ? "<p><strong>先要会</strong></p>" + before : "") +
+    (after ? "<p><strong>接着学</strong></p>" + after : "");
+  const methods = (net.skillByKp[node.id] || []).slice(0, 3);
+  const methodHtml = methods.length
+    ? "<p><strong>可以用</strong></p>" + methods.map(function (skill) {
+      return '<p><button type="button" class="link" data-method="' + esc(skill.id) + '">' + mathHtml(kpLabel(skill.title)) + "</button></p>";
+    }).join("")
+    : "";
+  return '<aside class="side"><div class="row"><h2>' + mathHtml(heading) + '</h2><button class="link" id="map-close">关闭</button></div>' +
+    body + caution + contextNote + exampleHtml + page + rel + methodHtml +
     '<button class="btn" id="map-kp">看这个知识点</button>' +
     (extra || "") + "</aside>";
 }
@@ -4713,6 +4753,7 @@ function bind() {
       } else {
         state.mapMethod = name;
         state.mapIdea = "";
+        state.mapPoint = null;
         state.mapCard = true;
       }
       render();
