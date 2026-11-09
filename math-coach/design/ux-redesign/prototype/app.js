@@ -1417,13 +1417,15 @@ function dotField(nodes, lines, note, tags, legendKind) {
     return curvePath(from, to, bend, cls);
   }).join("");
   const marks = nodes.map(function (node) {
+    const formula = node.math && String(node.label || "").indexOf("$") >= 0;
     const cls = "seed" + (node.tone ? " " + node.tone : "") + (node.kp ? " kp" : "") + (node.sec ? " sec" : "") +
       (node.mid ? " mid" : "") + (node.tiny ? " tiny" : "") + (node.lead ? " ch" : "") +
       (node.method ? " method" : "") + (node.extend ? " extend" : "") + (node.olymp ? " olymp" : "") +
       (node.idea ? " idea" : "") + (node.on ? " on" : "") + (node.big ? " here" : "") +
       (node.mute ? " mute" : "") + (node.pin ? " pin" : "") + (node.named ? " named" : "") +
       (node.above ? " above" : "") + (node.quiet ? " quiet" : "") + (node.dim ? " dim" : "") +
-      (node.side ? " side-" + node.side : "") + (node.full ? " full" : "") + (node.card ? " card" : "") + (node.math && plainMath(node.label).length > 14 ? " wrap" : "");
+      (node.side ? " side-" + node.side : "") + (node.full ? " full" : "") + (node.card ? " card" : "") +
+      (formula ? " formula" : "") + (node.math && !formula && plainMath(node.label).length > 14 ? " wrap" : "");
     const role = node.role ? "<em>" + esc(node.role) + "</em>" : "";
     let attr = "";
     if (node.point) attr = ' data-point="' + esc(node.point) + '"';
@@ -1437,7 +1439,7 @@ function dotField(nodes, lines, note, tags, legendKind) {
     const float = node.dx || node.dy ? ' class="float" style="--dx:' + (node.dx || 0) + "px;--dy:" + (node.dy || 0) + 'px"' : "";
     return "<" + tag + type + ' class="' + cls + '" data-nid="' + esc(node.id) + '" style="left:' + node.x + "%;top:" + node.y + '%" title="' +
       esc(node.title || node.label) + '"' + attr + ">" + role + "<i></i><span" + float + ">" +
-      (node.math ? esc(plainMath(node.label)) : node.card ? chapterLabelHtml(node) : node.full && !node.big && nodes.length > 14 ? esc(node.label).replace(" ", "<br>") : esc(node.label)) +
+      (node.math ? graphMathHtml(node.label) : node.card ? chapterLabelHtml(node) : node.full && !node.big && nodes.length > 14 ? esc(node.label).replace(" ", "<br>") : esc(node.label)) +
       "</span></" + tag + ">";
   }).join("");
   const legend = legendKind === "course"
@@ -1593,6 +1595,44 @@ function texPlain(tex) {
     .replace(/\\cdot/g, "·").replace(/\\times/g, "×").replace(/\\perp/g, "⊥");
   text = text.replace(/\\[a-zA-Z]+/g, "");
   return text.replace(/[{}]/g, "").replace(/\s+/g, "");
+}
+
+function graphMathHtml(value) {
+  const text = String(value == null ? "" : value);
+  if (text.indexOf("$") < 0) return esc(text);
+  const out = [];
+  let last = 0;
+  const re = /\$\$([\s\S]*?)\$\$|\$([^$]*)\$/g;
+  let match;
+  while ((match = re.exec(text))) {
+    out.push(esc(text.slice(last, match.index)));
+    out.push(texGraph(match[1] != null ? match[1] : match[2]));
+    last = match.index + match[0].length;
+  }
+  out.push(esc(text.slice(last)));
+  return out.join("");
+}
+
+function texGraph(tex) {
+  const text = String(tex || "");
+  const parts = [];
+  const re = /\\sqrt\{([^{}]*)\}|\\sqrt\s*([0-9A-Za-z]+)|\\cdot|\\times|\\frac\{([^{}]*)\}\{([^{}]*)\}|\\geq|\\ge|\\leq|\\le|\\neq|\\pm/g;
+  let last = 0;
+  let match;
+  while ((match = re.exec(text))) {
+    parts.push(esc(text.slice(last, match.index).replace(/\s+/g, "")));
+    if (match[0].indexOf("\\sqrt") === 0) parts.push('<span class="rad"><span>' + texGraph(match[1] != null ? match[1] : match[2]) + "</span></span>");
+    else if (match[0] === "\\cdot") parts.push("·");
+    else if (match[0] === "\\times") parts.push("×");
+    else if (match[0].indexOf("\\frac") === 0) parts.push(texGraph(match[3]) + "/" + texGraph(match[4]));
+    else if (match[0] === "\\geq" || match[0] === "\\ge") parts.push("≥");
+    else if (match[0] === "\\leq" || match[0] === "\\le") parts.push("≤");
+    else if (match[0] === "\\neq") parts.push("≠");
+    else if (match[0] === "\\pm") parts.push("±");
+    last = match.index + match[0].length;
+  }
+  parts.push(esc(text.slice(last).replace(/[{}\\]/g, "").replace(/\s+/g, "")));
+  return parts.join("");
 }
 
 function mathHtml(value) {
