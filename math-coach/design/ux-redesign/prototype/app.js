@@ -723,7 +723,7 @@ function catalog() {
   chapters.forEach(function (node) { (chByVol[node.vol] = chByVol[node.vol] || []).push(node); });
   sections.forEach(function (node) { (secsByCh[node.vol + "-" + node.ch] = secsByCh[node.vol + "-" + node.ch] || []).push(node); });
   graph.nodes.forEach(function (node) {
-    if (node.kind === "knowledge_point" && node.sec) (kpsBySec[node.sec] = kpsBySec[node.sec] || []).push(node);
+    if (coreKp(node) && node.sec) (kpsBySec[node.sec] = kpsBySec[node.sec] || []).push(node);
     if (node.kind === "skill" && node.sec) (skillsBySec[node.sec] = skillsBySec[node.sec] || []).push(node);
   });
   const thoughtBySkill = {};
@@ -1202,10 +1202,19 @@ function graphPointSide(id, extra) {
   if (!node || node.kind !== "knowledge_point") return "";
   const preN = (net.pre[node.id] || []).length;
   const postN = (net.post[node.id] || []).length;
+  const examples = (net.post[node.id] || []).map(function (otherId) { return net.byId[otherId]; }).filter(function (other) {
+    return other && other.kp_type === "context";
+  });
+  const exampleHtml = examples.map(function (other) {
+    const text = String(other.title || "");
+    const cut = text.search(/[：:]/);
+    return "<p>课本里的例子：" + mathHtml(cut > 0 ? text.slice(cut + 1) : text) + "</p>";
+  }).join("");
+  const contextNote = node.kp_type === "context" ? "<p>这是课本里的例子，不单独算一个知识点。</p>" : "";
   return '<aside class="side"><div class="row"><h2>' + mathHtml(kpLabel(node.title)) + '</h2><button class="link" id="map-close">关闭</button></div>' +
-    "<p>" + mathHtml(node.title) + "</p>" +
+    "<p>" + mathHtml(node.title) + "</p>" + contextNote + exampleHtml +
     "<p>第 " + node.ch + " 章 · " + esc(node.sec) + "</p>" +
-    "<p>前置 " + preN + " 个，后置 " + postN + " 个。关系来自现有图谱，原来的数据没有改。</p>" +
+    "<p>前置 " + preN + " 个，后置 " + postN + " 个。关系来自现有图谱。</p>" +
     '<button class="btn" id="map-kp">看这个知识点</button>' +
     (extra || "") + "</aside>";
 }
@@ -1539,7 +1548,14 @@ function shortKp(title) {
 }
 
 function kpLabel(title) {
-  return String(title || "").split(/[：:]/)[0] || String(title || "");
+  const text = String(title || "");
+  const warn = text.match(/^易错[：:](.+)$/);
+  if (warn) return warn[1];
+  return text.split(/[：:]/)[0] || text;
+}
+
+function coreKp(node) {
+  return !!node && node.kind === "knowledge_point" && node.kp_type !== "context" && node.kp_type !== "activity";
 }
 
 function commaLines(text) {
@@ -1675,7 +1691,7 @@ function ensureNet() {
   const byId = {};
   graph.nodes.forEach(function (node) {
     if (!keep[node.kind]) return;
-    const copy = { id: node.id, kind: node.kind, title: node.title, vol: node.vol, sec: node.sec, ch: node.ch };
+    const copy = { id: node.id, kind: node.kind, title: node.title, vol: node.vol, sec: node.sec, ch: node.ch, kp_type: node.kp_type };
     nodes.push(copy);
     byId[node.id] = copy;
   });
@@ -1685,7 +1701,7 @@ function ensureNet() {
   nodes.forEach(function (node) {
     if (node.kind === "chapter") chapterId[node.vol + "-" + node.ch] = node.id;
     if (node.kind === "section") secId[node.sec] = node.id;
-    if (node.kind === "knowledge_point") (kpsBySec[node.sec] = kpsBySec[node.sec] || []).push(node);
+    if (coreKp(node)) (kpsBySec[node.sec] = kpsBySec[node.sec] || []).push(node);
   });
   const skillsBySec = {};
   const skillByKp = {};
@@ -2913,7 +2929,7 @@ function graphPointField(net, id) {
   function related(ids) {
     return (ids || []).filter(function (otherId) {
       const other = net.byId[otherId];
-      return other && other.kind === "knowledge_point";
+      return other && coreKp(other);
     }).slice(0, 4);
   }
   const pres = related(net.pre[id]).map(function (otherId) {
@@ -3353,14 +3369,16 @@ function viewMap() {
       ? (sets.methods.length ? sets.methods.map(function (skill) {
         const on = state.mapMethod === skill.id ? " on" : "";
         const dim = literacyNode() && catNow && !skillMatchesLiteracy(skill, catNow) ? " dim" : "";
-        const thoughts = ((catNow && catNow.thoughtBySkill[skill.id]) || []).map(function (thought) { return thought.title; });
-        const sub = thoughts.length ? "<span>" + esc(thoughts.join(" · ")) + "</span>" : "";
-        return '<button type="button" class="link' + on + dim + '" data-method="' + esc(skill.id) + '"><b>' + mathHtml(kpLabel(skill.title)) + "</b>" + sub + "</button>";
+        return '<button type="button" class="link' + on + dim + '" data-method="' + esc(skill.id) + '">' + mathHtml(kpLabel(skill.title)) + "</button>";
       }).join("") : '<p class="muted">这一节在图谱里还没有挂方法。</p>')
+      : '<p class="muted">先选一节。</p>';
+    const ideaHtml = sets.sec
+      ? (sets.ideas.length ? layerNodeButtons(sets.ideas, "data-idea", state.mapIdea) : '<p class="muted">这一节的方法还没有标思想。</p>')
       : '<p class="muted">先选一节。</p>';
     const columns = layerCol("节", sets.sections, sectionHtml, "slim") +
       layerCol("知识", sets.points, pointHtml, "main-col") +
-      layerCol("方法", sets.methods, methodHtml, "main-col");
+      layerCol("方法", sets.methods, methodHtml, "main-col") +
+      layerCol("思想", sets.ideas, ideaHtml, "main-col");
     body = '<div class="map-page map-fill' + (state.mapSideOpen === false ? " side-collapsed" : "") + '"><div class="board pano-board"><div class="float-modes">' +
       modeButton("layer", "分层") + modeButton("panorama", "全景") + net + "</div>" +
       '<div class="layer-board">' + mapFilters() + '<div class="map' + (side ? " with-card" : "") + '">' + columns + withSideFold(side) + "</div></div></div></div>";
