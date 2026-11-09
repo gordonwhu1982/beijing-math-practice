@@ -1,0 +1,25 @@
+math-coach/docs/delivery/ITERATION_LOG.md
+  s_f7fe7e394ee45d::t_e7221e6e65812a 43-44
+math-coach/design/ux-redesign/prototype/app.css
+  s_f7fe7e394ee45d::t_de7c1d168ece3d 669,683-684,694-704,725,735,741-742,748,754,759,765,770-773,780-783,797,814-819,825,827,834,889-892,1026-1028,1050-1082
+math-coach/design/ux-redesign/prototype/app.js
+  s_f7fe7e394ee45d::t_61d923c7df0d90 1420,1427-1428,1442,1600-1637
+math-coach/design/ux-redesign/prototype/index.html
+  s_f7fe7e394ee45d::t_85338cf13a9b21 7,22,24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "a98d13327a63002456114aa361ca0474f335aee6",
+  "prompts": {},
+  "sessions": {
+    "s_f7fe7e394ee45d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "445ce362-ceb0-4917-928b-14b30209f3d6",
+        "model": "grok-4.7"
+      },
+      "human_author": "gordonwhu1982 <129141243+gordonwhu1982@users.noreply.github.com>"
+    }
+  }
+}
