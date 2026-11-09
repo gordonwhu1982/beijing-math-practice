@@ -807,7 +807,7 @@ function viewBook() {
   }
   const cat = catalog();
   if (!cat) return '<h1>课本</h1><section class="card"><p>图谱还在打开。</p></section>';
-  const openVol = state.bookVol || "801";
+  const openVol = state.bookVol;
   const html = cat.volumes.map(function (vol) {
     const open = openVol === vol.vol;
     const chapters = cat.chByVol[vol.vol] || [];
@@ -3220,22 +3220,19 @@ function layerScope() {
   })[0] : null;
   const sections = chapter ? (cat.secsByCh[key] || []) : [];
   const sec = sections.filter(function (node) { return node.sec === state.mapSection; })[0] || null;
-  let points = sec ? (cat.kpsBySec[sec.sec] || []).slice() : [];
+  const points = sec ? (cat.kpsBySec[sec.sec] || []).slice() : [];
   const net = ensureNet();
-  if (state.mapPoint && net && net.byId[state.mapPoint]) {
-    points = points.filter(function (node) { return node.id === state.mapPoint; });
-    if (!points.length) points = [net.byId[state.mapPoint]];
+  const methods = [];
+  const seenSkill = {};
+  function addSkill(skill) {
+    if (!skill || seenSkill[skill.id]) return;
+    seenSkill[skill.id] = 1;
+    methods.push(skill);
   }
-  if (literacyNode()) {
-    points = points.filter(function (kp) {
-      const skills = (net && net.skillByKp[kp.id]) || [];
-      return skills.some(function (skill) { return skillMatchesLiteracy(skill, cat); });
-    });
-  }
-  let methods = sec ? (cat.skillsBySec[sec.sec] || []).slice() : [];
-  if (state.mapPoint && net) methods = (net.skillByKp[state.mapPoint] || []).slice();
-  if (literacyNode()) methods = methods.filter(function (skill) { return skillMatchesLiteracy(skill, cat); });
-  if (state.mapMethod) methods = methods.filter(function (skill) { return skill.id === state.mapMethod; });
+  if (sec) (cat.skillsBySec[sec.sec] || []).forEach(addSkill);
+  points.forEach(function (kp) {
+    ((net && net.skillByKp[kp.id]) || []).forEach(addSkill);
+  });
   const ideas = [];
   const seen = {};
   methods.forEach(function (skill) {
@@ -3250,6 +3247,10 @@ function layerScope() {
 
 function layerCol(title, names, html) {
   return '<div class="col"><h3>' + title + " " + names.length + "</h3>" + (html || '<p class="muted">这里没有</p>') + "</div>";
+}
+
+function layerPile(title, count, html) {
+  return '<section class="pile"><h3>' + title + " " + count + '</h3><div class="pile-body">' + html + "</div></section>";
 }
 
 function layerButtons(names, attr, selected) {
@@ -3276,11 +3277,12 @@ function ideaCard() {
     "<p>这个思想挂在当前列出的方法上。</p></aside>";
 }
 
-function layerNodeButtons(nodes, attr, selected) {
+function layerNodeButtons(nodes, attr, selected, bright) {
   return nodes.map(function (node) {
     const on = selected === node.id || selected === node.vol || selected === node.title ? " on" : "";
+    const dim = bright && !bright(node) ? " dim" : "";
     const value = attr === "data-book" ? node.vol : node.id;
-    return '<button type="button" class="link' + on + '" ' + attr + '="' + esc(value) + '">' + esc(plainMath(kpLabel(node.title))) + "</button>";
+    return '<button type="button" class="link' + on + dim + '" ' + attr + '="' + esc(value) + '">' + esc(plainMath(kpLabel(node.title))) + "</button>";
   }).join("");
 }
 
@@ -3312,22 +3314,39 @@ function viewMap() {
       const key = chapter.vol + "-" + chapter.ch;
       const on = activeChapterKey() === key ? " on" : "";
       const count = ((catalog() && catalog().secsByCh[key]) || []).length;
-      const secs = activeChapterKey() === key ? sets.sections.map(function (sec) {
-        const son = state.mapSection === sec.sec ? " on" : "";
-        return '<button type="button" class="link sec' + son + '" data-layer-sec="' + esc(sec.sec) + '">' + esc(sec.title) + "</button>";
-      }).join("") : "";
-      return '<button type="button" class="link' + on + '" data-layer-ch="' + esc(key) + '">' + esc(chapter.title) + " · " + count + " 节</button>" + secs;
+      return '<button type="button" class="link' + on + '" data-layer-ch="' + esc(key) + '"><b>' + esc(chapter.title) + '</b><span>' + count + " 节</span></button>";
     }).join("");
+    const sectionHtml = sets.chapter
+      ? (sets.sections.length ? sets.sections.map(function (sec) {
+        const on = state.mapSection === sec.sec ? " on" : "";
+        const count = ((catalog() && catalog().kpsBySec[sec.sec]) || []).length;
+        return '<button type="button" class="link' + on + '" data-layer-sec="' + esc(sec.sec) + '"><b>' + esc(sec.title) + '</b><span>' + count + " 个知识点</span></button>";
+      }).join("") : '<p class="muted">这一章还没有节。</p>')
+      : '<p class="muted">先选一章。</p>';
+    const catNow = catalog();
+    const netNow = ensureNet();
+    function pointOn(kp) {
+      if (!literacyNode() || !catNow || !netNow) return true;
+      return ((netNow.skillByKp[kp.id]) || []).some(function (skill) { return skillMatchesLiteracy(skill, catNow); });
+    }
     const pointHtml = sets.sec
-      ? (sets.points.length ? layerNodeButtons(sets.points, "data-point", state.mapPoint || "") : '<p class="muted">' + (literacyNode() ? "这个素养在这一节没有对上的知识点。" : "这一节还没有知识点。") + "</p>")
-      : '<p class="muted">先点一节。这一章的知识点按节分开，一节里可以往下翻。</p>';
-    const comps = (catalog() && catalog().competencies) || [];
-    const columns = layerCol("素养", comps, layerNodeButtons(comps, "data-literacy", state.mapLiteracy)) +
-      layerCol("教材", sets.books, layerNodeButtons(sets.books, "data-book", activeVol())) +
-      layerCol("章节", sets.chapters, chapterHtml || '<p class="muted">先选一册</p>') +
-      layerCol("知识", sets.points, pointHtml) +
-      layerCol("方法", sets.methods, sets.methods.length ? layerNodeButtons(sets.methods, "data-method", state.mapMethod) : '<p class="muted">先点一节</p>') +
-      layerCol("思想", sets.ideas, sets.ideas.length ? layerNodeButtons(sets.ideas, "data-idea", state.mapIdea) : '<p class="muted">先点一节</p>');
+      ? (sets.points.length ? layerNodeButtons(sets.points, "data-point", state.mapPoint || "", pointOn) : '<p class="muted">这一节在图谱里还没有知识点。</p>')
+      : '<p class="muted">先选一节。</p>';
+    const methodHtml = sets.sec
+      ? (sets.methods.length ? layerNodeButtons(sets.methods, "data-method", state.mapMethod, function (skill) {
+        return !literacyNode() || !catNow || skillMatchesLiteracy(skill, catNow);
+      }) : '<p class="muted">这一节在图谱里还没有挂方法。</p>')
+      : '<p class="muted">先选一节。</p>';
+    const ideaHtml = sets.sec
+      ? (sets.ideas.length ? layerNodeButtons(sets.ideas, "data-idea", state.mapIdea) : '<p class="muted">这一节的方法还没有标思想。</p>')
+      : '<p class="muted">先选一节。</p>';
+    const columns = layerCol("章", sets.chapters, chapterHtml || '<p class="muted">先选一册</p>') +
+      layerCol("节", sets.sections, sectionHtml) +
+      '<div class="col detail">' +
+      layerPile("知识", sets.points.length, pointHtml) +
+      layerPile("方法", sets.methods.length, methodHtml) +
+      layerPile("思想", sets.ideas.length, ideaHtml) +
+      "</div>";
     body = '<div class="map-page map-fill' + (state.mapSideOpen === false ? " side-collapsed" : "") + '"><div class="board pano-board"><div class="float-modes">' +
       modeButton("layer", "分层") + modeButton("panorama", "全景") + net + "</div>" +
       '<div class="layer-board">' + mapFilters() + '<div class="map' + (side ? " with-card" : "") + '">' + columns + withSideFold(side) + "</div></div></div></div>";
@@ -3356,8 +3375,12 @@ function mapFilters() {
     const key = item.vol + "-" + item.ch;
     return '<option value="' + esc(key) + '"' + (activeChapterKey() === key ? " selected" : "") + ">" + esc(item.title) + "</option>";
   }).join("") : "";
+  const comps = cat ? cat.competencies.map(function (item) {
+    return '<option value="' + esc(item.id) + '"' + (state.mapLiteracy === item.id || state.mapLiteracy === item.title ? " selected" : "") + ">" + esc(item.title) + "</option>";
+  }).join("") : "";
   return '<div class="map-filters"><label>册 <select id="pick-book"><option value="">不选</option>' + books +
-    '</select></label><label>章 <select id="pick-chapter"><option value="">不选</option>' + chapters + "</select></label></div>";
+    '</select></label><label>章 <select id="pick-chapter"><option value="">不选</option>' + chapters +
+    '</select></label><label>素养 <select id="pick-literacy"><option value="">不筛</option>' + comps + "</select></label></div>";
 }
 
 /** One segment button for the graph mode. */
@@ -4422,6 +4445,11 @@ function bind() {
       state.mapNetNo = Number(pickChapter.value.split("-")[1]) || state.mapNetNo;
       state.mapCard = true;
     }
+    render();
+  };
+  const pickLiteracy = document.getElementById("pick-literacy");
+  if (pickLiteracy) pickLiteracy.onchange = function () {
+    state.mapLiteracy = pickLiteracy.value;
     render();
   };
   document.querySelectorAll("[data-method]").forEach(function (button) {
