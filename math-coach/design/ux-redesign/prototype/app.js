@@ -1135,8 +1135,14 @@ function viewGraphKp(node) {
   }).join("");
   const exampleHtml = examples ? "<h2>课本里的例子</h2>" + examples : "";
   const methods = (net.skillByKp[node.id] || []).slice(0, 6).map(function (skill) {
-    return '<p><button type="button" class="link" data-open-skill="' + esc(skill.id) + '">' + mathHtml(kpLabel(skill.title)) + "</button></p>";
+    const pack = skillBundle(skill.id);
+    const line = pack && pack.rec && pack.rec.desc
+      ? " <span class=\"muted\">" + mathHtml(pack.rec.desc) + "</span>"
+      : "";
+    return '<p><button type="button" class="link" data-open-skill="' + esc(skill.id) + '">' + mathHtml(kpLabel(skill.title)) + "</button>" + line + "</p>";
   }).join("");
+  const slip = kpSlip(node);
+  const slipHtml = slip ? "<h2>容易错成</h2>" + listHtml([slip], "") : "";
   const thoughts = rec && rec.thoughts && rec.thoughts.length
     ? rec.thoughts.map(function (item) { return "<p>" + mathHtml(item.name || "") + "</p>"; }).join("")
     : "";
@@ -1162,7 +1168,7 @@ function viewGraphKp(node) {
   } else qHtml = "<p class=\"muted\">这一知识点还没有能交卷的选择题。</p>";
   return '<div class="kp-page"><p class="chip">从图谱来 · <button class="link" id="kp-map">回到图谱</button></p><h1>' +
     mathHtml(node.title) + '</h1><section class="card">' + lead + goals + page + "</section>" +
-    caution + when + exampleHtml +
+    caution + slipHtml + when + exampleHtml +
     '<div class="kp-rel"><section><h3>前置</h3>' + (pres || '<span class="muted">这是起点</span>') + "</section>" +
     "<section><h3>当前</h3><strong>" + mathHtml(kpLabel(node.title)) + "</strong></section>" +
     "<section><h3>后置</h3>" + (posts || '<span class="muted">暂时没有接着学的</span>') + "</section></div>" +
@@ -1412,6 +1418,79 @@ function kpRecord(node) {
   return (sec.kps || []).filter(function (item) { return item.uid === node.id; })[0] || null;
 }
 
+/** One wrong-answer signal already linked to this point. Empty until the section file arrives. */
+function kpSlip(node) {
+  const sec = ensureSec(node.vol, node.sec);
+  if (!sec || !sec.mcs) return "";
+  const edges = (window.MC.graph && window.MC.graph.edges) || [];
+  const ids = {};
+  edges.forEach(function (edge) {
+    if (edge.r === "misconception_of" && edge.d === node.id) ids[edge.s] = 1;
+  });
+  let line = "";
+  sec.mcs.some(function (mc) {
+    if (!ids[mc.uid] || !mc.signals || !mc.signals.length) return false;
+    line = mc.signals[0];
+    return true;
+  });
+  return line;
+}
+
+/** When a method applies, the first three steps, and the first place it goes wrong. */
+function skillGlance(rec) {
+  if (!rec) return { when: "", steps: "", pit: "" };
+  const when = rec.conditions && rec.conditions[0]
+    ? "<p><strong>什么时候用</strong> " + mathHtml(rec.conditions[0]) + "</p>"
+    : "";
+  const ordered = rec.steps ? rec.steps.slice().sort(function (a, b) { return (a.ordinal || 0) - (b.ordinal || 0); }) : [];
+  const steps = ordered.length
+    ? "<ol class=\"method-brief\">" + ordered.slice(0, 3).map(function (step) {
+      return "<li>" + mathHtml(step.action || "") + "</li>";
+    }).join("") + "</ol>"
+    : "";
+  const pits = (rec.signals || []).slice(0, 2);
+  if (!pits.length) {
+    (rec.boundaries || []).some(function (line) {
+      if (line.indexOf("只覆盖") >= 0 || line.indexOf("不代表") >= 0) return false;
+      pits.push(line);
+      return true;
+    });
+  }
+  const pit = pits.map(function (line, index) {
+    return "<p>" + (index ? "" : "<strong>别用错</strong> ") + mathHtml(line) + "</p>";
+  }).join("");
+  return { when: when, steps: steps, pit: pit };
+}
+
+/** Section node for the book currently open in the graph. */
+function sectionNode(secNo) {
+  const cat = catalog();
+  if (!cat || !secNo) return null;
+  const vol = activeVol();
+  return (cat.sections || []).filter(function (node) {
+    return node.sec === secNo && (!vol || node.vol === vol);
+  })[0] || null;
+}
+
+/** The first idea in a section, plus the textbook pages already recorded on its points. */
+function sectionStudy(secNode) {
+  const sec = secNode && ensureSec(secNode.vol, secNode.sec);
+  if (!sec) return { loading: true, lead: "", page: "" };
+  if (sec.missing) return { loading: false, lead: "", page: "" };
+  const pages = [];
+  const concepts = (sec.kps || []).filter(function (kp) {
+    return kp.kp_type !== "context" && kp.kp_type !== "activity";
+  });
+  concepts.forEach(function (kp) {
+    const page = kp.textbook && Number(kp.textbook.page);
+    if (page) pages.push(page);
+  });
+  const low = pages.length ? Math.min.apply(null, pages) : 0;
+  const high = pages.length ? Math.max.apply(null, pages) : 0;
+  const page = !low ? "" : low === high ? "课本第 " + low + " 页" : "课本第 " + low + "–" + high + " 页";
+  return { loading: false, lead: (concepts[0] && concepts[0].definition) || "", page: page };
+}
+
 /** Clickable knowledge points, skipping textbook examples. */
 function pointLinks(ids, net) {
   const rows = [];
@@ -1437,8 +1516,18 @@ function graphPointSide(id, extra) {
   if (rec && rec.definition) body = "<p>" + mathHtml(rec.definition) + "</p>";
   else if (rec === undefined) body = '<p class="muted">正在打开这个知识点的说明。</p>';
   else if (rest && rest !== heading) body = "<p>" + mathHtml(rest) + "</p>";
+  const whenPoint = rec && rec.conditions && rec.conditions[0]
+    ? "<p><strong>成立</strong> " + mathHtml(rec.conditions[0]) + "</p>"
+    : "";
   const caution = rec && rec.boundaries && rec.boundaries.length
-    ? "<p><strong>别混成</strong> " + mathHtml(rec.boundaries[0]) + "</p>"
+    ? rec.boundaries.slice(0, 2).map(function (line, index) {
+      return "<p>" + (index ? "" : "<strong>别混成</strong> ") + mathHtml(line) + "</p>";
+    }).join("")
+    : "";
+  const slip = kpSlip(node);
+  const slipHtml = slip ? "<p><strong>容易错成</strong> " + mathHtml(slip) + "</p>" : "";
+  const thoughtLine = rec && rec.thoughts && rec.thoughts.length
+    ? "<p><strong>思想</strong> " + rec.thoughts.map(function (item) { return mathHtml(item.name || ""); }).join("、") + "</p>"
     : "";
   const examples = (net.post[node.id] || []).map(function (otherId) { return net.byId[otherId]; }).filter(function (other) {
     return other && other.kp_type === "context";
@@ -1459,11 +1548,15 @@ function graphPointSide(id, extra) {
   const methods = (net.skillByKp[node.id] || []).slice(0, 3);
   const methodHtml = methods.length
     ? "<p><strong>可以用</strong></p>" + methods.map(function (skill) {
-      return '<p><button type="button" class="link" data-method="' + esc(skill.id) + '">' + mathHtml(kpLabel(skill.title)) + "</button></p>";
+      const pack = skillBundle(skill.id);
+      const line = pack && pack.rec && pack.rec.desc
+        ? "<p class=\"muted\">" + mathHtml(pack.rec.desc) + "</p>"
+        : "";
+      return '<p><button type="button" class="link" data-method="' + esc(skill.id) + '">' + mathHtml(kpLabel(skill.title)) + "</button></p>" + line;
     }).join("")
     : "";
   return '<aside class="side"><div class="row"><h2>' + mathHtml(heading) + '</h2><button class="link" id="map-close">关闭</button></div>' +
-    body + caution + contextNote + exampleHtml + page + rel + methodHtml +
+    body + whenPoint + caution + slipHtml + contextNote + exampleHtml + page + rel + methodHtml + thoughtLine +
     '<button class="btn" id="map-kp">看这个知识点</button>' +
     (extra || "") + "</aside>";
 }
@@ -1542,10 +1635,11 @@ function graphSkillSide(id) {
   const skill = pack.skill;
   const kps = pack.net.skillKps[id] || [];
   const desc = pack.rec && pack.rec.desc ? "<p>" + mathHtml(pack.rec.desc) + "</p>" : "";
+  const glance = skillGlance(pack.rec);
   return '<aside class="side"><div class="row"><h2>' + mathHtml(skill.title) + '</h2></div>' +
     '<button type="button" class="link" id="map-close">关闭</button>' +
     "<p>" + esc(skillMeta(skill, pack.rec, pack.sec)) + "</p>" +
-    desc + "<p><strong>用在</strong></p>" + kpLinks(kps) +
+    desc + glance.when + glance.steps + glance.pit + "<p><strong>用在</strong></p>" + kpLinks(kps) +
     '<button class="btn" id="map-skill">看这个方法</button></aside>';
 }
 
@@ -3424,10 +3518,17 @@ function panoramaSide() {
     const title = found.sec ? found.sec[0] + " " + found.sec[1] : state.mapSection;
     const net = ensureNet();
     const kps = net && net.kpsBySec[state.mapSection];
-    const body = kps && kps.length
-      ? "这一节有 " + kps.length + " 个知识点，来自现有图谱。点一个，看它的前置和后置。"
-      : "这一节的知识点还没放进这版原型。图上是前后节和本章。";
-    return '<aside class="side"><div class="row"><h2>' + esc(title) + "</h2></div><p>" + body + "</p>" +
+    const secNode = sectionNode(state.mapSection);
+    const study = secNode ? sectionStudy(secNode) : { loading: false, lead: "", page: "" };
+    const names = (kps || []).slice(0, 8).map(function (kp) {
+      return '<p><button type="button" class="link" data-point="' + esc(kp.id) + '">' + mathHtml(kpLabel(kp.title)) + "</button></p>";
+    }).join("");
+    const body = study.loading
+      ? '<p class="muted">正在打开这一节的说明。</p>'
+      : (study.lead ? "<p><strong>先弄清</strong></p><p>" + mathHtml(study.lead) + "</p>" : "") +
+        (names || "<p>这一节的知识点还没放进这版原型。图上是前后节和本章。</p>");
+    const pageLine = study.page ? '<p class="muted">' + esc(study.page) + "</p>" : "";
+    return '<aside class="side"><div class="row"><h2>' + esc(title) + "</h2></div>" + body + pageLine +
       backChapter + backCourse + "</aside>";
   }
   if (state.mapLevel === "chapter") {
@@ -3572,12 +3673,7 @@ function methodCard() {
   const desc = rec && rec.desc
     ? "<p>" + mathHtml(rec.desc) + "</p>"
     : "<p class=\"muted\">" + (sec ? "这条方法还没有写说明。" : "正在打开这个方法的说明。") + "</p>";
-  const steps = rec && rec.steps ? rec.steps.slice().sort(function (a, b) { return (a.ordinal || 0) - (b.ordinal || 0); }) : [];
-  const stepHtml = steps.length
-    ? "<ol class=\"method-brief\">" + steps.slice(0, 3).map(function (step) {
-      return "<li>" + mathHtml(step.action || "") + "</li>";
-    }).join("") + "</ol>"
-    : "";
+  const glance = skillGlance(rec);
   const kps = (pack && pack.net.skillKps[skill.id]) || [];
   const used = kps.length
     ? "<p><strong>用在</strong></p>" + kps.map(function (kp) {
@@ -3588,7 +3684,7 @@ function methodCard() {
     ? '<p><button type="button" class="link" data-layer-sec="' + esc(skill.sec) + '">' + esc(meta) + "</button></p>"
     : "<p>" + esc(meta) + "</p>";
   return '<aside class="side"><div class="row"><h2>' + mathHtml(kpLabel(skill.title)) + '</h2><button class="link" id="map-close">关闭</button></div>' +
-    where + desc + stepHtml + used +
+    where + desc + glance.when + glance.steps + glance.pit + used +
     '<button class="btn" id="map-skill">看这个方法</button></aside>';
 }
 
@@ -3596,8 +3692,20 @@ function ideaCard() {
   const cat = catalog();
   const thought = cat && cat.byId[state.mapIdea];
   if (!thought) return "";
+  const comps = (cat.compByThought[thought.id] || []).map(function (node) { return node.title; });
+  const compHtml = comps.length
+    ? "<p><strong>对应素养</strong> " + comps.map(function (title) { return esc(title); }).join("、") + "</p>"
+    : "";
+  const methods = layerScope().methods.filter(function (skill) {
+    return (cat.thoughtBySkill[skill.id] || []).some(function (item) { return item.id === thought.id; });
+  });
+  const methodHtml = methods.length
+    ? "<p><strong>这一节里这样用</strong></p>" + methods.slice(0, 6).map(function (skill) {
+      return '<p><button type="button" class="link" data-method="' + esc(skill.id) + '">' + mathHtml(kpLabel(skill.title)) + "</button></p>";
+    }).join("")
+    : "<p>这一节的方法还没有标到这个思想上。</p>";
   return '<aside class="side"><div class="row"><h2>' + esc(thought.title) + '</h2><button class="link" id="map-close">关闭</button></div>' +
-    "<p>这个思想挂在当前列出的方法上。</p></aside>";
+    compHtml + methodHtml + "</aside>";
 }
 
 function layerNodeButtons(nodes, attr, selected, bright) {
@@ -3625,11 +3733,20 @@ function viewMap() {
     else if (state.mapCard && state.mapMethod) side = methodCard();
     else if (state.mapPoint && state.mapCard) side = graphPointSide(state.mapPoint, "") || pointCard();
     else if (sets.sec && state.mapCard) {
+      const study = sectionStudy(sets.sec);
+      const lead = study.loading
+        ? '<p class="muted">正在打开这一节的说明。</p>'
+        : (study.lead ? "<p><strong>先弄清</strong></p><p>" + mathHtml(study.lead) + "</p>" : "<p>" + sets.points.length + " 个知识点</p>");
+      const pageLine = study.page ? '<p class="muted">' + esc(study.page) + "</p>" : "";
       side = '<aside class="side"><div class="row"><h2>' + esc(sets.sec.title) + '</h2><button class="link" id="map-close">关闭</button></div>' +
-        "<p>" + sets.points.length + ' 个知识点</p><button class="btn" id="open-layer-sec">打开这一节</button></aside>';
+        lead + pageLine + '<button class="btn" id="open-layer-sec">打开这一节</button></aside>';
     } else if (sets.chapter && state.mapCard) {
+      const first = sets.sections[0];
+      const start = first
+        ? "<p>先从这一节看起</p><p><button type=\"button\" class=\"link\" data-layer-sec=\"" + esc(first.sec) + "\">" + esc(first.title) + "</button></p>"
+        : "";
       side = '<aside class="side"><div class="row"><h2>' + esc(sets.chapter.title) + '</h2><button class="link" id="map-close">关闭</button></div>' +
-        "<p>" + sets.sections.length + ' 节</p><button class="btn" id="open-chapter">打开这一章</button></aside>';
+        "<p>" + sets.sections.length + " 节</p>" + start + '<button class="btn" id="open-chapter">打开这一章</button></aside>';
     } else if (!sets.chapter && !state.mapPoint && !state.mapMethod && !state.mapIdea) {
       side = '<aside class="side"><p class="muted">先选一册、一章，再点一节。知识点出现在右边可以往下翻。</p></aside>';
     }
