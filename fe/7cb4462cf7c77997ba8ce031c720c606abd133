@@ -1,0 +1,141 @@
+math-coach/content/framework/knowledge_points/801.detail.jsonl
+  s_f7fe7e394ee45d::t_29e911c32393c4 164-174
+math-coach/content/framework/knowledge_points/801.json
+  s_f7fe7e394ee45d::t_fff236b8fa73b2 201,346,349-366
+math-coach/content/framework/kp_prerequisites.json
+  s_f7fe7e394ee45d::t_fe32a5f6792b92 7,4334-4343,4346-4392
+math-coach/content/questions/801/ch12.kp.jsonl
+  s_f7fe7e394ee45d::t_c61ed956ced7e5 59,133,142,204,340,413,521,526,529,532,599,604,606,610,612-613,681-682,764,771,780-781,934,1154-1155
+math-coach/content/relations/edges.jsonl
+  s_f7fe7e394ee45d::t_92a766559dc75b 314-382,450-466,471-856,954-961,964-966,970-984,988-1007,1012-1018,1022-1180,1184-1189,1191-1242,1248,1250,1253,1255-1256,1258,1260-1265,1346-1372,1374-1378,1380-1399,1401-1479,1482-1487,1490-1495,1497-1501,1504-1505,1507-1510,1513-1514,1518,1521,1523,1530,1532-1542,1544,1546-1551,1553,1555,1557-1559,1562-1563,1565-1569,1571-1596,1598-1612,1614-1620,1622,1624-1625,1627-1628,1630-1637,1639-1646,1648-1659,1661-1663,1665-1679,2030-2041,2043,2045-2057,2215-2263,2269-2282,2292-2820,4011-4013,4015,4017-4019,4021,4023-4025,4027,4029,4031,4033,4035,4037,4039,4041,4043,4045,4047,4049,4051,4053,4055,4057,4059,4061,4063,4065,4067,4069,4071,4073,4075,4077,4079,4081,4083,4085,4087,4089,4091,4093,4095,4097,4099,4101,4103,4105,4107,4109,4111,4113,4115,4117,4119,4121,4123-4125,4127,4129,4131,4133,4135,4137,4139,4141,4143,4145,4147,4149,4151,4153,4155,4157,4159,4161,4163,4165,4167,4169,4171,4173,4175,4177,4179,4181,4183,4185,4187,4189,4191,4193,4195,4197,4199,4201,4203-4898,6401-6565,6674-6702,6711-7024
+math-coach/content/skills/801/ch12.jsonl
+  s_f7fe7e394ee45d::t_9ae92367f323a4 40-42
+math-coach/design/ux-redesign/ch12-extension-unmatched.txt
+  s_f7fe7e394ee45d::t_a2e30528dceb8e 7,12-13,18,23,28-29,32-33,36-40,42-43,47,56,59-61,63-68,72,74,76,78-80,94-95,100,108,134,141,152-153,156,167,170,189-190,205,220,236-237,247,258,273,293,300,302,308,313-315
+math-coach/runtime/web/data/catalog.js
+  s_f7fe7e394ee45d::t_ce3c65ee27b085 2
+math-coach/runtime/web/data/figures.js
+  s_f7fe7e394ee45d::t_bceff3fd4d6bf3 2
+math-coach/runtime/web/data/graph.js
+  s_f7fe7e394ee45d::t_4671be57901352 2
+math-coach/runtime/web/data/sec/801-10.1.js
+  s_f7fe7e394ee45d::t_4ea198cfb75c8c 2
+math-coach/runtime/web/data/sec/801-10.2.js
+  s_f7fe7e394ee45d::t_9b50073bcfbff8 2
+math-coach/runtime/web/data/sec/801-10.3.js
+  s_f7fe7e394ee45d::t_d65a84f0719c48 2
+math-coach/runtime/web/data/sec/801-10.4.js
+  s_f7fe7e394ee45d::t_a73746fafeff7e 2
+math-coach/runtime/web/data/sec/801-10.5.js
+  s_f7fe7e394ee45d::t_6402294e27e60d 2
+math-coach/runtime/web/data/sec/801-11.1.js
+  s_f7fe7e394ee45d::t_53d442924e5a59 2
+math-coach/runtime/web/data/sec/801-11.2.js
+  s_f7fe7e394ee45d::t_734b1c8b2004e8 2
+math-coach/runtime/web/data/sec/801-11.3.js
+  s_f7fe7e394ee45d::t_ac9d28162070ee 2
+math-coach/runtime/web/data/sec/801-11.4.js
+  s_f7fe7e394ee45d::t_d9a37effb2b1f8 2
+math-coach/runtime/web/data/sec/801-11.5.js
+  s_f7fe7e394ee45d::t_ee3dad9e208620 2
+math-coach/runtime/web/data/sec/801-11.6.js
+  s_f7fe7e394ee45d::t_2d2312686882dd 2
+math-coach/runtime/web/data/sec/801-11.7.js
+  s_f7fe7e394ee45d::t_84aea2b48c388e 2
+math-coach/runtime/web/data/sec/801-12.1.items.js
+  s_f7fe7e394ee45d::t_d39c8eedb4f5e3 2
+math-coach/runtime/web/data/sec/801-12.1.js
+  s_f7fe7e394ee45d::t_9da17d40dfb928 2
+math-coach/runtime/web/data/sec/801-12.10.items.js
+  s_f7fe7e394ee45d::t_975bb2747c9c4d 2
+math-coach/runtime/web/data/sec/801-12.10.js
+  s_f7fe7e394ee45d::t_e75ffecc65f8b6 2
+math-coach/runtime/web/data/sec/801-12.11.items.js
+  s_f7fe7e394ee45d::t_e53d5ad3a7c436 2
+math-coach/runtime/web/data/sec/801-12.11.js
+  s_f7fe7e394ee45d::t_d9e259fac5b805 2
+math-coach/runtime/web/data/sec/801-12.12.items.js
+  s_f7fe7e394ee45d::t_c28d1a22584b1a 2
+math-coach/runtime/web/data/sec/801-12.12.js
+  s_f7fe7e394ee45d::t_f7c79938150f2b 2
+math-coach/runtime/web/data/sec/801-12.2.items.js
+  s_f7fe7e394ee45d::t_76a586b0411631 2
+math-coach/runtime/web/data/sec/801-12.2.js
+  s_f7fe7e394ee45d::t_a28454748b2ea2 2
+math-coach/runtime/web/data/sec/801-12.3.items.js
+  s_f7fe7e394ee45d::t_7f732b526e30d0 2
+math-coach/runtime/web/data/sec/801-12.3.js
+  s_f7fe7e394ee45d::t_06cf5daf8ca6bb 2
+math-coach/runtime/web/data/sec/801-12.4.items.js
+  s_f7fe7e394ee45d::t_6ec1b54d8a996c 2
+math-coach/runtime/web/data/sec/801-12.4.js
+  s_f7fe7e394ee45d::t_0ea0bc48b05ed1 2
+math-coach/runtime/web/data/sec/801-12.5.items.js
+  s_f7fe7e394ee45d::t_d109730a8a7120 2
+math-coach/runtime/web/data/sec/801-12.5.js
+  s_f7fe7e394ee45d::t_4404c059c0a580 2
+math-coach/runtime/web/data/sec/801-12.6.items.js
+  s_f7fe7e394ee45d::t_22d78bde543ae1 2
+math-coach/runtime/web/data/sec/801-12.6.js
+  s_f7fe7e394ee45d::t_f391701acd9be8 2
+math-coach/runtime/web/data/sec/801-12.7.items.js
+  s_f7fe7e394ee45d::t_d49c7d690bb71e 2
+math-coach/runtime/web/data/sec/801-12.7.js
+  s_f7fe7e394ee45d::t_3b8820bb3c1efd 2
+math-coach/runtime/web/data/sec/801-12.8.js
+  s_f7fe7e394ee45d::t_b17bc845ded642 2
+math-coach/runtime/web/data/sec/801-12.9.items.js
+  s_f7fe7e394ee45d::t_f2014e11313a9a 2
+math-coach/runtime/web/data/sec/801-12.9.js
+  s_f7fe7e394ee45d::t_416ac2e0709af3 2
+math-coach/runtime/web/data/sec/801-12.M.ex.js
+  s_f7fe7e394ee45d::t_d4db937fd2d394 1-2
+math-coach/runtime/web/data/sec/801-12.M.items.js
+  s_f7fe7e394ee45d::t_d2fced3687b646 1-2
+math-coach/runtime/web/data/sec/801-12.M.js
+  s_f7fe7e394ee45d::t_b1eff4853fae23 1-2
+math-coach/runtime/web/data/sec/801-13.1.js
+  s_f7fe7e394ee45d::t_7d11ecd6ee46b1 2
+math-coach/runtime/web/data/sec/801-13.2.js
+  s_f7fe7e394ee45d::t_e124735b44d190 2
+math-coach/runtime/web/data/sec/801-13.3.js
+  s_f7fe7e394ee45d::t_ef968c0a739694 2
+math-coach/runtime/web/data/sec/801-ch-end-12.ex.js
+  s_f7fe7e394ee45d::t_f06d1b3b3bbec3 2
+math-coach/runtime/web/data/sec/801-ch-end-12.items.js
+  s_f7fe7e394ee45d::t_284a7848930fd8 2
+math-coach/runtime/web/data/sec/802-15.4.js
+  s_f7fe7e394ee45d::t_54b9c3dd704758 2
+math-coach/runtime/web/data/sec/802-15.5.js
+  s_f7fe7e394ee45d::t_e26bff592e5128 2
+math-coach/tools/ch12_extension_points.py
+  s_f7fe7e394ee45d::t_9b506834460d42 22,126-128,155-165
+math-coach/content/framework/figures.json
+  s_f7fe7e394ee45d::t_4c631b71cb0ff0 10-15,20-133,140-146,151-310,317-326,330-2156
+math-coach/content/framework/volumes/801.json
+  s_f7fe7e394ee45d::t_df3e031dd7d4ea 219-223
+math-coach/design/ux-redesign/prototype/app.css
+  s_f7fe7e394ee45d::t_0aae6f891abaa7 1275-1300,1431-1433
+math-coach/design/ux-redesign/prototype/app.js
+  s_f7fe7e394ee45d::t_eebfea9a365d8e 153,200-236,241,243,248-282,658,767,774-784,825,891-892,917-918,920,1050,1055,1080,1085,1134-1145,1194,1198,1204-1215,1218,1245-1335,1401-1404,1407-1409,1411-1412,1416,1499-1500,1505-1506,1508-1510,1525,1641-1648,1827,1831,1835,3717,3762,4316,4487,4648-4649,5268-5272,5348-5349,5859-5862,6344,6365,6386,6389,6393,6456,6467,6607
+math-coach/design/ux-redesign/prototype/index.html
+  s_f7fe7e394ee45d::t_69ac2fae0fb854 7,21-26,28-30,32
+math-coach/tools/build_web.py
+  s_f7fe7e394ee45d::t_ad8cef563a4fe1 237-243,570-587
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "fe7cb4462cf7c77997ba8ce031c720c606abd133",
+  "prompts": {},
+  "sessions": {
+    "s_f7fe7e394ee45d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "445ce362-ceb0-4917-928b-14b30209f3d6",
+        "model": "grok-4.7"
+      },
+      "human_author": "gordonwhu1982 <129141243+gordonwhu1982@users.noreply.github.com>"
+    }
+  }
+}
