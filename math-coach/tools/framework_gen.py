@@ -154,6 +154,8 @@ for p in sorted(glob.glob(os.path.join(KP_DIR, "*.detail.jsonl"))):
         n["textbook"] = d.get("textbook")
         n["skill_refs"] = d.get("skill_refs") or []
         n["misconception_refs"] = d.get("misconception_refs") or []
+        if d.get("tier"):
+            n["tier"] = d["tier"]
         n["status"] = "draft"
         n["detail"] = True
         det_ok += 1

@@ -145,6 +145,8 @@ const state = {
   mapPanX: 0,
   mapPanY: 0,
   mapShowAll: false,
+  kpBand: "core",
+  methodCards: false,
   mapSideOpen: true,
   mapSkill: "",
   methodId: "",
@@ -160,6 +162,7 @@ const state = {
   recordFrom: "review",
   scrolls: {},
   query: "",
+  searchOpen: false,
   testBack: "",
   checked: { "三角形的定义": false },
   kpName: "三角形的定义",
@@ -619,6 +622,7 @@ function noteRecordFrom(from) {
 
 function go(route) {
   rememberScroll();
+  state.searchOpen = false;
   if (route === "record" && state.route !== "record") noteRecordFrom(state.route);
   state.flash = "";
   if (route === "result" && state.route !== "result" && state.route !== "kp") {
@@ -706,9 +710,38 @@ function sectionHeading(sec) {
   return sec.sec + " " + title;
 }
 
+function kpShown(node) {
+  if (!node || node.kind !== "knowledge_point") return true;
+  if (state.route === "map" && state.mapPoint && node.id === state.mapPoint) return true;
+  const rank = node.tier === "olympiad" ? 2 : node.tier === "extend" ? 1 : 0;
+  const cap = state.kpBand === "olympiad" ? 2 : state.kpBand === "extend" ? 1 : 0;
+  return rank <= cap;
+}
+
+function shownKps(list) {
+  return (list || []).filter(kpShown);
+}
+
+function kpBandSwitch() {
+  const bands = [["core", "只看课本"], ["extend", "连培优"], ["olympiad", "再加竞赛"]];
+  return '<div class="tier-switch">' + bands.map(function (item) {
+    const on = (state.kpBand || "core") === item[0] ? " on" : "";
+    return '<button type="button" class="link' + on + '" data-kp-band="' + item[0] + '">' + item[1] + "</button>";
+  }).join("") + "</div>";
+}
+
+function hiddenBandNote(extendCount, olympCount) {
+  const cap = state.kpBand || "core";
+  const parts = [];
+  if (cap === "core" && extendCount) parts.push(extendCount + " 个培优");
+  if (cap !== "olympiad" && olympCount) parts.push(olympCount + " 个竞赛");
+  if (!parts.length) return "";
+  return '<p class="muted">还有 ' + parts.join("、") + "，用上面的开关打开。</p>";
+}
+
 function nodesInSection(map, sec) {
   if (!map || !sec) return [];
-  return (map[sec.sec] || []).filter(function (node) { return node.vol === sec.vol; });
+  return (map[sec.sec] || []).filter(function (node) { return node.vol === sec.vol && kpShown(node); });
 }
 
 /** The section chosen on the today page. The handwritten set stays on 12.1. */
@@ -988,7 +1021,7 @@ function viewChapter() {
     ? '<button class="btn" id="test-chapter">' + testLabel + "</button>" + firstBtn +
       '<button type="button" class="link" id="abandon-test">放弃这次测试</button>'
     : firstBtn +
-      (demo ? '<button type="button" class="link" id="test-chapter">测一下这一章</button>' : "") +
+      (demo ? '<button type="button" class="link" id="test-chapter">这次只测 12.1 的 6 道示意题</button>' : "") +
       '<button type="button" class="link" id="see-map">在图里看本章</button>';
   let kpTotal = 0;
   secs.forEach(function (sec) { kpTotal += nodesInSection(cat.kpsBySec, sec).length; });
@@ -1023,15 +1056,28 @@ function viewSection() {
     return '<h1>找不到这一节</h1><section class="card"><p>找不到这一节。</p><button class="btn" id="to-book">回到课本</button></section>';
   }
   const cat = catalog();
-  const kps = nodesInSection(cat && cat.kpsBySec, sec);
+  const allKps = ((cat && cat.kpsBySec[sec.sec]) || []).filter(function (node) { return node.vol === sec.vol; });
+  const kps = allKps.filter(kpShown);
   const skills = nodesInSection(cat && cat.skillsBySec, sec);
+  const bandNote = hiddenBandNote(
+    allKps.filter(function (node) { return node.tier === "extend"; }).length,
+    allKps.filter(function (node) { return node.tier === "olympiad"; }).length
+  );
   const demo = sec.vol === "801" && sec.sec === "12.1";
+  const study = sectionStudy(sec);
+  const pageLine = !study.loading && study.page ? '<p class="muted">' + esc(study.page) + "</p>" : "";
   const points = kps.map(function (kp) {
-    return '<button type="button" class="kp-row" data-kp-name="' + esc(kp.id) + '"><strong>' + mathHtml(kpLabel(kp.title)) + "</strong></button>";
+    const rec = kpRecord(kp);
+    const sentence = rec && rec.definition ? firstSentence(rec.definition) : "";
+    const def = sentence ? '<span class="muted">' + mathHtml(sentence) + "</span>" : "";
+    return '<button type="button" class="kp-row kp-with-def' + methodTierClass(kp.tier) + '" data-kp-name="' + esc(kp.id) + '"><strong>' + mathHtml(kpLabel(kp.title)) + "</strong>" + def + "</button>";
+  }).join("");
+  const skillButtons = skills.slice(0, 8).map(function (skill) {
+    return '<button type="button" class="link' + methodTierClass(skill.tier) + '" data-open-skill="' + esc(skill.id) + '" title="' + methodTierName(skill.tier) + '">' + mathHtml(kpLabel(skill.title)) + "</button>";
   }).join("");
   const skillLine = skills.length
-    ? skills.slice(0, 8).map(function (skill) { return mathHtml(kpLabel(skill.title)); }).join("、") + (skills.length > 8 ? " 等 " + skills.length + " 个" : "")
-    : "这一节在图谱里还没有挂方法。";
+    ? '<div class="method-links">' + skillButtons + (skills.length > 8 ? '<span class="muted">等 ' + skills.length + " 个</span>" : "") + "</div>"
+    : "";
   let actions = '<button class="btn" id="see-section-map">在图里看这一节</button>';
   let note = '<p class="muted">这一节的知识点来自现有图谱。</p>';
   if (demo) {
@@ -1068,11 +1114,22 @@ function viewSection() {
       note = '<p class="muted">先练 ' + count + " 道选择题。填空和解答还不能在这里自动判。</p>";
     }
   }
-  return "<h1>" + esc(title) + '</h1><div class="chapter-page"><div class="section-body">' +
-    '<section class="card"><h2>知识点</h2><p class="muted">' + kps.length + ' 个</p><div class="kp-rows scroll">' +
+  const methodBlock = skills.length
+    ? '<div class="chapter-notes"><p>方法</p>' + skillLine + "</div>"
+    : '<p class="chapter-notes">这一节在图谱里还没有挂方法。</p>';
+  return "<h1>" + esc(title) + "</h1>" + pageLine + '<div class="chapter-page"><div class="section-body">' +
+    '<section class="card"><h2>知识点</h2>' + kpBandSwitch() + '<p class="muted">' + kps.length + " 个</p>" + bandNote + '<div class="kp-rows scroll">' +
     (points || "<p>这一节还没有知识点。</p>") + "</div></section>" +
-    '<p class="chapter-notes">方法：' + skillLine + "</p>" + note + "</div>" +
+    methodBlock + note + "</div>" +
     '<div class="chapter-side"><p class="muted">' + (demo && sectionDone() ? "示意题练过" : demo ? "示意题还没练" : "按这一节的选择题练") + "</p>" + actions + "</div></div>";
+}
+
+/** First sentence of a definition already stored on the point. No sentence is invented. */
+function firstSentence(text) {
+  const value = String(text || "").trim();
+  if (!value) return "";
+  const cut = value.search(/[。！？]/);
+  return cut >= 0 ? value.slice(0, cut + 1) : value;
 }
 
 /** Put the breadcrumb on this point's own book, chapter and section. */
@@ -1101,17 +1158,21 @@ function viewGraphKp(node) {
   if (rec && rec.definition) lead = "<p>" + mathHtml(rec.definition) + "</p>";
   else if (rec === undefined) lead = '<p class="muted">正在打开这个知识点的说明。</p>';
   else if (rest) lead = "<p>" + mathHtml(rest) + "</p>";
+  const slip = kpSlip(node);
+  const slipItems = slip ? [slip] : [];
   const goals = rec && rec.objectives && rec.objectives.length
-    ? "<p><strong>要会</strong> " + rec.objectives.slice(0, 3).map(function (item) {
+    ? '<p class="kp-goal"><span>要会</span>' + rec.objectives.slice(0, 3).map(function (item) {
       return mathHtml(item.text || "");
     }).join("；") + "</p>"
     : "";
-  const caution = rec && rec.boundaries && rec.boundaries.length
-    ? "<h2>别混成</h2>" + listHtml(rec.boundaries, "")
-    : "";
-  const when = rec && rec.conditions && rec.conditions.length
-    ? "<h2>成立的条件</h2>" + listHtml(rec.conditions, "")
-    : "";
+  function noteBlock(kind, title, items) {
+    if (!items || !items.length) return "";
+    return '<section class="kp-note ' + kind + '"><h2>' + title + "</h2>" + listHtml(items, "") + "</section>";
+  }
+  const notes = noteBlock("mix", "别混成", rec && rec.boundaries) +
+    noteBlock("slip", "容易错成", slipItems) +
+    noteBlock("when", "成立的条件", rec && rec.conditions);
+  const noteHtml = notes ? '<div class="kp-notes">' + notes + "</div>" : "";
   const page = rec && rec.textbook && rec.textbook.page
     ? '<p class="muted">课本第 ' + esc(rec.textbook.page) + " 页</p>"
     : "";
@@ -1133,26 +1194,27 @@ function viewGraphKp(node) {
     const mark = text.search(/[：:]/);
     return "<p>" + mathHtml(mark > 0 ? text.slice(mark + 1) : text) + "</p>";
   }).join("");
-  const exampleHtml = examples ? "<h2>课本里的例子</h2>" + examples : "";
+  const exampleHtml = examples ? '<section class="kp-block"><h2>课本里的例子</h2>' + examples + "</section>" : "";
   const methods = (net.skillByKp[node.id] || []).slice(0, 6).map(function (skill) {
     const pack = skillBundle(skill.id);
     const line = pack && pack.rec && pack.rec.desc
-      ? " <span class=\"muted\">" + mathHtml(pack.rec.desc) + "</span>"
+      ? "<p>" + mathHtml(pack.rec.desc) + "</p>"
       : "";
-    return '<p><button type="button" class="link" data-open-skill="' + esc(skill.id) + '">' + mathHtml(kpLabel(skill.title)) + "</button>" + line + "</p>";
+    return '<article class="kp-method"><button type="button" class="link' + methodTierClass(skill.tier) + '" data-open-skill="' + esc(skill.id) + '" title="' + methodTierName(skill.tier) + '">' + mathHtml(kpLabel(skill.title)) + "</button>" + line + "</article>";
   }).join("");
-  const slip = kpSlip(node);
-  const slipHtml = slip ? "<h2>容易错成</h2>" + listHtml([slip], "") : "";
   const thoughts = rec && rec.thoughts && rec.thoughts.length
     ? rec.thoughts.map(function (item) { return "<p>" + mathHtml(item.name || "") + "</p>"; }).join("")
     : "";
-  const ideaHtml = methods || thoughts
-    ? "<h2>方法和思想</h2>" + (methods || "<p>现有图谱里还没有挂方法。</p>") +
-      (thoughts ? "<p><strong>思想</strong></p>" + thoughts : "")
-    : "<h2>方法和思想</h2><p>现有图谱里还没有挂方法和思想。</p>";
+  let ideaHtml = '<section class="kp-block"><h2>方法和思想</h2><p>现有图谱里还没有挂方法和思想。</p></section>';
+  if (methods || thoughts) {
+    ideaHtml = '<section class="kp-block">' +
+      (methods ? "<h2>方法</h2>" + methods : "") +
+      (thoughts ? "<h2>思想</h2><div class=\"kp-ideas\">" + thoughts + "</div>" : "") +
+      "</section>";
+  }
   const itemPack = ensureItems(node.vol, node.sec);
   let qHtml = "";
-  let dock = '<div class="dock"><button class="btn" id="kp-map">回到图谱</button></div>';
+  let dock = "";
   if (!itemPack) qHtml = '<p class="muted">正在看这一节有没有题。</p>';
   else if (!itemPack.missing) {
     const rows = (itemPack.items || []).filter(function (row) {
@@ -1166,11 +1228,13 @@ function viewGraphKp(node) {
       dock = '<div class="dock"><button class="btn" id="redo-kp">再练这个知识点</button><button type="button" class="link" id="kp-map">在图里看</button></div>';
     } else qHtml = "<p class=\"muted\">这一知识点还没有能交卷的选择题。</p>";
   } else qHtml = "<p class=\"muted\">这一知识点还没有能交卷的选择题。</p>";
-  return '<div class="kp-page"><p class="chip">从图谱来 · <button class="link" id="kp-map">回到图谱</button></p><h1>' +
-    mathHtml(node.title) + '</h1><section class="card">' + lead + goals + page + "</section>" +
-    caution + slipHtml + when + exampleHtml +
+  const shortTitle = kpLabel(full);
+  const subtitle = rest && rest !== shortTitle ? '<p class="kp-lead">' + mathHtml(rest) + "</p>" : "";
+  return '<div class="kp-page"><p class="kp-back"><button type="button" class="link" id="kp-map">回到图谱</button></p><h1>' +
+    mathHtml(shortTitle) + "</h1>" + subtitle + '<section class="card">' + lead + goals + page + "</section>" +
+    noteHtml + exampleHtml +
     '<div class="kp-rel"><section><h3>前置</h3>' + (pres || '<span class="muted">这是起点</span>') + "</section>" +
-    "<section><h3>当前</h3><strong>" + mathHtml(kpLabel(node.title)) + "</strong></section>" +
+    '<section class="is-now"><h3>当前</h3><strong>' + mathHtml(shortTitle) + "</strong></section>" +
     "<section><h3>后置</h3>" + (posts || '<span class="muted">暂时没有接着学的</span>') + "</section></div>" +
     ideaHtml + qHtml + dock + "</div>";
 }
@@ -1191,18 +1255,19 @@ function viewMethod() {
   const edges = (window.MC.graph && window.MC.graph.edges) || [];
   const steps = rec && rec.steps ? rec.steps.slice().sort(function (a, b) { return (a.ordinal || 0) - (b.ordinal || 0); }) : [];
   const stepHtml = steps.length
-    ? "<ol>" + steps.map(function (step) {
+    ? '<ol class="method-steps">' + steps.map(function (step) {
       return "<li><p>" + mathHtml(step.action || "") + "</p>" + (step.basis ? "<p>" + mathHtml(step.basis) + "</p>" : "") + "</li>";
     }).join("") + "</ol>"
     : "<p>步骤还没有写进这一节的数据。</p>";
   const alt = (rec && rec.alternatives) || [];
   const altHtml = alt.length
-    ? alt.map(function (uid) {
+    ? '<div class="method-names">' + alt.map(function (uid) {
       const named = (sec && (sec.skills || []).filter(function (item) { return item.uid === uid; })[0]) || graphById(uid);
       const label = named ? (named.name || named.title) : uid;
       if (!named) return "<p>" + esc(uid) + "</p>";
-      return '<p><button type="button" class="link" data-open-skill="' + esc(uid) + '">' + mathHtml(label) + "</button></p>";
-    }).join("")
+      const tier = named.tier || ((graphById(uid) || {}).tier);
+      return methodChip(uid, label, tier);
+    }).join("") + "</div>"
     : "<p>没有标其他做法。</p>";
   const thoughtIds = {};
   ((rec && rec.thoughts) || []).forEach(function (tid) { thoughtIds[tid] = 1; });
@@ -1211,16 +1276,17 @@ function viewMethod() {
   });
   const thoughtKeys = Object.keys(thoughtIds);
   const thoughtHtml = thoughtKeys.length
-    ? thoughtKeys.map(function (tid) {
+    ? '<div class="method-ideas">' + thoughtKeys.map(function (tid) {
       const node = graphById(tid);
       return "<p>" + esc(node && node.title ? node.title : tid) + "</p>";
-    }).join("")
+    }).join("") + "</div>"
     : "<p>图谱里还没有把这条方法连到思想上。</p>";
   const siblings = sec && sec.skills ? sec.skills.filter(function (item) { return item.uid !== skill.id; }) : [];
   const siblingHtml = siblings.length
-    ? "<section><h2>同一节的其他方法</h2>" + siblings.map(function (item) {
-      return '<p><button type="button" class="link" data-open-skill="' + esc(item.uid) + '">' + mathHtml(item.name || item.uid) + "</button></p>";
-    }).join("") + "</section>"
+    ? '<section><h2>同一节的其他方法</h2><p class="muted">蓝的是课本方法，橙的是培优，紫的是竞赛。</p><div class="method-names">' + siblings.map(function (item) {
+      const node = graphById(item.uid);
+      return methodChip(item.uid, item.name || item.uid, (node && node.tier) || item.tier);
+    }).join("") + "</div></section>"
     : "";
   const before = [];
   const after = [];
@@ -1228,14 +1294,15 @@ function viewMethod() {
     if (edge.r !== "prerequisite_of") return;
     const from = graphById(edge.s);
     const to = graphById(edge.d);
-    if (edge.d === skill.id && from && from.kind === "skill") before.push(from.title || from.id);
-    if (edge.s === skill.id && to && to.kind === "skill") after.push(to.title || to.id);
+    if (edge.d === skill.id && from && from.kind === "skill") before.push(from);
+    if (edge.s === skill.id && to && to.kind === "skill") after.push(to);
   });
   const orderHtml = before.length || after.length
-    ? "<p>教材不写方法之间的先后。这是图谱里已有的边，还没有教研复核。</p>" +
-      (before.length ? "<p>先有</p>" + listHtml(before, "") : "") +
-      (after.length ? "<p>之后</p>" + listHtml(after, "") : "")
-    : "<p>图谱里没有标方法的先后。</p>";
+    ? '<p class="muted">教材不写方法之间的先后。这是图谱里已有的边，还没有教研复核。</p><div class="method-order">' +
+      (before.length ? '<section><h3>先有</h3><div class="method-names">' + before.map(function (node) { return methodChip(node.id, node.title || node.id, node.tier); }).join("") + "</div></section>" : "") +
+      (after.length ? '<section><h3>之后</h3><div class="method-names">' + after.map(function (node) { return methodChip(node.id, node.title || node.id, node.tier); }).join("") + "</div></section>" : "") +
+      "</div>"
+    : '<p class="muted">图谱里没有标方法的先后。</p>';
   const covered = {};
   (pack.net.skillKps[skill.id] || []).forEach(function (kp) { covered[kp.id] = 1; });
   const mistakes = [];
@@ -1262,12 +1329,12 @@ function viewMethod() {
     ? "练习标了 " + rec.qn + " 道，这里先列 " + qs.length + " 道。这些不是教材例题。点一道就打开原题。"
     : "这里先列 " + qs.length + " 道练习。点一道就打开原题。";
   const qHtml = qs.length
-    ? "<p class=\"muted\">" + qTitle + "</p>" + qs.map(function (item) {
+    ? "<p class=\"muted\">" + qTitle + '</p><div class="method-qs">' + qs.map(function (item) {
       const packItems = window.MC["items:" + item.vol + "-" + item.no];
       const found = packItems && (packItems.items || []).filter(function (row) { return row.id === item.id; })[0];
       const stem = found ? mathHtml(found.stem) : esc(bandLabel(item.band) + " · " + (item.no || "") + " · " + String(item.id || "").split("_").pop());
       return '<button type="button" class="kp-row q-row" data-open-q="' + esc(item.id) + '" data-q-vol="' + esc(item.vol || "") + '" data-q-no="' + esc(item.no || "") + '"><em>' + esc(bandLabel(item.band)) + "</em><span>" + stem + "</span></button>";
-    }).join("")
+    }).join("") + "</div>"
     : "<p>这一条还没有挂练习题。</p>";
   const exPack = ensureEx(skill.vol, skill.sec);
   let exampleHtml = "<p>正在打开这一节的教材例题。</p>";
@@ -1287,21 +1354,23 @@ function viewMethod() {
         }).join("");
     }
   }
-  const more = "<section><h2>换个做法</h2>" + altHtml + "</section>" +
-    "<section><h2>它管不到的地方</h2>" + listHtml(rec && rec.boundaries, "还没有写下它不管的情况。") + "</section>" +
-    "<section><h2>用在哪里</h2>" + kpLinks(pack.net.skillKps[skill.id] || []) + "</section>" +
+  const more = '<div class="method-pair"><section><h2>换个做法</h2>' + altHtml + "</section>" +
+    (siblingHtml || "") + "</div>" +
     "<section><h2>它体现的思想</h2>" + thoughtHtml + "</section>" +
-    siblingHtml +
+    '<section><h2>用在哪里</h2><div class="method-kps">' + kpLinks(pack.net.skillKps[skill.id] || []) + "</div></section>" +
     "<section><h2>先练哪个</h2>" + orderHtml + "</section>" +
-    "<section><h2>用这个方法时容易犯的错</h2>" + (mistakes.length ? listHtml(mistakes, "") : "<p>现有图谱里没有标出用这个方法时的错因。</p>") + "</section>";
-  return '<div class="method-page"><header class="card method-head"><h1>' + mathHtml(skill.title) + "</h1><p class=\"muted\">" + esc(skillMeta(skill, rec, sec)) + "</p>" +
-    (rec && rec.desc ? "<p>" + mathHtml(rec.desc) + "</p>" : "<p>这条方法还没有一句话说明。</p>") +
-    '<div class="method-acts"><button class="btn" id="method-map">回到图谱</button><button type="button" class="link" id="method-section">去这一节</button></div></header>' +
-    '<div class="method-grid"><section class="card"><h2>怎么做</h2>' + stepHtml +
-    "<h2>什么时候用</h2>" + listHtml(rec && rec.conditions, "还没有写下什么时候用。") +
-    "<h2>做错的样子</h2>" + listHtml(rec && rec.signals, "还没有写下做错的样子。") +
-    '</section><section class="card"><h2>教材例题</h2>' + exampleHtml +
-    "<h2>用它做过的题</h2>" + qHtml + "</section></div>" +
+    '<section class="kp-note mix"><h2>它管不到的地方</h2>' + listHtml(rec && rec.boundaries, "还没有写下它不管的情况。") + "</section>" +
+    '<section class="kp-note slip"><h2>用这个方法时容易犯的错</h2>' + (mistakes.length ? listHtml(mistakes, "") : "<p>现有图谱里没有标出用这个方法时的错因。</p>") + "</section>";
+  const whenHtml = '<section class="kp-note when"><h2>什么时候用</h2>' + listHtml(rec && rec.conditions, "还没有写下什么时候用。") + "</section>";
+  const pitHtml = '<section class="kp-note slip"><h2>做错的样子</h2>' + listHtml(rec && rec.signals, "还没有写下做错的样子。") + "</section>";
+  return '<div class="method-page"><p class="kp-back"><button type="button" class="link" id="method-map">回到图谱</button><button type="button" class="link" id="method-section">去这一节</button></p>' +
+    '<header class="method-head"><h1>' + mathHtml(skill.title) + "</h1>" +
+    (rec && rec.desc ? '<p class="kp-lead">' + mathHtml(rec.desc) + "</p>" : "<p>这条方法还没有一句话说明。</p>") +
+    '<p class="muted">' + esc(skillMeta(skill, rec, sec)) + "</p></header>" +
+    '<section class="card"><h2>怎么做</h2>' + stepHtml + "</section>" +
+    '<div class="kp-notes">' + whenHtml + pitHtml + "</div>" +
+    '<section class="card"><h2>用它做过的题</h2>' + qHtml + "</section>" +
+    '<section class="card"><h2>教材例题</h2>' + exampleHtml + "</section>" +
     '<details class="card method-more"><summary>其余说明</summary>' + more + "</details></div>";
 }
 
@@ -1325,7 +1394,12 @@ function viewQ() {
   const next = index >= 0 && index < list.length - 1 ? list[index + 1] : null;
   const jump = (prev ? '<button type="button" class="link" data-open-q="' + esc(prev.id) + '" data-q-vol="' + esc(prev.vol || "") + '" data-q-no="' + esc(prev.no || "") + '">上一题</button>' : "") +
     (next ? '<button type="button" class="link" data-open-q="' + esc(next.id) + '" data-q-vol="' + esc(next.vol || "") + '" data-q-no="' + esc(next.no || "") + '">下一题</button>' : "");
-  return '<div class="method-page"><div class="work"><section class="card"><p class="chip">' + esc(bandLabel(found.band || ref.band)) + " · " + esc(ref.no || "") + "</p><p class=\"stem\">" + mathHtml(found.stem || "") + "</p>" + opts +
+  const also = (found.kps || []).filter(function (kp) { return kp.role === "secondary" && kp.uid; });
+  const alsoHtml = also.length ? '<p class="q-also"><span class="muted">还用到</span>' + also.map(function (kp) {
+    const node = ensureNet() && ensureNet().byId[kp.uid];
+    return '<button type="button" class="link' + methodTierClass(node && node.tier) + '" data-kp-name="' + esc(kp.uid) + '">' + mathHtml(kpLabel(kp.name || (node && node.title) || kp.uid)) + "</button>";
+  }).join("") + "</p>" : "";
+  return '<div class="method-page"><div class="work"><section class="card"><p class="chip">' + esc(bandLabel(found.band || ref.band)) + " · " + esc(ref.no || "") + " · 练习题，不是教材例题</p><p class=\"stem\">" + mathHtml(found.stem || "") + "</p>" + alsoHtml + opts +
     (opts ? "" : "<p class=\"muted\">这是原来的题干。答案先收着，点开再看。</p>") +
     '</section><aside class="card"><h2>答案与思路</h2><details><summary>看答案</summary><div class="stem">' + mathHtml(found.ans || "这题答案还没入库") + "</div></details></aside></div>" +
     '<div class="dock"><button class="btn" id="q-back">回到这个方法</button>' + jump + "</div></div>";
@@ -1399,7 +1473,7 @@ function viewKp() {
   return '<div class="kp-page">' + back + "<h1>" + esc(state.kpName) + "</h1>" +
     '<section class="card"><p>' + body + "</p>" + sourceLine("body") + "</section>" + missedHtml +
     '<div class="kp-rel">' + relCell("前置", note.before, note.beforeLabel, "before") +
-    "<section><h3>当前</h3><strong>" + esc(state.kpName) + "</strong></section>" +
+    "<section class=\"is-now\"><h3>当前</h3><strong>" + esc(state.kpName) + "</strong></section>" +
     relCell("后续", note.after, note.afterLabel, "after") + "</div>" +
     "<h2>方法和思想</h2><p><strong>先用</strong> " + note.use + "</p><p><strong>别用成</strong> " + note.avoid + "</p>" +
     "<h2>相关题</h2><div class=\"kp-qs\">" + QUESTIONS.filter(function (item) { return item.kp === state.kpName; }).map(function (item) {
@@ -1545,14 +1619,14 @@ function graphPointSide(id, extra) {
   const after = pointLinks(net.post[node.id], net);
   const rel = (before ? "<p><strong>先要会</strong></p>" + before : "") +
     (after ? "<p><strong>接着学</strong></p>" + after : "");
-  const methods = (net.skillByKp[node.id] || []).slice(0, 3);
+  const methods = net.skillByKp[node.id] || [];
   const methodHtml = methods.length
     ? "<p><strong>可以用</strong></p>" + methods.map(function (skill) {
       const pack = skillBundle(skill.id);
       const line = pack && pack.rec && pack.rec.desc
         ? "<p class=\"muted\">" + mathHtml(pack.rec.desc) + "</p>"
         : "";
-      return '<p><button type="button" class="link" data-method="' + esc(skill.id) + '">' + mathHtml(kpLabel(skill.title)) + "</button></p>" + line;
+      return '<p><button type="button" class="link' + methodTierClass(skill.tier) + '" data-method="' + esc(skill.id) + '" title="' + methodTierName(skill.tier) + '">' + mathHtml(kpLabel(skill.title)) + "</button></p>" + line;
     }).join("")
     : "";
   return '<aside class="side"><div class="row"><h2>' + mathHtml(heading) + '</h2><button class="link" id="map-close">关闭</button></div>' +
@@ -1589,15 +1663,15 @@ function ensureSlice(key, src) {
 }
 
 function ensureSec(vol, sec) {
-  return ensureSlice("sec:" + vol + "-" + sec, "../../../runtime/web/data/sec/" + vol + "-" + sec + ".js");
+  return ensureSlice("sec:" + vol + "-" + sec, "../../../runtime/web/data/sec/" + vol + "-" + sec + ".js?v=130");
 }
 
 function ensureItems(vol, no) {
-  return ensureSlice("items:" + vol + "-" + no, "../../../runtime/web/data/sec/" + vol + "-" + no + ".items.js");
+  return ensureSlice("items:" + vol + "-" + no, "../../../runtime/web/data/sec/" + vol + "-" + no + ".items.js?v=130");
 }
 
 function ensureEx(vol, no) {
-  return ensureSlice("ex:" + vol + "-" + no, "../../../runtime/web/data/sec/" + vol + "-" + no + ".ex.js");
+  return ensureSlice("ex:" + vol + "-" + no, "../../../runtime/web/data/sec/" + vol + "-" + no + ".ex.js?v=130");
 }
 
 function bandLabel(band) {
@@ -1611,6 +1685,22 @@ function skillBundle(id) {
   const sec = ensureSec(skill.vol, skill.sec);
   const rec = sec && (sec.skills || []).filter(function (item) { return item.uid === id; })[0];
   return { net: net, skill: skill, sec: sec, rec: rec || null };
+}
+
+function methodTierName(tier) {
+  if (tier === "extend") return "培优";
+  if (tier === "olympiad") return "竞赛";
+  return "课本";
+}
+
+function methodTierClass(tier) {
+  if (tier === "extend") return " is-extend";
+  if (tier === "olympiad") return " is-olymp";
+  return "";
+}
+
+function methodChip(id, label, tier) {
+  return '<p><button type="button" class="link' + methodTierClass(tier) + '" data-open-skill="' + esc(id) + '" title="' + methodTierName(tier) + '">' + mathHtml(label) + "</button></p>";
 }
 
 function skillMeta(skill, rec, sec) {
@@ -1734,7 +1824,7 @@ function softBend(x1, y1, x2, y2, amount) {
 
 function dotField(nodes, lines, note, tags, legendKind) {
   const at = {};
-  const focus = legendKind === "chapter" || legendKind === "mind";
+  const focus = legendKind === "chapter" || legendKind === "mind" || legendKind === "point" || legendKind === "zones";
   const course = legendKind === "course";
   const book = course && !state.mapShowAll;
   nodes.forEach(function (node) { at[node.id] = node; });
@@ -1745,14 +1835,19 @@ function dotField(nodes, lines, note, tags, legendKind) {
     if (!from || !to) return "";
     const cls = pair[2] || (index % 2 ? "b" : "a");
     if (focus) {
-      const flow = pair[3] || "none";
+      const flow = typeof pair[3] === "string" ? pair[3] : "none";
+      const dashed = String(cls).indexOf("dash") >= 0;
+      const dotted = String(cls).indexOf("dot") >= 0;
       const tail = flow === "in" ? to : from;
       const head = flow === "in" ? from : to;
       geo.push({
         x1: tail.x, y1: tail.y, x2: head.x, y2: head.y, from: tail.id, to: head.id, cls: cls,
-        arrow: flow === "in" || flow === "out",
+        arrow: (flow === "in" || flow === "out") && !dashed && !dotted,
         tailGap: flow === "out" ? 22 : 14,
-        hubHead: flow === "in"
+        hubHead: flow === "in",
+        dash: dashed,
+        dot: dotted,
+        mid: typeof pair[4] === "string" ? pair[4] : ""
       });
       return "";
     }
@@ -1785,7 +1880,9 @@ function dotField(nodes, lines, note, tags, legendKind) {
       (node.math ? mathHtml(node.label) : node.card ? chapterLabelHtml(node) : node.full && !node.big && nodes.length > 14 ? esc(node.label).replace(" ", "<br>") : esc(node.label)) +
       "</span></" + tag + ">";
   }).join("");
-  const legend = legendKind === "course"
+  const legend = legendKind === "point" || legendKind === "zones"
+    ? '<p class="field-legend"><span class="lg-line solid">前置指向当前</span><span class="lg-line out">当前指向后置</span><span class="lg-line m">方法指向当前</span></p>'
+    : legendKind === "course"
     ? '<p class="field-legend"><span><i class="lg t1"></i>七上</span><span><i class="lg t2"></i>七下</span><span><i class="lg t3"></i>八上</span><span><i class="lg t4"></i>八下</span><span><i class="lg t5"></i>九上</span><span><i class="lg t6"></i>九下</span>' +
       (state.mapShowAll ? '<span><i class="lg sec"></i>小节</span><span><i class="lg kp"></i>知识点</span>' : "") + "</p>"
     : legendKind === "chapter"
@@ -1802,10 +1899,13 @@ function dotField(nodes, lines, note, tags, legendKind) {
     ? '<svg id="focus-svg" aria-hidden="true"></svg><script type="application/json" id="focus-geo">' + JSON.stringify(geo) + "</script>"
     : '<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">' + svg + "</svg>" +
       (course ? '<script type="application/json" id="book-geo">' + JSON.stringify(bookEdges) + "</script>" : "");
-  return '<div class="field' + (focus ? " focus-net" : "") + (book ? " book-net" : "") + (focus && nodes.length > 14 ? " dense" : "") + '" id="pano-field"><div class="field-world" id="pano-world" style="' + worldStyle + '">' +
+  const methodBtn = state.pointFocus
+    ? '<button type="button" id="method-shape" aria-pressed="true">' + (state.methodCards ? "关系卡片" : "圆点一圈") + "</button>"
+    : "";
+  return '<div class="field' + (focus ? " focus-net" : "") + (legendKind === "zones" ? " ring" : "") + (legendKind === "point" ? " point-focus" : "") + (legendKind === "point" && state.methodCards ? " method-cards" : "") + (book ? " book-net" : "") + (focus && nodes.length > 14 ? " dense" : "") + '" id="pano-field"><div class="field-world" id="pano-world" style="' + worldStyle + '">' +
     (tags || "") + focusSvg + marks +
     '</div><p class="field-note">' + note + "</p>" + legend +
-    '<div class="field-zoom">' + pointsBtn + '<button type="button" id="zoom-out" aria-label="缩小">−</button><button type="button" id="zoom-fit">适配</button><button type="button" id="zoom-in" aria-label="放大">+</button></div></div>';
+    '<div class="field-zoom">' + methodBtn + pointsBtn + '<button type="button" id="zoom-out" aria-label="缩小">−</button><button type="button" id="zoom-fit">适配</button><button type="button" id="zoom-in" aria-label="放大">+</button></div></div>';
 }
 
 function wedgeBend(from, to, targets) {
@@ -2046,7 +2146,7 @@ function ensureNet() {
   const byId = {};
   graph.nodes.forEach(function (node) {
     if (!keep[node.kind]) return;
-    const copy = { id: node.id, kind: node.kind, title: node.title, vol: node.vol, sec: node.sec, ch: node.ch, kp_type: node.kp_type };
+    const copy = { id: node.id, kind: node.kind, title: node.title, vol: node.vol, sec: node.sec, ch: node.ch, kp_type: node.kp_type, tier: node.tier || (node.kind === "knowledge_point" ? "core" : "") };
     nodes.push(copy);
     byId[node.id] = copy;
   });
@@ -2242,23 +2342,79 @@ function zoomAt(clientX, clientY, nextZoom, field) {
   applyMapView();
 }
 
-function drawFocusEdges() {
-  const field = document.getElementById("pano-field");
-  const svg = document.getElementById("focus-svg");
-  const raw = document.getElementById("focus-geo");
-  if (!field || !svg || !raw) return;
+function layoutBox(field, id) {
+  if (!id) return null;
+  const world = document.getElementById("pano-world") || field;
+  const seeds = world.querySelectorAll(".seed");
+  let el = null;
+  for (let i = 0; i < seeds.length; i += 1) {
+    if (seeds[i].getAttribute("data-nid") === id) { el = seeds[i]; break; }
+  }
+  if (!el) return null;
+  const span = el.querySelector("span") || el;
+  const wr = world.getBoundingClientRect();
+  const box = span.getBoundingClientRect();
+  const zoom = state.mapZoom || 1;
+  const pad = 6;
+  const l = (box.left - wr.left) / zoom - pad;
+  const t = (box.top - wr.top) / zoom - pad;
+  const r = (box.right - wr.left) / zoom + pad;
+  const b = (box.bottom - wr.top) / zoom + pad;
+  return { l: l, t: t, r: r, b: b, cx: (l + r) / 2, cy: (t + b) / 2 };
+}
+
+function leaveBox(box, x, y, ux, uy) {
+  let best = 1e9;
+  if (ux > 0.001) best = Math.min(best, (box.r - x) / ux);
+  else if (ux < -0.001) best = Math.min(best, (box.l - x) / ux);
+  if (uy > 0.001) best = Math.min(best, (box.b - y) / uy);
+  else if (uy < -0.001) best = Math.min(best, (box.t - y) / uy);
+  if (!isFinite(best) || best < 0) return null;
+  return { x: x + ux * best, y: y + uy * best };
+}
+
+function drawFocusEdges(field) {
+  field = field || document.getElementById("pano-field");
+  if (!field || !field.isConnected) return;
+  const svg = field.querySelector("#focus-svg");
+  const raw = field.querySelector("#focus-geo");
+  if (!svg || !raw) return;
   let geo = [];
   try { geo = JSON.parse(raw.textContent); } catch (err) { return; }
   const w = field.clientWidth || 1;
   const h = field.clientHeight || 1;
   svg.setAttribute("viewBox", "0 0 " + w + " " + h);
+  const point = field.classList.contains("point-focus");
   const count = geo.length || 1;
   const gap = Math.PI * 2 / count;
   svg.innerHTML = geo.map(function (edge) {
-    const x1 = edge.x1 / 100 * w;
-    const y1 = edge.y1 / 100 * h;
-    const x2 = edge.x2 / 100 * w;
-    const y2 = edge.y2 / 100 * h;
+    let x1 = edge.x1 / 100 * w;
+    let y1 = edge.y1 / 100 * h;
+    let x2 = edge.x2 / 100 * w;
+    let y2 = edge.y2 / 100 * h;
+    if (point) {
+      const a = layoutBox(field, edge.from);
+      const b = layoutBox(field, edge.to);
+      if (a && b && a.r - a.l > 8 && b.r - b.l > 8) {
+        const dx0 = b.cx - a.cx;
+        const dy0 = b.cy - a.cy;
+        const len0 = Math.hypot(dx0, dy0) || 1;
+        const start = leaveBox(a, a.cx, a.cy, dx0 / len0, dy0 / len0);
+        const end = leaveBox(b, b.cx, b.cy, -dx0 / len0, -dy0 / len0);
+        if (start && end) { x1 = start.x; y1 = start.y; x2 = end.x; y2 = end.y; }
+      }
+      const side = field.parentElement && field.parentElement.querySelector(":scope > .side");
+      const world = document.getElementById("pano-world") || field;
+      if (side && x2 !== x1) {
+        const zoom = state.mapZoom || 1;
+        const limit = (side.getBoundingClientRect().left - world.getBoundingClientRect().left) / zoom - 8;
+        if (x2 > limit) {
+          const t = Math.max(0.05, Math.min(1, (limit - x1) / (x2 - x1)));
+          y2 = y1 + (y2 - y1) * t;
+          x2 = x1 + (x2 - x1) * t;
+        }
+      }
+    }
     const dx = x2 - x1;
     const dy = y2 - y1;
     const len = Math.hypot(dx, dy) || 1;
@@ -2267,11 +2423,12 @@ function drawFocusEdges() {
     const px = -uy;
     const py = ux;
     const room = (len * 0.5) * Math.tan(Math.min(gap, 1) / 2);
-    const bend = Math.max(10, Math.min(18, room * 0.34));
-    const fromBelow = edge.hubHead && edge.y1 > edge.y2 + 3;
-    const tipGap = edge.hubHead ? (fromBelow ? 58 : 22) : 14;
-    const sx0 = x1 + ux * (edge.tailGap || 18);
-    const sy0 = y1 + uy * (edge.tailGap || 18);
+    const bend = point ? 0 : Math.max(10, Math.min(18, room * 0.34));
+    const fromBelow = !point && edge.hubHead && edge.y1 > edge.y2 + 3;
+    const tipGap = point ? 0 : (edge.hubHead ? (fromBelow ? 58 : 22) : 14);
+    const tailPad = point ? 0 : (edge.tailGap || 18);
+    const sx0 = x1 + ux * tailPad;
+    const sy0 = y1 + uy * tailPad;
     const tipX = x2 - ux * tipGap;
     const tipY = y2 - uy * tipGap;
     const headLen = 16;
@@ -2300,8 +2457,29 @@ function drawFocusEdges() {
       const ry = endY - ny * half;
       head = '<path class="' + edge.cls + ' head" d="M ' + tipFx.toFixed(1) + " " + tipFy.toFixed(1) + " L " + lx.toFixed(1) + " " + ly.toFixed(1) + " L " + rx.toFixed(1) + " " + ry.toFixed(1) + ' Z"/>';
     }
-    return '<path class="' + edge.cls + ' edge" d="' + curve + '"/>' + head;
+    const kind = edge.dash ? " dash" : edge.dot ? " dot" : "";
+    let mid = "";
+    if (edge.mid) {
+      const mx = (sx0 + seamX) / 2;
+      const my = (sy0 + seamY) / 2;
+      mid = '<g class="mid-label"><rect x="' + (mx - 22).toFixed(1) + '" y="' + (my - 11).toFixed(1) + '" width="44" height="20" rx="8"/>' +
+        '<text x="' + mx.toFixed(1) + '" y="' + (my + 4).toFixed(1) + '" text-anchor="middle">' + esc(edge.mid) + "</text></g>";
+    }
+    return '<path class="' + edge.cls + kind + ' edge" d="' + curve + '"/>' + head + mid;
   }).join("");
+}
+
+function rememberPointSection() {
+  const net = ensureNet();
+  const node = net && state.mapPoint && net.byId[state.mapPoint];
+  if (!node) return;
+  if (node.sec) state.mapSection = node.sec;
+  if (node.ch) state.mapNetNo = Number(node.ch) || state.mapNetNo;
+  if (node.vol && node.ch) {
+    state.mapBook = node.vol;
+    state.mapChapter = node.vol + "-" + node.ch;
+  }
+  state.mapLevel = "chapter";
 }
 
 function stepMapBack() {
@@ -2311,6 +2489,7 @@ function stepMapBack() {
   state.mapMethod = "";
   state.mapIdea = "";
   if (state.mapPoint) {
+    rememberPointSection();
     state.mapPoint = null;
     state.mapCard = true;
   } else if (state.mapSection) {
@@ -2682,10 +2861,164 @@ function layoutShowAllChapters(field) {
   }).join("");
 }
 
-function layoutFocusLabels(field) {
-  if (!field || !field.classList.contains("focus-net")) return;
+function packPointCards(field) {
+  if (!field.classList.contains("method-cards")) return;
+  const w = field.clientWidth || 1;
+  const h = field.clientHeight || 1;
+  if (w < 280 || h < 240) return;
+  const fr = field.getBoundingClientRect();
+  const zoom = state.mapZoom || 1;
+  const modes = document.querySelector(".float-modes");
+  const legend = field.querySelector(".field-legend");
+  const sideEl = document.querySelector(".pano-board > .side");
+  const top = Math.max(56, modes ? (modes.getBoundingClientRect().bottom - fr.top) / zoom + 12 : 56);
+  const bottom = Math.min(h - 28, legend ? (legend.getBoundingClientRect().top - fr.top) / zoom - 12 : h - 28);
+  const sideLimit = sideEl ? (sideEl.getBoundingClientRect().left - fr.left) / zoom - 16 : w - 16;
+  const leftPad = 16;
+  const gapX = 22;
+  function box(seed) {
+    const span = seed.querySelector("span");
+    return { seed: seed, lw: span ? span.offsetWidth : 80, lh: span ? Math.max(32, span.offsetHeight) : 36 };
+  }
+  const pres = Array.prototype.map.call(field.querySelectorAll(".seed.side-top"), box);
+  const posts = Array.prototype.map.call(field.querySelectorAll(".seed.side-left"), box);
+  const methods = Array.prototype.map.call(field.querySelectorAll(".seed.side-right"), box);
+  const usable = Math.max(160, sideLimit - leftPad);
+  const rows = [];
+  let row = [];
+  let rowW = 0;
+  pres.forEach(function (it) {
+    const need = it.lw + (row.length ? gapX : 0);
+    if (row.length && rowW + need > usable) {
+      rows.push(row);
+      row = [it];
+      rowW = it.lw;
+    } else {
+      row.push(it);
+      rowW += need;
+    }
+  });
+  if (row.length) rows.push(row);
+  let y = top;
+  rows.forEach(function (line) {
+    const rh = line.reduce(function (max, it) { return Math.max(max, it.lh); }, 32);
+    const total = line.reduce(function (sum, it) { return sum + it.lw; }, 0) + gapX * (line.length - 1);
+    let x = leftPad + Math.max(0, (usable - total) / 2);
+    line.forEach(function (it) {
+      it.seed.style.left = ((x + it.lw / 2) / w * 100) + "%";
+      it.seed.style.top = ((y + it.lh / 2) / h * 100) + "%";
+      x += it.lw + gapX;
+    });
+    y += rh + 14;
+  });
+  const bandTop = rows.length ? y + 6 : top;
+  function column(items, side) {
+    if (!items.length) return 0;
+    const widest = items.reduce(function (max, it) { return Math.max(max, it.lw); }, 48);
+    const tall = items.reduce(function (sum, it) { return sum + it.lh; }, 0);
+    const room = Math.max(16, bottom - bandTop);
+    let gap = 16;
+    if (items.length > 1) gap = Math.max(10, Math.min(22, (room - tall) / (items.length - 1)));
+    const used = tall + gap * Math.max(0, items.length - 1);
+    const xPx = side === "left" ? leftPad + widest / 2 : sideLimit - widest / 2;
+    let cursor = bandTop + Math.max(0, (room - used) / 2);
+    items.forEach(function (it) {
+      it.seed.style.left = (xPx / w * 100) + "%";
+      it.seed.style.top = ((cursor + it.lh / 2) / h * 100) + "%";
+      cursor += it.lh + gap;
+    });
+    return widest;
+  }
+  const postWide = column(posts, "left");
+  const methodWide = column(methods, "right");
   const hub = field.querySelector(".seed.here");
-  const raw = document.getElementById("focus-geo");
+  if (hub) {
+    const hb = box(hub);
+    const leftEdge = posts.length ? leftPad + postWide + 16 : leftPad;
+    const rightEdge = methods.length ? sideLimit - methodWide - 16 : sideLimit;
+    let cx = (leftEdge + rightEdge) / 2;
+    const minCx = leftEdge + hb.lw / 2;
+    const maxCx = rightEdge - hb.lw / 2;
+    if (minCx <= maxCx) cx = Math.max(minCx, Math.min(maxCx, cx));
+    hub.style.left = (cx / w * 100) + "%";
+    hub.style.top = (((bandTop + bottom) / 2) / h * 100) + "%";
+  }
+}
+
+function packRingLabels(field) {
+  if (!field.classList.contains("ring")) return;
+  const w = field.clientWidth || 1;
+  const h = field.clientHeight || 1;
+  if (w < 280 || h < 240) return;
+  const fr = field.getBoundingClientRect();
+  const zoom = state.mapZoom || 1;
+  const modes = document.querySelector(".float-modes");
+  const legend = field.querySelector(".field-legend");
+  const top = Math.max(48, modes ? (modes.getBoundingClientRect().bottom - fr.top) / zoom + 8 : 52);
+  const bottom = Math.min(h - 28, legend ? (legend.getBoundingClientRect().top - fr.top) / zoom - 8 : h - 28);
+  const sideEl = document.querySelector(".pano-board > .side");
+  const sideLimit = sideEl ? (sideEl.getBoundingClientRect().left - fr.left) / zoom - 12 : w - 16;
+  function locals(list) {
+    return list.map(function (seed) {
+      const span = seed.querySelector("span");
+      return { seed: seed, lw: span ? span.offsetWidth : 48, lh: span ? Math.max(28, span.offsetHeight) : 28 };
+    });
+  }
+  function column(items, side, y0, y1) {
+    if (!items.length) return;
+    const room = Math.max(16, y1 - y0);
+    const tall = items.reduce(function (sum, it) { return sum + it.lh; }, 0);
+    let gap = 16;
+    if (items.length > 1) {
+      gap = Math.max(10, Math.min(22, (room - tall) / (items.length - 1)));
+    }
+    const widest = items.reduce(function (max, it) { return Math.max(max, it.lw); }, 48);
+    let xPx = side === "left" ? Math.min(w * 0.32, widest + 28) : sideLimit - widest - 8;
+    if (side === "left" && xPx < widest + 16) xPx = widest + 16;
+    const used = tall + gap * Math.max(0, items.length - 1);
+    let y = y0 + Math.max(0, (room - used) / 2);
+    items.forEach(function (it) {
+      const cy = y + it.lh / 2;
+      it.seed.style.left = (xPx / w * 100) + "%";
+      it.seed.style.top = (cy / h * 100) + "%";
+      y += it.lh + gap;
+    });
+  }
+  const lefts = locals(Array.prototype.slice.call(field.querySelectorAll(".seed.side-left")));
+  const rights = locals(Array.prototype.slice.call(field.querySelectorAll(".seed.side-right")));
+  const tops = locals(Array.prototype.slice.call(field.querySelectorAll(".seed.side-top")));
+  let bandTop = top;
+  if (tops.length) {
+    const rowH = tops.reduce(function (max, it) { return Math.max(max, it.lh); }, 28);
+    const gap = 22;
+    const total = tops.reduce(function (sum, it) { return sum + it.lw; }, 0) + gap * (tops.length - 1);
+    let x = Math.max(36, (w - total) / 2);
+    const dotY = top + rowH + 12;
+    tops.forEach(function (it) {
+      it.seed.style.left = ((x + it.lw / 2) / w * 100) + "%";
+      it.seed.style.top = (dotY / h * 100) + "%";
+      x += it.lw + gap;
+    });
+    bandTop = dotY + 22;
+  }
+  column(lefts, "left", bandTop, bottom);
+  column(rights, "right", bandTop, bottom);
+  const hub = field.querySelector(".seed.here");
+  if (hub) {
+    hub.style.left = "48%";
+    hub.style.top = (((bandTop + bottom) / 2) / h * 100) + "%";
+  }
+}
+
+function layoutFocusLabels(field) {
+  if (!field || !field.isConnected || !field.classList.contains("focus-net")) return;
+  if (field.classList.contains("point-focus")) {
+    packPointCards(field);
+    drawFocusEdges(field);
+    return;
+  }
+  const hub = field.querySelector(".seed.here");
+  const raw = field.querySelector("#focus-geo");
   if (!hub || !raw) return;
   if (!raw.dataset.base) raw.dataset.base = raw.textContent;
   raw.textContent = raw.dataset.base;
@@ -2707,11 +3040,36 @@ function layoutFocusLabels(field) {
     span.style.top = "";
     span.style.bottom = "";
     span.style.transform = "";
+    if (!field.classList.contains("ring")) return;
+    const cap = seed.classList.contains("here") ? "12em"
+      : (seed.classList.contains("side-top") || seed.classList.contains("side-bottom")) ? "8em" : "11em";
     span.style.width = "max-content";
-    span.style.maxWidth = seed.classList.contains("here") ? "none" : "16em";
-    span.style.whiteSpace = seed.classList.contains("here") ? "nowrap" : "normal";
+    span.style.maxWidth = cap;
+    span.style.whiteSpace = "normal";
+    if (seed.classList.contains("side-left")) span.style.textAlign = "right";
+    else if (seed.classList.contains("side-right")) span.style.textAlign = "left";
+    else span.style.textAlign = "center";
   });
-  drawFocusEdges();
+  packRingLabels(field);
+  try {
+    const moved = JSON.parse(raw.textContent);
+    const at = {};
+    field.querySelectorAll(".seed").forEach(function (seed) {
+      at[seed.getAttribute("data-nid")] = {
+        x: parseFloat(seed.style.left),
+        y: parseFloat(seed.style.top)
+      };
+    });
+    moved.forEach(function (edge) {
+      const a = at[edge.from];
+      const b = at[edge.to];
+      if (a) { edge.x1 = a.x; edge.y1 = a.y; }
+      if (b) { edge.x2 = b.x; edge.y2 = b.y; }
+    });
+    raw.textContent = JSON.stringify(moved);
+  } catch (err) { /* keep the authored line positions */ }
+  drawFocusEdges(field);
+  if (field.classList.contains("ring")) return;
   const zoom = state.mapZoom || 1;
   const box = field.getBoundingClientRect();
   const legend = field.querySelector(".field-legend");
@@ -2742,23 +3100,30 @@ function layoutFocusLabels(field) {
     span.style.bottom = "auto";
     span.style.transform = "none";
   }
-  function cardAt(seed, span, extra, slide) {
-    const host = seed.getBoundingClientRect();
-    const hx = (hubBox.left + hubBox.right) / 2;
-    const hy = (hubBox.top + hubBox.bottom) / 2;
-    const sx = (host.left + host.right) / 2;
-    const sy = (host.top + host.bottom) / 2;
-    let dx = sx - hx;
-    let dy = sy - hy;
-    const len = Math.hypot(dx, dy) || 1;
-    dx /= len;
-    dy /= len;
-    const w = span.offsetWidth;
-    const h = span.offsetHeight;
-    const dist = Math.hypot(host.width, host.height) / 2 + 8 + extra + Math.hypot(w, h) / 2;
-    const cx = sx + dx * dist - dy * slide;
-    const cy = sy + dy * dist + dx * slide;
-    return { left: cx - w / 2, top: cy - h / 2, right: cx + w / 2, bottom: cy + h / 2, dx: dx, dy: dy };
+  function readBox(el) {
+    const r = el.getBoundingClientRect();
+    return { left: r.left, top: r.top, right: r.right, bottom: r.bottom };
+  }
+  function sameBox(a, b) {
+    return Math.abs(a.left - b.left) < 1 && Math.abs(a.top - b.top) < 1;
+  }
+  function shiftBox(rect, dx, dy) {
+    return { left: rect.left + dx, top: rect.top + dy, right: rect.right + dx, bottom: rect.bottom + dy };
+  }
+  function edgeGap(seedBox, label) {
+    const sx = (seedBox.left + seedBox.right) / 2;
+    const sy = (seedBox.top + seedBox.bottom) / 2;
+    const tx = Math.max(label.left, Math.min(sx, label.right));
+    const ty = Math.max(label.top, Math.min(sy, label.bottom));
+    const dx = tx - sx;
+    const dy = ty - sy;
+    const dist = Math.hypot(dx, dy);
+    if (dist < 1) return 0;
+    const hw = (seedBox.right - seedBox.left) / 2;
+    const hh = (seedBox.bottom - seedBox.top) / 2;
+    const ex = Math.abs(dx) > 0.001 ? hw / (Math.abs(dx) / dist) : 1e9;
+    const ey = Math.abs(dy) > 0.001 ? hh / (Math.abs(dy) / dist) : 1e9;
+    return dist - Math.min(ex, ey);
   }
   function clampRect(rect) {
     const w = rect.right - rect.left;
@@ -2779,36 +3144,69 @@ function layoutFocusLabels(field) {
     return !placed.some(function (other) { return overlap(rect, other); });
   }
   const placed = [];
+  const leaders = [];
   const hubSpan = hub.querySelector("span");
   if (hubSpan) {
-    const w = hubSpan.offsetWidth;
-    const h = hubSpan.offsetHeight;
-    let left = (hubBox.left + hubBox.right) / 2 - w / 2;
-    let top = hubBox.bottom + 8;
-    const rect = clampRect({ left: left, top: top, right: left + w, bottom: top + h });
-    applySpan(hub, hubSpan, rect);
+    const natural = readBox(hubSpan);
+    const rect = fits(natural, placed) ? natural : clampRect(natural);
+    if (!sameBox(rect, natural)) applySpan(hub, hubSpan, rect);
     placed.push(rect);
   }
   field.querySelectorAll(".seed").forEach(function (seed) {
     if (seed === hub) return;
     const span = seed.querySelector("span");
     if (!span) return;
-    const tries = [];
-    for (let extra = 0; extra <= 200; extra += 16) tries.push([extra, 0]);
-    for (let slide = 16; slide <= 180; slide += 16) {
-      tries.push([8, slide]);
-      tries.push([8, -slide]);
+    const natural = readBox(span);
+    let chosen = natural;
+    if (!fits(natural, placed)) {
+      const side = seed.classList.contains("side-left") ? "left"
+        : seed.classList.contains("side-right") ? "right"
+        : seed.classList.contains("side-bottom") ? "bottom" : "top";
+      const outward = side === "left" ? [-1, 0] : side === "right" ? [1, 0] : side === "bottom" ? [0, 1] : [0, -1];
+      const alongX = side === "top" || side === "bottom";
+      const tries = [];
+      for (let extra = 1; extra <= 5; extra += 1) {
+        tries.push([outward[0] * extra * 18, outward[1] * extra * 18]);
+      }
+      for (let step = 1; step <= 2; step += 1) {
+        const slide = step * 12;
+        tries.push(alongX ? [slide, 0] : [0, slide]);
+        tries.push(alongX ? [-slide, 0] : [0, -slide]);
+      }
+      tries.some(function (delta) {
+        const moved = clampRect(shiftBox(natural, delta[0], delta[1]));
+        if (!fits(moved, placed)) return false;
+        chosen = moved;
+        return true;
+      });
+      if (sameBox(chosen, natural)) chosen = clampRect(natural);
     }
-    let chosen = null;
-    tries.forEach(function (pair) {
-      if (chosen) return;
-      const rect = clampRect(cardAt(seed, span, pair[0], pair[1]));
-      if (fits(rect, placed)) chosen = rect;
-    });
-    if (!chosen) chosen = clampRect(cardAt(seed, span, 0, 0));
-    applySpan(seed, span, chosen);
+    if (!sameBox(chosen, natural)) applySpan(seed, span, chosen);
+    if (edgeGap(seed.getBoundingClientRect(), chosen) > 10) leaders.push({ seed: seed, label: chosen });
     placed.push(chosen);
   });
+  const svg = field.querySelector("#focus-svg");
+  if (svg && leaders.length) {
+    svg.insertAdjacentHTML("beforeend", leaders.map(function (pair) {
+      const host = pair.seed.getBoundingClientRect();
+      const label = pair.label;
+      const sx = (host.left + host.right) / 2;
+      const sy = (host.top + host.bottom) / 2;
+      const tx = Math.max(label.left, Math.min(sx, label.right));
+      const ty = Math.max(label.top, Math.min(sy, label.bottom));
+      const dx = tx - sx;
+      const dy = ty - sy;
+      const dist = Math.hypot(dx, dy) || 1;
+      const ex = Math.abs(dx) > 0.001 ? (host.width / 2) / (Math.abs(dx) / dist) : 1e9;
+      const ey = Math.abs(dy) > 0.001 ? (host.height / 2) / (Math.abs(dy) / dist) : 1e9;
+      const edge = Math.min(ex, ey);
+      const x1 = sx + dx / dist * edge;
+      const y1 = sy + dy / dist * edge;
+      const px = function (v) { return ((v - box.left) / zoom).toFixed(1); };
+      const py = function (v) { return ((v - box.top) / zoom).toFixed(1); };
+      return '<path class="leader" d="M ' + px(x1) + " " + py(y1) + " L " + px(tx) + " " + py(ty) + '"/>';
+    }).join(""));
+  }
 }
 
 function bindMapView() {
@@ -2820,6 +3218,10 @@ function bindMapView() {
     field.dataset.laid = "1";
     let key = field.clientWidth + "x" + field.clientHeight;
     const watch = new ResizeObserver(function () {
+      if (!field.isConnected) {
+        watch.disconnect();
+        return;
+      }
       const next = field.clientWidth + "x" + field.clientHeight;
       if (next === key) return;
       key = next;
@@ -2919,6 +3321,11 @@ function bindMapView() {
     state.mapShowAll = !state.mapShowAll;
     render();
   };
+  const methodShape = document.getElementById("method-shape");
+  if (methodShape) methodShape.onclick = function () {
+    state.methodCards = !state.methodCards;
+    render();
+  };
 }
 
 function round1(n) { return Math.round(n * 10) / 10; }
@@ -2979,7 +3386,7 @@ function graphCourseField(net) {
     net.nodes.forEach(function (node) {
       if (node.kind !== "section" || !net.pos[node.id]) return;
       const at = net.pos[node.id];
-      const kps = net.kpsBySec[node.sec] || [];
+      const kps = shownKps(net.kpsBySec[node.sec]);
       kps.forEach(function (kp, index) {
         const angle = -Math.PI / 2 + index * (Math.PI * 2 / kps.length);
         nodes.push({
@@ -3201,7 +3608,7 @@ function graphChapterIslands(net, no) {
       id: "sec-" + id, section: id, sec: true, named: true, above: true,
       label: id + " " + sec[1], title: id + " " + sec[1], x: spot.x, y: spot.y
     });
-    const kps = net.kpsBySec[id] || [];
+    const kps = shownKps(net.kpsBySec[id]);
     const skills = (net.skillsBySec[id] || []).slice(0, 4);
     const satellites = kps.map(function (node) { return { kind: "kp", node: node }; })
       .concat(skills.map(function (node) { return { kind: "sk", node: node }; }));
@@ -3238,7 +3645,7 @@ function graphChapterIslands(net, no) {
 function graphSectionField(net, id) {
   const found = sectionParts(id);
   const chapter = courseByNo(found.no);
-  const kps = net.kpsBySec[id] || [];
+  const kps = shownKps(net.kpsBySec[id]);
   const skills = (net.skillsBySec[id] || []).slice(0, 3);
   const left = [];
   const right = [];
@@ -3279,42 +3686,166 @@ function graphSectionField(net, id) {
   "知识点、方法和章节均匀围在这一节周围。方法的箭头指向这一节。点知识点看它的前置和后置。", "mind");
 }
 
-function graphPointField(net, id) {
+function columnYs(count, top, bottom, step) {
+  const ys = [];
+  if (!count) return ys;
+  if (count === 1) {
+    ys.push(round1((top + bottom) / 2));
+    return ys;
+  }
+  const room = bottom - top;
+  const span = Math.min(room, (count - 1) * (step || room));
+  const start = top + (room - span) / 2;
+  for (let index = 0; index < count; index += 1) {
+    ys.push(round1(start + index * (span / (count - 1))));
+  }
+  return ys;
+}
+
+function methodRank(method) {
+  if (method.tier === "olympiad") return 2;
+  if (method.tier === "extend") return 1;
+  return 0;
+}
+
+function graphPointRing(net, id) {
   const node = net.byId[id];
   function related(ids) {
-    return (ids || []).filter(function (otherId) {
+    const rows = [];
+    (ids || []).forEach(function (otherId) {
       const other = net.byId[otherId];
-      return other && coreKp(other);
-    }).slice(0, 4);
+      if (other && coreKp(other)) rows.push(other);
+    });
+    return rows;
   }
-  const pres = related(net.pre[id]).map(function (otherId) {
-    const other = net.byId[otherId];
-    return { id: other.id, point: other.id, kp: true, named: true, math: true, label: kpLabel(other.title), title: other.title, line: "b", flow: "in" };
-  });
-  const posts = related(net.post[id]).map(function (otherId) {
-    const other = net.byId[otherId];
-    return { id: other.id, point: other.id, kp: true, named: true, math: true, label: kpLabel(other.title), title: other.title, line: "b", flow: "out" };
-  });
-  const chapter = courseByNo(node.ch);
-  const top = chapter ? [{
-    id: "ch-" + node.ch, openChapter: true, no: node.ch, lead: true, named: true,
-    label: "第" + node.ch + "章", title: "第" + node.ch + "章 " + chapter.title, line: "c", flow: "none"
-  }] : [];
-  const bottom = (net.skillByKp[id] || []).slice(0, 3).map(function (method) {
-    const extend = method.tier === "extend";
-    const olymp = method.tier === "olympiad";
-    return {
-      id: method.id, method: true, methodId: method.id, extend: extend, olymp: olymp, named: true,
-      on: state.mapSkill === method.id,
-      label: kpLabel(method.title), title: method.title, math: true,
-      line: olymp ? "oly" : extend ? "ext" : "a", flow: "in"
-    };
-  });
-  return spreadSides({
+  const pres = related(net.pre[id]);
+  const posts = related(net.post[id]);
+  const methods = (net.skillByKp[id] || []).slice().sort(function (a, b) { return methodRank(a) - methodRank(b); });
+  const centerX = 42;
+  const preCols = !pres.length ? 1 : pres.length > 4 ? Math.min(4, Math.ceil(pres.length / 2)) : pres.length;
+  const preRows = pres.length ? Math.ceil(pres.length / preCols) : 1;
+  const preTop = 24;
+  const sideTop = pres.length ? preTop + preRows * 16 + 8 : 28;
+  const centerY = round1((sideTop + 82) / 2);
+  const nodes = [{
     id: "c", point: id, kp: true, big: true, on: true,
-    label: kpLabel(node.title), title: node.title, math: true, x: 42, y: 48
-  }, { left: pres, right: posts, top: top, bottom: bottom },
-  "周围的点均匀排开。绿线是先修：前置的箭头指向这里，后置的箭头从这里指出去。蓝线是方法，箭头指向这个知识点。", "mind");
+    label: kpLabel(node.title), title: node.title, math: true, x: centerX, y: centerY
+  }];
+  const lines = [];
+  pres.forEach(function (other, index) {
+    const row = Math.floor(index / preCols);
+    const col = index % preCols;
+    const inRow = Math.min(preCols, pres.length - row * preCols);
+    const span = inRow <= 1 ? 0 : (inRow - 1) * 12;
+    let left = centerX - span / 2;
+    if (left < 28) left = 28;
+    if (left + span > 64) left = Math.max(28, 64 - span);
+    const x = inRow <= 1 ? centerX : round1(left + col * (span / (inRow - 1)));
+    nodes.push({
+      id: other.id, point: other.id, kp: true, named: true, math: true, side: "top",
+      label: kpLabel(other.title), title: other.title, x: x, y: preTop + row * 16
+    });
+    lines.push(["c", other.id, "b", "in"]);
+  });
+  columnYs(posts.length, sideTop, 82, 10).forEach(function (y, index) {
+    const other = posts[index];
+    nodes.push({
+      id: other.id, point: other.id, kp: true, named: true, math: true, side: "left",
+      label: kpLabel(other.title), title: other.title, x: 18, y: y
+    });
+    lines.push(["c", other.id, "a", "out"]);
+  });
+  columnYs(methods.length, sideTop, 82, 11).forEach(function (y, index) {
+    const method = methods[index];
+    nodes.push({
+      id: method.id, method: true, methodId: method.id,
+      extend: method.tier === "extend", olymp: method.tier === "olympiad",
+      named: true, math: true, side: "right", on: state.mapSkill === method.id,
+      label: kpLabel(method.title), title: method.title, x: 58, y: y
+    });
+    lines.push(["c", method.id, "m", "in"]);
+  });
+  return dotField(nodes, lines, "上面是前置，左边是后置，右边是方法。", "", "zones");
+}
+
+function graphPointField(net, id) {
+  state.pointFocus = true;
+  return state.methodCards ? graphPointCards(net, id) : graphPointRing(net, id);
+}
+
+function graphPointCards(net, id) {
+  const node = net.byId[id];
+  function cores(ids) {
+    const rows = [];
+    (ids || []).forEach(function (otherId) {
+      const other = net.byId[otherId];
+      if (coreKp(other)) rows.push(other);
+    });
+    return rows;
+  }
+  const pres = cores(net.pre[id]);
+  const posts = cores(net.post[id]);
+  const methods = (net.skillByKp[id] || []).slice().sort(function (a, b) { return methodRank(a) - methodRank(b); });
+  const cat = catalog();
+  let thought = "";
+  methods.some(function (method) {
+    const linked = cat && cat.thoughtBySkill[method.id];
+    if (linked && linked[0] && linked[0].title) { thought = linked[0].title; return true; }
+    return false;
+  });
+  if (!thought) {
+    const rec = kpRecord(node);
+    const named = rec && rec.thoughts && rec.thoughts[0];
+    if (named && named.name) thought = named.name;
+  }
+  const nodes = [];
+  const lines = [];
+  function put(item, x, y) {
+    item.x = x;
+    item.y = y;
+    nodes.push(item);
+  }
+  const preRows = Math.max(1, Math.ceil(pres.length / 3));
+  const sideTop = pres.length ? 16 + preRows * 12 : 22;
+  const centerX = methods.length ? 44 : 40;
+  const centerY = (sideTop + 84) / 2;
+  put({
+    id: "c", point: id, kp: true, big: true, on: true, here: true, named: true, math: true,
+    label: kpLabel(node.title), title: node.title
+  }, centerX, round1(centerY));
+  pres.forEach(function (other, index) {
+    const row = Math.floor(index / 3);
+    const rowItems = pres.slice(row * 3, row * 3 + 3);
+    const col = index % 3;
+    const span = rowItems.length <= 1 ? 0 : Math.min(18, 8 * (rowItems.length - 1));
+    const x = rowItems.length <= 1 ? centerX : round1(centerX - span / 2 + col * (span / (rowItems.length - 1)));
+    put({
+      id: other.id, point: other.id, kp: true, named: true, math: true, side: "top",
+      label: kpLabel(other.title), title: other.title
+    }, x, 14 + row * 12);
+    lines.push(["c", other.id, "b", "in"]);
+  });
+  columnYs(posts.length, sideTop, 84, 9).forEach(function (y, index) {
+    const other = posts[index];
+    put({
+      id: other.id, point: other.id, kp: true, named: true, math: true, side: "left",
+      label: kpLabel(other.title), title: other.title
+    }, 18, y);
+    lines.push(["c", other.id, "a", "out"]);
+  });
+  columnYs(methods.length, sideTop, 84, 10).forEach(function (y, index) {
+    const method = methods[index];
+    put({
+      id: method.id, method: true, methodId: method.id,
+      extend: method.tier === "extend", olymp: method.tier === "olympiad",
+      named: true, math: true, on: state.mapSkill === method.id,
+      label: kpLabel(method.title), title: method.title, side: "right"
+    }, 66, y);
+    lines.push(["c", method.id, "m", "in"]);
+  });
+  let note = "上面是先要会，左边是接着学，右边是方法。每条线都连到当前这个知识点。";
+  if (thought) note += "思想：" + thought + "。";
+  return dotField(nodes, lines, note, "", "point");
 }
 
 function ensureSectionId(net, sec) {
@@ -3517,11 +4048,11 @@ function panoramaSide() {
     const found = sectionParts(state.mapSection);
     const title = found.sec ? found.sec[0] + " " + found.sec[1] : state.mapSection;
     const net = ensureNet();
-    const kps = net && net.kpsBySec[state.mapSection];
+    const kps = shownKps(net && net.kpsBySec[state.mapSection]);
     const secNode = sectionNode(state.mapSection);
     const study = secNode ? sectionStudy(secNode) : { loading: false, lead: "", page: "" };
     const names = (kps || []).slice(0, 8).map(function (kp) {
-      return '<p><button type="button" class="link" data-point="' + esc(kp.id) + '">' + mathHtml(kpLabel(kp.title)) + "</button></p>";
+      return '<p><button type="button" class="link' + methodTierClass(kp.tier) + '" data-point="' + esc(kp.id) + '">' + mathHtml(kpLabel(kp.title)) + "</button></p>";
     }).join("");
     const body = study.loading
       ? '<p class="muted">正在打开这一节的说明。</p>'
@@ -3535,7 +4066,7 @@ function panoramaSide() {
     const net = ensureNet();
     const list = SECTIONS[chapter.no] || [];
     const rows = list.map(function (sec) {
-      const kps = net && net.kpsBySec[sec[0]] ? net.kpsBySec[sec[0]].length : 0;
+      const kps = net && net.kpsBySec[sec[0]] ? shownKps(net.kpsBySec[sec[0]]).length : 0;
       const skills = net && net.skillsBySec[sec[0]] ? net.skillsBySec[sec[0]].length : 0;
       return '<button type="button" data-open-section="' + esc(sec[0]) + '"><b>' + esc(sec[0] + " " + sec[1]) + "</b><span>" +
         kps + " 知识 · " + skills + " 方法</span></button>";
@@ -3547,7 +4078,7 @@ function panoramaSide() {
       '<button type="button" class="link" id="back-layer">回到分层</button></aside>';
   }
   return '<aside class="side"><div class="row"><h2>第 ' + chapter.no + " 章 " + esc(chapter.title) + "</h2></div>" +
-    "<p>默认只画 26 章，章名带第几章。图上的「全部点」打开后，才画出节和知识点。</p>" +
+    "<p>点一章，先看这一章的节。</p><p>默认只画 26 章。不打开「全部点」时，画面上仍然只有章。</p>" +
     (chapter.no === 12 ? '<button class="btn" id="open-chapter">打开这一章</button>' : "") +
     '<button type="button" class="link" id="back-layer">回到分层</button></aside>';
 }
@@ -3621,7 +4152,9 @@ function layerScope() {
   })[0] : null;
   const sections = chapter ? (cat.secsByCh[key] || []) : [];
   const sec = sections.filter(function (node) { return node.sec === state.mapSection; })[0] || null;
-  const points = sec ? (cat.kpsBySec[sec.sec] || []).slice() : [];
+  const points = sec ? (cat.kpsBySec[sec.sec] || []).filter(function (node) {
+    return node.vol === sec.vol && kpShown(node);
+  }) : [];
   const net = ensureNet();
   const methods = [];
   const seenSkill = {};
@@ -3701,7 +4234,7 @@ function ideaCard() {
   });
   const methodHtml = methods.length
     ? "<p><strong>这一节里这样用</strong></p>" + methods.slice(0, 6).map(function (skill) {
-      return '<p><button type="button" class="link" data-method="' + esc(skill.id) + '">' + mathHtml(kpLabel(skill.title)) + "</button></p>";
+      return '<p><button type="button" class="link' + methodTierClass(skill.tier) + '" data-method="' + esc(skill.id) + '" title="' + methodTierName(skill.tier) + '">' + mathHtml(kpLabel(skill.title)) + "</button></p>";
     }).join("")
     : "<p>这一节的方法还没有标到这个思想上。</p>";
   return '<aside class="side"><div class="row"><h2>' + esc(thought.title) + '</h2><button class="link" id="map-close">关闭</button></div>' +
@@ -3713,13 +4246,47 @@ function layerNodeButtons(nodes, attr, selected, bright) {
     const on = selected === node.id || selected === node.vol || selected === node.title ? " on" : "";
     const dim = bright && !bright(node) ? " dim" : "";
     const value = attr === "data-book" ? node.vol : node.id;
-    return '<button type="button" class="link' + on + dim + '" ' + attr + '="' + esc(value) + '">' + mathHtml(kpLabel(node.title)) + "</button>";
+    return '<button type="button" class="link' + methodTierClass(node.tier) + on + dim + '" ' + attr + '="' + esc(value) + '">' + mathHtml(kpLabel(node.title)) + "</button>";
   }).join("");
+}
+
+/** Knowledge column. Neighbors are labeled only while a point is selected. */
+function layerMarkedPoint(node, role, bright) {
+  const on = state.mapPoint === node.id ? " on" : "";
+  const dim = bright && !bright(node) ? " dim" : "";
+  return '<button type="button" class="link' + methodTierClass(node.tier) + on + dim + '" data-point="' + esc(node.id) + '">' +
+    mathHtml(kpLabel(node.title)) + "<span>" + role + "</span></button>";
+}
+
+function layerKnowledge(sets, bright) {
+  if (!sets.sec) return { nodes: [], html: '<p class="muted">先选一节。</p>' };
+  const net = ensureNet();
+  const selected = state.mapPoint && net && net.byId[state.mapPoint];
+  if (!selected || selected.kind !== "knowledge_point") {
+    if (!sets.points.length) return { nodes: [], html: '<p class="muted">这一节没有单独列出</p>' };
+    return { nodes: sets.points, html: layerNodeButtons(sets.points, "data-point", state.mapPoint || "", bright) };
+  }
+  function cores(ids) {
+    const rows = [];
+    (ids || []).forEach(function (id) {
+      const node = net.byId[id];
+      if (coreKp(node)) rows.push(node);
+    });
+    return rows;
+  }
+  const pres = cores(net.pre[selected.id]);
+  const posts = cores(net.post[selected.id]);
+  let html = "";
+  pres.forEach(function (node) { html += layerMarkedPoint(node, "先要会", bright); });
+  html += layerMarkedPoint(selected, "当前", bright);
+  posts.forEach(function (node) { html += layerMarkedPoint(node, "接着学", bright); });
+  return { nodes: pres.concat([selected], posts), html: html };
 }
 
 /** Layered graph. The view switch stays above the point card. */
 function viewMap() {
   state.nav = "map";
+  state.pointFocus = false;
   if (hashParam("load") === "1") {
     return '<h1>图谱</h1><div class="seg">' + modeButton("layer", "分层") + modeButton("panorama", "全景") +
       '</div><section class="card"><p>正在打开……</p></section>';
@@ -3753,7 +4320,7 @@ function viewMap() {
     const sectionHtml = sets.chapter
       ? (sets.sections.length ? sets.sections.map(function (sec) {
         const on = state.mapSection === sec.sec ? " on" : "";
-        const count = ((catalog() && catalog().kpsBySec[sec.sec]) || []).length;
+        const count = shownKps((catalog() && catalog().kpsBySec[sec.sec]) || []).filter(function (node) { return node.vol === sec.vol; }).length;
         return '<button type="button" class="link' + on + '" data-layer-sec="' + esc(sec.sec) + '"><b>' + esc(sec.title) + '</b><span>' + count + " 个知识点</span></button>";
       }).join("") : '<p class="muted">这一章还没有节。</p>')
       : '<p class="muted">先选一章。</p>';
@@ -3763,21 +4330,28 @@ function viewMap() {
       if (!literacyNode() || !catNow || !netNow) return true;
       return ((netNow.skillByKp[kp.id]) || []).some(function (skill) { return skillMatchesLiteracy(skill, catNow); });
     }
-    const pointHtml = sets.sec
-      ? (sets.points.length ? layerNodeButtons(sets.points, "data-point", state.mapPoint || "", pointOn) : '<p class="muted">这一节在图谱里还没有知识点。</p>')
-      : '<p class="muted">先选一节。</p>';
+    const knowledge = layerKnowledge(sets, pointOn);
+    const pointHtml = (sets.sec ? kpBandSwitch() + hiddenBandNote(
+      ((catNow && catNow.kpsBySec[sets.sec.sec]) || []).filter(function (node) { return node.vol === sets.sec.vol && node.tier === "extend"; }).length,
+      ((catNow && catNow.kpsBySec[sets.sec.sec]) || []).filter(function (node) { return node.vol === sets.sec.vol && node.tier === "olympiad"; }).length
+    ) : "") + knowledge.html;
+    const usedByPoint = {};
+    if (state.mapPoint && netNow) {
+      (netNow.skillByKp[state.mapPoint] || []).forEach(function (skill) { usedByPoint[skill.id] = 1; });
+    }
     const methodHtml = sets.sec
       ? (sets.methods.length ? sets.methods.map(function (skill) {
         const on = state.mapMethod === skill.id ? " on" : "";
         const dim = literacyNode() && catNow && !skillMatchesLiteracy(skill, catNow) ? " dim" : "";
-        return '<button type="button" class="link' + on + dim + '" data-method="' + esc(skill.id) + '">' + mathHtml(kpLabel(skill.title)) + "</button>";
-      }).join("") : '<p class="muted">这一节在图谱里还没有挂方法。</p>')
+        const tag = usedByPoint[skill.id] ? "<span>这个点用到</span>" : "";
+        return '<button type="button" class="link' + methodTierClass(skill.tier) + on + dim + '" data-method="' + esc(skill.id) + '" title="' + methodTierName(skill.tier) + '">' + mathHtml(kpLabel(skill.title)) + tag + "</button>";
+      }).join("") : '<p class="muted">这一节没有单独列出</p>')
       : '<p class="muted">先选一节。</p>';
     const ideaHtml = sets.sec
-      ? (sets.ideas.length ? layerNodeButtons(sets.ideas, "data-idea", state.mapIdea) : '<p class="muted">这一节的方法还没有标思想。</p>')
+      ? (sets.ideas.length ? layerNodeButtons(sets.ideas, "data-idea", state.mapIdea) : '<p class="muted">这一节没有单独列出</p>')
       : '<p class="muted">先选一节。</p>';
     const columns = layerCol("节", sets.sections, sectionHtml, "slim") +
-      layerCol("知识", sets.points, pointHtml, "main-col") +
+      layerCol("知识", knowledge.nodes, pointHtml, "main-col") +
       layerCol("方法", sets.methods, methodHtml, "main-col") +
       layerCol("思想", sets.ideas, ideaHtml, "main-col");
     body = '<div class="map-page map-fill' + (state.mapSideOpen === false ? " side-collapsed" : "") + '"><div class="board pano-board"><div class="float-modes">' +
@@ -3831,8 +4405,11 @@ function viewBrief() {
     return '<h1>这次是测试</h1><section class="card"><p>这几个知识点暂时没有能测的题。</p>' +
       '<button class="btn" id="to-kp">去看这个知识点</button></section>';
   }
+  const scopeNote = scope === "chapter"
+    ? "<p>这次只测 12.1 的 6 道示意题。</p>"
+    : '<p class="muted">这一次 ' + count + " 道示意题。</p>";
   return '<h1>这次是测试</h1><section class="card"><p>不能看提示，交卷后才知道对错。做的过程中可以改答案。</p>' +
-    '<p class="muted">这一次 ' + count + " 道示意题。</p>" +
+    scopeNote +
     '<div class="row"><button class="btn" id="begin-test">开始测</button><button class="btn secondary" id="skip-test">先不测</button></div></section>';
 }
 
@@ -3865,7 +4442,8 @@ function viewPractice() {
   const item = questionById(state.queue[state.index]);
   if (!item) return '<h1>这一组没有题</h1><button class="btn" id="to-today">回到今天</button>';
   const title = state.mode === "test"
-    ? "测试 · 第 " + (state.index + 1) + " / " + state.queue.length + " 题 · 不能看提示"
+    ? (state.testScope === "chapter" ? "这次只测 12.1 的 6 道示意题 · " : "测试 · ") +
+      "第 " + (state.index + 1) + " / " + state.queue.length + " 题 · 不能看提示"
     : state.mode === "wrong" ? "只练错的" : state.mode === "skip" ? "把跳过的做完" : (state.practiceTitle || "12.1 三角形 · 练习");
   const openSkips = state.skippedIds.filter(function (id) { return !isFinal(state.setMarks[id]); });
   const skipNote = openSkips.length ? " · 跳过 " + openSkips.length : "";
@@ -3899,6 +4477,8 @@ function viewPractice() {
   }
   const processBox = item.kind === "open" ? "" : '<button type="button" class="link" id="toggle-process">写过程（可不写）</button>' +
     (state.processOpen ? '<textarea id="process" class="process">' + esc(state.processes[item.id] || "") + "</textarea>" : "");
+  const processInCard = state.mode === "test" ? "" : processBox;
+  const processBelow = state.mode === "test" && processBox ? '<div class="process-slot">' + processBox + "</div>" : "";
   let feedback = "";
   if (item.kind === "open" && state.revealed && state.mode !== "test") {
     if (!isFinal(state.setMarks[item.id])) {
@@ -3956,7 +4536,8 @@ function viewPractice() {
   return '<div class="practice-fit"><div class="head"><button class="link" id="leave">‹ 返回</button><div><strong>' + title +
     "</strong>" + progress + "</div>" + (state.mode === "test" ? "" : '<button class="btn secondary" id="finish">交卷</button>') + "</div>" +
     '<div class="work"><section class="card"><p class="stem">' + mathHtml(item.stem) + "</p>" + answerBlock +
-    processBox + feedback + '</section><aside class="card hint-side"><h2>' + (state.mode === "test" ? "题号" : "提示") + "</h2>" + hintBlock + "</aside></div>" +
+    processInCard + feedback + '</section><aside class="card hint-side"><h2>' + (state.mode === "test" ? "题号" : "提示") + "</h2>" + hintBlock + "</aside></div>" +
+    processBelow +
     '<div class="dock"><button class="btn" id="submit">' + primary + "</button>" +
     (canSkip ? '<button class="btn secondary" id="skip">先跳过</button>' : "") +
     (state.mode === "test" ? '<button class="btn secondary" id="skip">先跳过</button>' : "") + "</div></div>";
@@ -4219,8 +4800,8 @@ function viewRecord() {
 function viewEvidence() {
   state.nav = "record";
   return '<div class="record-page"><h1>关于这些数据</h1><section class="card">' +
-    "<p>这些数来自这台平板上做过的示意题。换设备或清理浏览器就看不到了。</p>" +
-    "<p>知识之间的关系还是草稿，不能当成已经核对过的教材依据。</p>" +
+    "<p>作答存在这台设备上。换设备或清理浏览器就看不到了。</p>" +
+    "<p>教材定义不靠这次作答。知识之间的关系还是草稿，教材里的定义不是临时写的。</p>" +
     '<button type="button" class="link" id="to-record">回到我的记录</button></section></div>';
 }
 
@@ -4376,7 +4957,7 @@ function bindHits(box) {
       const vol = button.getAttribute("data-book-vol");
       const ch = button.getAttribute("data-book-ch");
       const sec = button.getAttribute("data-book-sec");
-      state.query = "";
+      state.searchOpen = false;
       if (vol) state.bookVol = vol;
       if (vol && ch) {
         state.volId = vol;
@@ -4562,6 +5143,12 @@ function bind() {
   if (backSec) backSec.onclick = function () { go("section"); };
   const backToday = document.getElementById("back-today");
   if (backToday) backToday.onclick = function () { go("today"); };
+  document.querySelectorAll("[data-kp-band]").forEach(function (button) {
+    button.onclick = function () {
+      state.kpBand = button.getAttribute("data-kp-band") || "core";
+      render();
+    };
+  });
   document.querySelectorAll("[data-kp-name]").forEach(function (button) {
     button.onclick = function () {
       state.kpName = button.getAttribute("data-kp-name");
@@ -4759,12 +5346,11 @@ function bind() {
   const backSection = document.getElementById("back-section");
   if (backSection) backSection.onclick = function () {
     resetMapView();
+    rememberPointSection();
     state.mapPoint = null;
     state.mapSkill = "";
     state.mapMethod = "";
     state.mapIdea = "";
-    state.mapSection = state.mapSection || "12.1";
-    state.mapLevel = "chapter";
     state.mapCard = true;
     render();
   };
@@ -4777,18 +5363,23 @@ function bind() {
       if (state.mapPoint === name && !state.mapCard) {
         state.mapCard = true;
       } else if (state.mapPoint === name) {
+        rememberPointSection();
         state.mapPoint = null;
         state.mapSkill = "";
         state.mapMethod = "";
         state.mapIdea = "";
-        state.mapCard = false;
+        state.mapCard = true;
       } else if (node && node.kind === "knowledge_point") {
         state.mapPoint = name;
         state.mapSkill = "";
         state.mapMethod = "";
         state.mapIdea = "";
         state.mapSection = node.sec || state.mapSection;
-        state.mapNetNo = node.ch || state.mapNetNo;
+        state.mapNetNo = Number(node.ch) || state.mapNetNo;
+        if (node.vol && node.ch) {
+          state.mapBook = node.vol;
+          state.mapChapter = node.vol + "-" + node.ch;
+        }
         state.mapLevel = "chapter";
         state.mapCard = true;
       } else {
@@ -4998,9 +5589,19 @@ function bind() {
   if (query) {
     query.oninput = function () {
       state.query = query.value;
+      state.searchOpen = !!state.query.trim();
       const hits = document.getElementById("hits");
       if (!hits) return;
-      hits.hidden = !state.query.trim();
+      hits.hidden = !state.searchOpen;
+      hits.innerHTML = state.searchOpen ? searchHits(state.query) : "";
+      bindHits(hits);
+    };
+    query.onfocus = function () {
+      if (!state.query.trim()) return;
+      state.searchOpen = true;
+      const hits = document.getElementById("hits");
+      if (!hits) return;
+      hits.hidden = false;
       hits.innerHTML = searchHits(state.query);
       bindHits(hits);
     };
@@ -5668,7 +6269,8 @@ function topBar() {
   return '<div class="topbar">' + backBtn + '<div class="crumbs">' + crumbBar() + "</div>" +
     '<div class="search"><input id="q" type="search" placeholder="搜知识点、章节" autocomplete="off" value="' +
     (state.query || "").replace(/"/g, "&quot;") + '"><div id="hits" class="hits"' +
-    (state.query ? "" : " hidden") + ">" + searchHits(state.query) + "</div></div></div>";
+    (state.searchOpen && (state.query || "").trim() ? "" : " hidden") + ">" +
+    (state.searchOpen && (state.query || "").trim() ? searchHits(state.query) : "") + "</div></div></div>";
 }
 
 /** Paint the current route. */
@@ -5791,7 +6393,10 @@ function onHash() {
   }
   if (state.route === "review" && name !== "review") state.testBack = "";
   if (name === "record" && state.route !== "record") noteRecordFrom(state.route);
-  if (name !== state.route) rememberScroll();
+  if (name !== state.route) {
+    state.searchOpen = false;
+    rememberScroll();
+  }
   state.route = name;
   if (name === "map") {
     const point = hashParam("point");

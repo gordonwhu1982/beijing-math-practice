@@ -225,7 +225,10 @@ def main():
                 for r in read_jsonl(os.path.join(vdir, fn)):
                     rubric.setdefault(r["qid"], []).append(r)
     jp = read_json(os.path.join(BUILD, "questions", "judge_prep.json"))
-    specs = load_specs(args.vol)
+    specs = {}
+    for vol_name in sorted(os.listdir(qroot)):
+        if os.path.isdir(os.path.join(qroot, vol_name)):
+            specs.update(load_specs(vol_name))
     # 题→知识点映射：content/questions/<册>/*.kp.jsonl（只收高置信 auto 档，见 questions_kp_map.py）
     q_kp = {}
     for p in sorted(glob.glob(os.path.join(CONTENT, "questions", "*", "*.kp.jsonl"))):
@@ -389,6 +392,8 @@ def main():
             if d:
                 item["kp_type"] = d.get("kp_type")
                 item["deeper"] = True
+                if d.get("tier") and d.get("tier") != "core":
+                    item["tier"] = d["tier"]
             if kp_qn.get(n["id"]):
                 item["qn"] = kp_qn[n["id"]]
             if kp_cpstd.get(n["id"]):
@@ -529,7 +534,7 @@ def main():
     def kp_payload(kid):
         n = kps[kid]
         d = details.get(kid) or {}
-        return {
+        payload = {
             "uid": kid, "name": n["title"], "kp_type": d.get("kp_type"),
             "definition": d.get("definition"), "conditions": d.get("conditions"),
             "boundaries": d.get("boundaries"), "objectives": d.get("objectives"),
@@ -553,6 +558,9 @@ def main():
                          "kind": _a["kind"], "why": _a["why"]}
                         for _a in kp_lat.get(kid, [])],
         }
+        if d.get("tier") and d.get("tier") != "core":
+            payload["tier"] = d["tier"]
+        return payload
 
     def skill_payload(sid):
         s = skills[sid]
