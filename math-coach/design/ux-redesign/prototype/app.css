@@ -1272,6 +1272,32 @@ textarea.process {
 .q-row em { flex: none; font-style: normal; color: var(--c-primary); font-size: var(--fs-small); margin-top: 4px; }
 .q-row > span { display: block; min-width: 0; white-space: normal; overflow: visible; }
 .method-page .katex { font-size: 1.05em; }
+.walk { margin: 0; padding: 4px 0 4px 16px; border-left: 3px solid var(--c-primary); }
+.walk h2, .walk h3 { margin: 0 0 8px; }
+.walk h3 { font-size: var(--fs-h3); font-weight: 650; }
+.walk .stem { margin: 0 0 12px; }
+.walk-note p { margin: 0 0 8px; line-height: 1.65; max-width: 68ch; }
+.drill-list { display: flex; flex-direction: column; }
+.drill-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  width: 100%;
+  margin: 0;
+  padding: 12px 0;
+  border: 0;
+  border-top: 1px solid var(--c-line);
+  border-radius: 0;
+  background: transparent;
+  color: var(--c-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.drill-row:last-child { border-bottom: 1px solid var(--c-line); }
+.drill-row em { flex: none; width: 2.5em; font-style: normal; color: var(--c-primary); font-size: var(--fs-small); line-height: 1.5; }
+.drill-row > span { flex: 1; min-width: 0; line-height: 1.5; }
+.drill-row:hover, .drill-row:focus-visible { background: var(--c-primary-soft); }
 .ex-card { padding: 8px 0 12px; border-top: 1px solid var(--c-line); }
 .ex-card:first-of-type { border-top: 0; }
 .ex-card summary { cursor: pointer; color: var(--c-primary); }
@@ -1402,3 +1428,6 @@ textarea.process {
 .point-focus .seed.here > span { border: 2px solid #14324f; }
 .point-focus .seed.sec > span,
 .point-focus .seed.lead > span { border-radius: 999px; padding-top: 2px; padding-bottom: 2px; }
+.figbox { margin: 8px 0 2px; padding: 8px 8px 2px; background: #f8fafc; border: 1px solid var(--line, #e2e8f0); border-radius: 12px; }
+.figbox svg { width: 100%; max-width: 440px; height: auto; display: block; margin: 0 auto; background: #fff; border-radius: 8px; }
+.figbox figcaption { font-size: var(--fs-small); line-height: 1.45; color: var(--ink, #334155); margin: 8px 4px 6px; }

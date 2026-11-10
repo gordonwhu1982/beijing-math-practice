@@ -150,6 +150,7 @@ const state = {
   mapSideOpen: true,
   mapSkill: "",
   methodId: "",
+  drillKind: "kp",
   qId: "",
   qVol: "",
   qNo: "",
@@ -196,29 +197,87 @@ function questionById(id) {
   return BANK[id] || QUESTIONS.find(function (item) { return item.id === id; });
 }
 
-/** Turn real choice rows into questions this page can mark. Other forms stay out. */
+/** A fill that is one short plain value can be marked by text. Proofs stay for the student. */
+function plainFill(row) {
+  const spec = row && row.spec;
+  if (!spec || spec.type !== "exact_value" || !spec.values || spec.values.length !== 1) return "";
+  const raw = String(spec.values[0].raw || "").trim();
+  if (!raw || raw.length > 24 || raw.indexOf("\\") >= 0 || raw.indexOf("$") >= 0) return "";
+  return raw;
+}
+
+/** One bank row: choice when the key is known, short fill when the value is plain, otherwise self-check. */
+function rememberRow(row) {
+  const id = "bank-" + row.id;
+  const kp = (row.kps && row.kps[0] && row.kps[0].name) || "";
+  const fill = row.form === "fill" ? plainFill(row) : "";
+  if (row.form === "choice" && row.opts && row.opts.list && row.opts.list.length && row.opts.key) {
+    const options = row.opts.list.map(function (opt) { return opt.text; });
+    const answer = row.opts.list.findIndex(function (opt) { return opt.key === row.opts.key; });
+    if (answer >= 0 && options.length) {
+      BANK[id] = { id: id, kind: "choice", stem: row.stem, options: options, answer: answer, kp: kp, explain: row.ans || "" };
+      return id;
+    }
+  }
+  if (fill) {
+    BANK[id] = { id: id, kind: "blank", stem: row.stem, answer: fill, kp: kp, explain: row.ans || "" };
+    return id;
+  }
+  let stem = row.stem || "";
+  if (row.form === "choice" && row.opts && row.opts.list && row.opts.list.length) {
+    stem += " " + row.opts.list.map(function (opt) {
+      return (opt.key ? opt.key + ". " : "") + (opt.text || "");
+    }).join("　");
+  }
+  BANK[id] = { id: id, kind: "open", stem: stem, answer: row.ans || "", kp: kp, explain: row.note || "" };
+  return id;
+}
+
+/** Every question with a stem can be practiced. Proofs and long answers are self-checked. */
 function gradableFrom(pack, uid) {
   const rows = (pack && pack.items) || [];
   const ids = [];
   rows.forEach(function (row) {
-    if (ids.length >= 6) return;
-    if (row.form !== "choice" || !row.opts || !row.opts.list || !row.opts.key) return;
+    if (!row || !row.stem) return;
     if (uid && !((row.kps || []).some(function (kp) { return kp.uid === uid; }))) return;
-    const options = row.opts.list.map(function (opt) { return opt.text; });
-    const answer = row.opts.list.findIndex(function (opt) { return opt.key === row.opts.key; });
-    if (answer < 0 || !options.length) return;
-    const id = "bank-" + row.id;
-    BANK[id] = {
-      id: id,
-      stem: row.stem,
-      options: options,
-      answer: answer,
-      kp: (row.kps && row.kps[0] && row.kps[0].name) || "",
-      explain: row.ans || ""
-    };
-    ids.push(id);
+    ids.push(rememberRow(row));
   });
   return ids;
+}
+
+/** Open one stored question. The section file may still be loading. */
+function openBankQuestion(vol, sec, qid, title, source) {
+  if (!vol || !sec || !qid) return;
+  const from = source || "kp";
+  state.practiceVol = vol;
+  state.practiceNo = sec;
+  state.practiceKp = "";
+  state.practiceTitle = title || (sec + " · 这一题");
+  const pack = ensureItems(vol, sec);
+  if (!pack) {
+    state.pendingOpen = { vol: vol, sec: sec, qid: qid, title: state.practiceTitle, source: from };
+    state.flash = "正在打开这道题";
+    render();
+    return;
+  }
+  state.pendingOpen = null;
+  const ids = gradableFrom(pack).filter(function (id) { return id === "bank-" + qid; });
+  if (!ids.length) {
+    state.flash = "这道题的原文还没放进这一节。";
+    render();
+    return;
+  }
+  startQueue(ids, "single", from);
+}
+
+function consumePendingOpen() {
+  const pending = state.pendingOpen;
+  if (!pending) return false;
+  const pack = window.MC && window.MC["items:" + pending.vol + "-" + pending.sec];
+  if (!pack) return false;
+  state.pendingOpen = null;
+  openBankQuestion(pending.vol, pending.sec, pending.qid, pending.title, pending.source);
+  return true;
 }
 
 /** Refill choice questions after a reload. The handwritten set does not use this. */
@@ -596,6 +655,7 @@ function homeRoute() {
     if (state.testScope === "chapter") return "chapter";
     return "review";
   }
+  if (state.source === "drill") return "drill";
   if (state.source === "review" || state.source === "kp") return state.source === "kp" ? "kp" : "review";
   if (state.source === "section" || state.source === "chapter" || state.source === "map") return "section";
   return "today";
@@ -704,10 +764,22 @@ function resumeLabel(source) {
 
 /** Knowledge points and methods that belong to this volume's section, not another book with the same number. */
 function sectionHeading(sec) {
+  if (sec && sec.sec === "12.M") return "专题 · 比例、面积和模型";
   const title = String(sec && sec.title || "");
   if (!sec) return "";
   if (title.indexOf(String(sec.sec)) === 0) return title;
   return sec.sec + " " + title;
+}
+
+/** A section whose points are all above the current switch stays out of the textbook lists. */
+function sectionListed(sec) {
+  if (!sec) return false;
+  const cat = catalog();
+  const all = ((cat && cat.kpsBySec[sec.sec]) || []).filter(function (node) {
+    return node.vol === sec.vol;
+  });
+  if (!all.length) return true;
+  return all.some(kpShown);
 }
 
 function kpShown(node) {
@@ -750,7 +822,7 @@ function todayPick() {
   const vol = state.todayVol || "801";
   const chapters = cat ? (cat.chByVol[vol] || []) : [];
   const chapter = chapters.filter(function (item) { return String(item.ch) === String(state.todayChapter); })[0] || chapters[0] || null;
-  const secs = chapter ? (cat.secsByCh[chapter.vol + "-" + chapter.ch] || []) : [];
+  const secs = (chapter ? (cat.secsByCh[chapter.vol + "-" + chapter.ch] || []) : []).filter(sectionListed);
   const sec = secs.filter(function (item) { return item.sec === state.todaySec; })[0] || secs[0] || null;
   return { cat: cat, vol: vol, chapters: chapters, chapter: chapter, secs: secs, sec: sec, demo: !!(sec && sec.vol === "801" && sec.sec === "12.1") };
 }
@@ -816,8 +888,8 @@ function viewToday() {
   if (demo && started) blurb = "12.1 讲三角形的定义和记法。做错或跳过的可以回到回顾。";
   if (!demo && !pack) blurb = "正在看这一节有没有能交卷的题。";
   else if (!demo && pack && (pack.missing || !(pack.items || []).length)) blurb = "这一节还没有题目。可以先看知识点和图谱。";
-  else if (!demo && !bankIds.length) blurb = "这一节还没有能自动判的选择题。填空和解答先不在这里交卷。";
-  else if (!demo) blurb = "这一节先练 " + bankIds.length + " 道选择题。填空和解答还不能在这里自动判。";
+  else if (!demo && !bankIds.length) blurb = "这一节还没有题目。";
+  else if (!demo) blurb = "这一节有 " + bankIds.length + " 道。选择题和写得出一个数的填空会自动对，证明和解答做完后自己对一下。";
   const startLabel = resume || (demo ? "开始练 · 6 题" : (bankIds.length ? "开始练 · " + bankIds.length + " 题" : "这一节还不能练"));
   const owedBar = owed
     ? '<div class="card owed"><span class="muted">有 ' + owed + ' 道要重做</span> <button class="link" id="to-review">去回顾 ›</button></div>'
@@ -842,9 +914,10 @@ function viewToday() {
     }).join("")
     : bankIds.map(function (id, index) {
       const item = BANK[id];
-      return '<article class="qcell"><p class="stem">' + (index + 1) + ". " + mathHtml(item.stem) + '</p><p class="muted">' + mathHtml(item.kp) + "</p></article>";
+      const tag = item.kind === "blank" ? "填空" : item.kind === "open" ? "自己对答案" : "选择";
+      return '<article class="qcell"><p class="stem">' + (index + 1) + ". " + mathHtml(item.stem) + '</p><p class="muted">' + mathHtml(item.kp) + " · " + tag + "</p></article>";
     }).join("");
-  const qTitle = demo ? "今天这 6 道" : (bankIds.length ? "这一节先练这 " + bankIds.length + " 道" : "这一节的题");
+  const qTitle = demo ? "今天这 6 道" : (bankIds.length ? "这一节的 " + bankIds.length + " 道" : "这一节的题");
   const qBody = questions || '<p class="muted">' + blurb + "</p>";
   return '<h1>今天练这一节</h1>' + todayPicker(pick) + '<div class="today"><div class="today-side"><section class="card task"><span class="chip">' + chip + "</span>" +
     '<div class="hero">' + hero + "</div><p class=\"muted\">" + (demo ? "课本第 74 页 · 6 个知识点" : kps.length + " 个知识点") + "</p><p>" + blurb + "</p>" +
@@ -974,12 +1047,12 @@ function viewBook() {
     const chapters = cat.chByVol[vol.vol] || [];
     const body = open ? chapters.map(function (ch) {
       const key = ch.vol + "-" + ch.ch;
-      const secs = cat.secsByCh[key] || [];
+      const secs = (cat.secsByCh[key] || []).filter(sectionListed);
       let kpCount = 0;
       secs.forEach(function (sec) { kpCount += nodesInSection(cat.kpsBySec, sec).length; });
       const secHtml = secs.map(function (sec) {
         const count = nodesInSection(cat.kpsBySec, sec).length;
-        return '<button type="button" class="sec-row" data-book-sec="' + esc(sec.sec) + '" data-book-vol="' + esc(sec.vol) + '" data-book-ch="' + esc(sec.ch) + '"><span>' + esc(sec.title) + '</span><span class="muted">' + count + " 个知识点</span></button>";
+        return '<button type="button" class="sec-row" data-book-sec="' + esc(sec.sec) + '" data-book-vol="' + esc(sec.vol) + '" data-book-ch="' + esc(sec.ch) + '"><span>' + esc(sectionHeading(sec)) + '</span><span class="muted">' + count + " 个知识点</span></button>";
       }).join("");
       return '<div class="ch-block"><button type="button" class="ch-row" data-book-ch="' + esc(ch.ch) + '" data-book-vol="' + esc(ch.vol) + '"><span>' + esc(ch.title) + '</span><span class="muted">' + secs.length + " 节 · " + kpCount + " 个知识点</span></button>" + secHtml + "</div>";
     }).join("") : "";
@@ -1004,12 +1077,12 @@ function viewChapter() {
     return '<h1>找不到这一章</h1><section class="card"><p>找不到这一章。</p><button class="btn" id="to-book">回到课本</button></section>';
   }
   const cat = catalog();
-  const secs = (cat && cat.secsByCh[chapter.vol + "-" + chapter.ch]) || [];
+  const secs = ((cat && cat.secsByCh[chapter.vol + "-" + chapter.ch]) || []).filter(sectionListed);
   const demo = chapter.vol === "801" && String(chapter.ch) === "12";
   const rows = secs.map(function (sec) {
     const count = nodesInSection(cat.kpsBySec, sec).length;
     const note = demo && sec.sec === "12.1" ? (sectionDone() ? " · 示意题练过" : " · 有示意题") : "";
-    return '<button type="button" class="kp-row" data-book-sec="' + esc(sec.sec) + '" data-book-vol="' + esc(sec.vol) + '" data-book-ch="' + esc(sec.ch) + '"><strong>' + esc(sec.title) + '</strong><span class="muted">' + count + " 个知识点" + note + "</span></button>";
+    return '<button type="button" class="kp-row" data-book-sec="' + esc(sec.sec) + '" data-book-vol="' + esc(sec.vol) + '" data-book-ch="' + esc(sec.ch) + '"><strong>' + esc(sectionHeading(sec)) + '</strong><span class="muted">' + count + " 个知识点" + note + "</span></button>";
   }).join("");
   const first = secs[0];
   const testHere = demo && stillOpen(state.drafts["test:chapter"]);
@@ -1058,7 +1131,18 @@ function viewSection() {
   const cat = catalog();
   const allKps = ((cat && cat.kpsBySec[sec.sec]) || []).filter(function (node) { return node.vol === sec.vol; });
   const kps = allKps.filter(kpShown);
-  const skills = nodesInSection(cat && cat.skillsBySec, sec);
+  const net = ensureNet();
+  const skills = [];
+  const seenSkill = {};
+  function addSkill(skill) {
+    if (!skill || seenSkill[skill.id]) return;
+    seenSkill[skill.id] = 1;
+    skills.push(skill);
+  }
+  nodesInSection(cat && cat.skillsBySec, sec).forEach(addSkill);
+  kps.forEach(function (kp) {
+    ((net && net.skillByKp[kp.id]) || []).forEach(addSkill);
+  });
   const bandNote = hiddenBandNote(
     allKps.filter(function (node) { return node.tier === "extend"; }).length,
     allKps.filter(function (node) { return node.tier === "olympiad"; }).length
@@ -1107,20 +1191,31 @@ function viewSection() {
     const count = pack && !pack.missing ? gradableFrom(pack).length : 0;
     if (!pack) note = '<p class="muted">正在看这一节有没有能交卷的题。</p>';
     else if (pack.missing || !(pack.items || []).length) note = '<p class="muted">这一节还没有题目。</p>';
-    else if (!count) note = '<p class="muted">这一节还没有能自动判的选择题。</p>';
+    else if (!count) note = '<p class="muted">这一节还没有题目。</p>';
     else {
       actions = '<button class="btn" id="start">开始练 · ' + count + ' 题</button>' +
         '<button type="button" class="link" id="see-section-map">在图里看这一节</button>';
-      note = '<p class="muted">先练 ' + count + " 道选择题。填空和解答还不能在这里自动判。</p>";
+      note = '<p class="muted">这一节有 ' + count + " 道。证明和解答也可以做，做完后自己对一下。</p>";
     }
   }
   const methodBlock = skills.length
     ? '<div class="chapter-notes"><p>方法</p>' + skillLine + "</div>"
     : '<p class="chapter-notes">这一节在图谱里还没有挂方法。</p>';
-  return "<h1>" + esc(title) + "</h1>" + pageLine + '<div class="chapter-page"><div class="section-body">' +
+  const doors = sec.sec === "12.M" ? ["K801-12.3-13", "K801-12.3-09", "K801-12.8-11", "K801-12.10-06", "K801-12.10-10"] : [];
+  const doorHtml = doors.length
+    ? '<div class="chapter-notes"><p>还看这些</p><div class="method-links">' + doors.map(function (id) {
+      const node = cat && cat.byId[id];
+      const label = node ? kpLabel(node.title) : id;
+      return '<button type="button" class="link" data-kp-name="' + esc(id) + '">' + mathHtml(label) + "</button>";
+    }).join("") + "</div></div>"
+    : "";
+  const topicNote = sec.sec === "12.M"
+    ? '<p class="muted">课本目录里没有这一节。这里只收用全等、勾股或面积就能说清的结论。圆和相似留到后面的章。</p>'
+    : "";
+  return "<h1>" + esc(sec.sec === "12.M" ? sectionHeading(sec) : title) + "</h1>" + pageLine + topicNote + '<div class="chapter-page"><div class="section-body">' +
     '<section class="card"><h2>知识点</h2>' + kpBandSwitch() + '<p class="muted">' + kps.length + " 个</p>" + bandNote + '<div class="kp-rows scroll">' +
     (points || "<p>这一节还没有知识点。</p>") + "</div></section>" +
-    methodBlock + note + "</div>" +
+    methodBlock + doorHtml + note + "</div>" +
     '<div class="chapter-side"><p class="muted">' + (demo && sectionDone() ? "示意题练过" : demo ? "示意题还没练" : "按这一节的选择题练") + "</p>" + actions + "</div></div>";
 }
 
@@ -1147,7 +1242,97 @@ function kpCrumbLabel(name) {
   return plainMath(kpLabel(node && node.title ? node.title : name));
 }
 
-/** Full knowledge page. Definition first, then neighbors, methods and practice. */
+/** Stored answer, one paragraph per line. Nothing is written that is not already in the row. */
+function blockHtml(text) {
+  return String(text || "").split("\n").map(function (line) {
+    return line.trim() ? "<p>" + mathHtml(line) + "</p>" : "";
+  }).join("");
+}
+
+/** One stored question with a written solution. Prefer a note, then a medium-length answer. */
+function pickWalk(rows) {
+  const ready = (rows || []).filter(function (row) { return row && row.stem && (row.ans || row.note); });
+  ready.sort(function (a, b) {
+    function score(row) {
+      const len = String(row.ans || "").length + String(row.note || "").length;
+      return (len > 80 && len < 1800 ? 10000 : 0) + len;
+    }
+    return score(b) - score(a);
+  });
+  return ready[0] || null;
+}
+
+/** The explanation sits under the stem. The answer text is the stored solution. */
+function walkHtml(row) {
+  if (!row) return "";
+  const talk = row.note ? blockHtml(row.note) : "";
+  const ans = row.ans ? blockHtml(row.ans) : "";
+  return '<section class="walk"><h2>例题</h2><p class="stem">' + mathHtml(row.stem || "") + '</p>' +
+    '<div class="walk-note"><h3>讲解</h3>' + (talk || "") + (ans || "") +
+    (!talk && !ans ? "<p>这道题的解析还没写进数据。</p>" : "") + "</div></section>";
+}
+
+/** Questions already tagged to this point, in its section and in the saved cross-links. */
+function kpLinked(node) {
+  const pack = ensureItems(node.vol, node.sec);
+  const rows = [];
+  const seen = {};
+  function push(row, vol, sec) {
+    if (!row || !row.id || seen[row.id] || !row.stem) return;
+    seen[row.id] = 1;
+    rows.push({ id: row.id, vol: vol, sec: sec, stem: row.stem, form: row.form || "", ans: row.ans || "", note: row.note || "" });
+  }
+  ((pack && pack.items) || []).forEach(function (row) {
+    if ((row.kps || []).some(function (kp) { return kp.uid === node.id; })) push(row, node.vol, node.sec);
+  });
+  const rec = kpRecord(node);
+  (rec && rec.practice || []).forEach(function (q) {
+    if (!q.id || seen[q.id]) return;
+    const vol = q.vol || node.vol;
+    const sec = q.sec || node.sec;
+    const file = ensureItems(vol, sec);
+    const found = file && (file.items || []).filter(function (item) { return item.id === q.id; })[0];
+    if (found) push(found, vol, sec);
+    else if (q.stem) rows.push({ id: q.id, vol: vol, sec: sec, stem: q.stem, form: "", ans: "", note: "" });
+  });
+  return rows;
+}
+
+function formName(form) {
+  return { choice: "选择", fill: "填空", proof: "证明", solution: "解答", calculation: "计算", construction: "作图" }[form] || "题目";
+}
+
+/** The query result: related questions, one row each. Doing a question happens after a click. */
+function viewDrill() {
+  const method = state.drillKind === "method";
+  let rows = [];
+  let title = "练习";
+  if (method) {
+    const pack = state.methodId && skillBundle(state.methodId);
+    title = (pack && pack.skill && kpLabel(pack.skill.title)) || "这个方法";
+    ((pack && pack.rec && pack.rec.qs) || []).forEach(function (item) {
+      const file = item.vol && item.no ? ensureItems(item.vol, item.no) : null;
+      const found = file && (file.items || []).filter(function (row) { return row.id === item.id; })[0];
+      rows.push({ id: item.id, vol: item.vol, sec: item.no, stem: found ? found.stem : "", form: found ? found.form : "" });
+    });
+  } else {
+    const node = ensureNet() && ensureNet().byId[state.kpName];
+    title = node ? kpLabel(node.title) : "这个知识点";
+    if (node) rows = kpLinked(node);
+  }
+  const list = rows.length
+    ? '<div class="drill-list">' + rows.map(function (row) {
+      return '<button type="button" class="drill-row" data-open-item="' + esc(row.id) + '" data-open-vol="' + esc(row.vol || "") +
+        '" data-item-sec="' + esc(row.sec || "") + '" data-from="drill"><em>' + formName(row.form) + "</em><span>" +
+        (row.stem ? mathHtml(row.stem) : "正在打开题干") + "</span></button>";
+    }).join("") + "</div>"
+    : "<p>还没有对上的题。</p>";
+  return '<div class="kp-page"><p class="kp-back"><button type="button" class="link" id="drill-back">' +
+    (method ? "回到这个方法" : "回到这个知识点") + "</button></p><h1>" + mathHtml(title) + "</h1>" +
+    '<p class="muted">查到 ' + rows.length + " 道。点一道就做这一道。</p>" + list + "</div>";
+}
+
+/** Full knowledge page. One worked example stays here. The question list is a separate query. */
 function viewGraphKp(node) {
   const net = ensureNet();
   const rec = kpRecord(node);
@@ -1213,30 +1398,22 @@ function viewGraphKp(node) {
       "</section>";
   }
   const itemPack = ensureItems(node.vol, node.sec);
-  let qHtml = "";
-  let dock = "";
-  if (!itemPack) qHtml = '<p class="muted">正在看这一节有没有题。</p>';
-  else if (!itemPack.missing) {
-    const rows = (itemPack.items || []).filter(function (row) {
-      return row.form === "choice" && row.opts && row.opts.key &&
-        (row.kps || []).some(function (kp) { return kp.uid === node.id; });
-    }).slice(0, 4);
-    if (rows.length) {
-      qHtml = "<h2>可以练的题</h2>" + rows.map(function (row) {
-        return '<p class="stem">' + mathHtml(row.stem || "") + "</p>";
-      }).join("");
-      dock = '<div class="dock"><button class="btn" id="redo-kp">再练这个知识点</button><button type="button" class="link" id="kp-map">在图里看</button></div>';
-    } else qHtml = "<p class=\"muted\">这一知识点还没有能交卷的选择题。</p>";
-  } else qHtml = "<p class=\"muted\">这一知识点还没有能交卷的选择题。</p>";
+  const linked = itemPack ? kpLinked(node) : [];
+  const walk = !itemPack
+    ? '<p class="muted">正在打开例题。</p>'
+    : (walkHtml(pickWalk(linked)) || '<p class="muted">这一条还没有带解析的例题。</p>');
   const shortTitle = kpLabel(full);
   const subtitle = rest && rest !== shortTitle ? '<p class="kp-lead">' + mathHtml(rest) + "</p>" : "";
+  const figHtml = kpFigures(node.id);
+  const dock = '<div class="dock"><button class="btn" id="kp-drill">练习这个知识点</button>' +
+    '<button type="button" class="link" id="kp-map">在图里看</button></div>';
   return '<div class="kp-page"><p class="kp-back"><button type="button" class="link" id="kp-map">回到图谱</button></p><h1>' +
-    mathHtml(shortTitle) + "</h1>" + subtitle + '<section class="card">' + lead + goals + page + "</section>" +
-    noteHtml + exampleHtml +
+    mathHtml(shortTitle) + "</h1>" + subtitle + '<section class="card">' + lead + figHtml + goals + page + "</section>" +
+    noteHtml + walk + exampleHtml +
     '<div class="kp-rel"><section><h3>前置</h3>' + (pres || '<span class="muted">这是起点</span>') + "</section>" +
     '<section class="is-now"><h3>当前</h3><strong>' + mathHtml(shortTitle) + "</strong></section>" +
     "<section><h3>后置</h3>" + (posts || '<span class="muted">暂时没有接着学的</span>') + "</section></div>" +
-    ideaHtml + qHtml + dock + "</div>";
+    ideaHtml + dock + "</div>";
 }
 
 function listHtml(items, empty) {
@@ -1318,42 +1495,19 @@ function viewMethod() {
     }
   });
   const qs = (rec && rec.qs) || [];
-  const seenFiles = {};
-  qs.forEach(function (item) {
-    const key = item.vol + "-" + item.no;
-    if (seenFiles[key]) return;
-    seenFiles[key] = 1;
-    ensureItems(item.vol, item.no);
-  });
-  const qTitle = rec && rec.qn
-    ? "练习标了 " + rec.qn + " 道，这里先列 " + qs.length + " 道。这些不是教材例题。点一道就打开原题。"
-    : "这里先列 " + qs.length + " 道练习。点一道就打开原题。";
-  const qHtml = qs.length
-    ? "<p class=\"muted\">" + qTitle + '</p><div class="method-qs">' + qs.map(function (item) {
-      const packItems = window.MC["items:" + item.vol + "-" + item.no];
-      const found = packItems && (packItems.items || []).filter(function (row) { return row.id === item.id; })[0];
-      const stem = found ? mathHtml(found.stem) : esc(bandLabel(item.band) + " · " + (item.no || "") + " · " + String(item.id || "").split("_").pop());
-      return '<button type="button" class="kp-row q-row" data-open-q="' + esc(item.id) + '" data-q-vol="' + esc(item.vol || "") + '" data-q-no="' + esc(item.no || "") + '"><em>' + esc(bandLabel(item.band)) + "</em><span>" + stem + "</span></button>";
-    }).join("") + "</div>"
-    : "<p>这一条还没有挂练习题。</p>";
   const exPack = ensureEx(skill.vol, skill.sec);
-  let exampleHtml = "<p>正在打开这一节的教材例题。</p>";
-  if (exPack && exPack.missing) exampleHtml = "<p>这一节没有单独的教材例题。</p>";
+  let exampleHtml = "<p>正在打开这一节的例题。</p>";
+  if (exPack && exPack.missing) exampleHtml = "<p>这一节没有单独标到这个方法上的例题。</p>";
   else if (exPack) {
     const linked = (exPack.items || []).filter(function (item) {
       return (item.kps || []).some(function (kp) { return kp.m1 && kp.m1.uid === skill.id; });
     });
-    if (!linked.length) {
-      exampleHtml = "<p>教材例题是单独一份数据，用「这道题的做法」标到方法上。这一条还没有被标上，所以不拿别的题来充。</p>";
-    } else {
-      const shown = linked.slice(0, 3);
-      exampleHtml = '<p class="muted">教材例题里有 ' + linked.length + " 道标了这个方法。先列 " + shown.length + " 道，解析原来就写在例题里。</p>" +
-        shown.map(function (item) {
-          return '<article class="ex-card"><p class="stem">' + mathHtml(item.stem || "") + '</p><details><summary>看这道例题的解析</summary><div class="stem">' +
-            mathHtml(item.ans || "这道例题的解析还没入库") + "</div></details></article>";
-        }).join("");
-    }
+    const one = pickWalk(linked);
+    exampleHtml = one ? walkHtml(one) : "<p>这一条还没有带解析的例题，不拿别的题来充。</p>";
   }
+  const drill = qs.length
+    ? '<div class="dock"><button class="btn" id="method-drill">练习这个方法</button></div>'
+    : "<p>这一条还没有挂练习题。</p>";
   const more = '<div class="method-pair"><section><h2>换个做法</h2>' + altHtml + "</section>" +
     (siblingHtml || "") + "</div>" +
     "<section><h2>它体现的思想</h2>" + thoughtHtml + "</section>" +
@@ -1368,9 +1522,8 @@ function viewMethod() {
     (rec && rec.desc ? '<p class="kp-lead">' + mathHtml(rec.desc) + "</p>" : "<p>这条方法还没有一句话说明。</p>") +
     '<p class="muted">' + esc(skillMeta(skill, rec, sec)) + "</p></header>" +
     '<section class="card"><h2>怎么做</h2>' + stepHtml + "</section>" +
+    exampleHtml + drill +
     '<div class="kp-notes">' + whenHtml + pitHtml + "</div>" +
-    '<section class="card"><h2>用它做过的题</h2>' + qHtml + "</section>" +
-    '<section class="card"><h2>教材例题</h2>' + exampleHtml + "</section>" +
     '<details class="card method-more"><summary>其余说明</summary>' + more + "</details></div>";
 }
 
@@ -1485,6 +1638,14 @@ function viewKp() {
 }
 
 /** Section record for one knowledge point. Undefined while the file is still opening. */
+function kpFigures(id) {
+  const pack = window.MC && window.MC.figures;
+  if (!pack || !window.MC.fig || !id) return "";
+  return (pack.figures || []).filter(function (fig) {
+    return (fig.kp_refs || []).indexOf(id) >= 0;
+  }).map(function (fig) { return window.MC.fig.render(fig); }).join("");
+}
+
 function kpRecord(node) {
   const sec = ensureSec(node.vol, node.sec);
   if (!sec) return undefined;
@@ -1663,15 +1824,15 @@ function ensureSlice(key, src) {
 }
 
 function ensureSec(vol, sec) {
-  return ensureSlice("sec:" + vol + "-" + sec, "../../../runtime/web/data/sec/" + vol + "-" + sec + ".js?v=130");
+  return ensureSlice("sec:" + vol + "-" + sec, "../../../runtime/web/data/sec/" + vol + "-" + sec + ".js?v=131");
 }
 
 function ensureItems(vol, no) {
-  return ensureSlice("items:" + vol + "-" + no, "../../../runtime/web/data/sec/" + vol + "-" + no + ".items.js?v=130");
+  return ensureSlice("items:" + vol + "-" + no, "../../../runtime/web/data/sec/" + vol + "-" + no + ".items.js?v=131");
 }
 
 function ensureEx(vol, no) {
-  return ensureSlice("ex:" + vol + "-" + no, "../../../runtime/web/data/sec/" + vol + "-" + no + ".ex.js?v=130");
+  return ensureSlice("ex:" + vol + "-" + no, "../../../runtime/web/data/sec/" + vol + "-" + no + ".ex.js?v=131");
 }
 
 function bandLabel(band) {
@@ -3553,6 +3714,7 @@ function spreadChapters(nodes) {
 function graphChapterRadial(net, no) {
   const chapter = courseByNo(no) || courseByNo(12);
   const list = (SECTIONS[chapter.no] || []).slice();
+  if (Number(chapter.no) === 12 && state.kpBand === "olympiad") list.push(["12.M", "专题"]);
   const half = Math.ceil(list.length / 2);
   const left = [];
   const right = [];
@@ -3597,6 +3759,7 @@ function graphChapterRadial(net, no) {
 function graphChapterIslands(net, no) {
   const chapter = courseByNo(no) || courseByNo(12);
   const list = (SECTIONS[chapter.no] || []).slice();
+  if (Number(chapter.no) === 12 && state.kpBand === "olympiad") list.push(["12.M", "专题"]);
   const nodes = [];
   const lines = [];
   const placed = [];
@@ -4150,7 +4313,7 @@ function layerScope() {
   const chapter = key && key.indexOf(vol + "-") === 0 ? (cat.chByVol[vol] || []).filter(function (node) {
     return node.vol + "-" + node.ch === key;
   })[0] : null;
-  const sections = chapter ? (cat.secsByCh[key] || []) : [];
+  const sections = (chapter ? (cat.secsByCh[key] || []) : []).filter(sectionListed);
   const sec = sections.filter(function (node) { return node.sec === state.mapSection; })[0] || null;
   const points = sec ? (cat.kpsBySec[sec.sec] || []).filter(function (node) {
     return node.vol === sec.vol && kpShown(node);
@@ -4321,7 +4484,7 @@ function viewMap() {
       ? (sets.sections.length ? sets.sections.map(function (sec) {
         const on = state.mapSection === sec.sec ? " on" : "";
         const count = shownKps((catalog() && catalog().kpsBySec[sec.sec]) || []).filter(function (node) { return node.vol === sec.vol; }).length;
-        return '<button type="button" class="link' + on + '" data-layer-sec="' + esc(sec.sec) + '"><b>' + esc(sec.title) + '</b><span>' + count + " 个知识点</span></button>";
+        return '<button type="button" class="link' + on + '" data-layer-sec="' + esc(sec.sec) + '"><b>' + esc(sectionHeading(sec)) + '</b><span>' + count + " 个知识点</span></button>";
       }).join("") : '<p class="muted">这一章还没有节。</p>')
       : '<p class="muted">先选一章。</p>';
     const catNow = catalog();
@@ -4482,7 +4645,8 @@ function viewPractice() {
   let feedback = "";
   if (item.kind === "open" && state.revealed && state.mode !== "test") {
     if (!isFinal(state.setMarks[item.id])) {
-      feedback = '<div class="feedback"><p>和参考答案比，你做对了吗？</p><p>参考答案：' + esc(item.answer) + "</p>" +
+      feedback = '<div class="feedback"><p>和参考答案比，你做对了吗？</p><div class="stem">参考答案：' +
+        String(item.answer || "").split("\n").map(mathHtml).join("<br>") + "</div>" +
         '<div class="ops"><button class="btn" data-self="ok">对了</button>' +
         '<button class="btn secondary" data-self="bad">不对</button>' +
         '<button class="btn secondary" data-self="judge">不确定</button></div></div>';
@@ -5101,6 +5265,11 @@ function bind() {
       openSection(button.getAttribute("data-book-vol"), button.getAttribute("data-book-ch"), button.getAttribute("data-book-sec"));
     };
   });
+  document.querySelectorAll("[data-open-item]").forEach(function (button) {
+    button.onclick = function () {
+      openBankQuestion(button.getAttribute("data-open-vol"), button.getAttribute("data-item-sec"), button.getAttribute("data-open-item"), "", button.getAttribute("data-from") || "kp");
+    };
+  });
   const openSec = document.querySelectorAll("[data-open-sec]");
   openSec.forEach(function (button) { button.onclick = function () { go("section"); }; });
   const seeMap = document.getElementById("see-map");
@@ -5176,6 +5345,8 @@ function bind() {
   };
   const backFrom = document.getElementById("back-from");
   if (backFrom) backFrom.onclick = function () { go(state.kpFrom === "review" ? "review" : "result"); };
+  const kpDrill = document.getElementById("kp-drill");
+  if (kpDrill) kpDrill.onclick = function () { state.drillKind = "kp"; go("drill"); };
   const redoKp = document.getElementById("redo-kp");
   if (redoKp) redoKp.onclick = function () {
     const node = ensureNet() && ensureNet().byId[state.kpName];
@@ -5685,6 +5856,10 @@ function bind() {
     state.mapCard = true;
     go("method");
   };
+  const methodDrill = document.getElementById("method-drill");
+  if (methodDrill) methodDrill.onclick = function () { state.drillKind = "method"; go("drill"); };
+  const drillBack = document.getElementById("drill-back");
+  if (drillBack) drillBack.onclick = function () { go(state.drillKind === "method" ? "method" : "kp"); };
   const methodMap = document.getElementById("method-map");
   if (methodMap) methodMap.onclick = function () {
     if (state.methodId) state.mapSkill = state.methodId;
@@ -6166,6 +6341,7 @@ function backTarget() {
   if (state.route === "result") return homeRoute();
   if (state.route === "q") return "method";
   if (state.route === "method") return "map";
+  if (state.route === "drill") return state.drillKind === "method" ? "method" : "kp";
   if (state.route === "kp") {
     if (state.kpFrom === "today") return "today";
     if (state.kpFrom === "map") return "map";
@@ -6186,7 +6362,7 @@ function crumbBar() {
   if (state.route === "book") parts = [{ label: "课本" }];
   else if (state.route === "chapter") parts = [book, { label: (currentChapter() && currentChapter().title) || "这一章" }];
   else if (state.route === "section") parts = [book, { route: "chapter", label: (currentChapter() && currentChapter().title) || "这一章" }, { label: (currentSection() && currentSection().title) || "这一节" }];
-  else if (state.route === "kp") {
+  else if (state.route === "kp" || (state.route === "drill" && state.drillKind !== "method")) {
     const point = ensureNet() && ensureNet().byId[state.kpName];
     if (point && point.kind === "knowledge_point") {
       const cat = catalog();
@@ -6207,12 +6383,14 @@ function crumbBar() {
       parts.push({ label: kpCrumbLabel(name), kpIndex: index });
     });
     parts.push({ label: kpCrumbLabel(state.kpName) });
+    if (state.route === "drill") parts.push({ label: "练习" });
   }
   else if (state.route === "map") parts = [{ label: "图谱" }];
-  else if (state.route === "method" || state.route === "q") {
+  else if (state.route === "method" || state.route === "q" || (state.route === "drill" && state.drillKind === "method")) {
     const named = state.methodId && ensureNet() && ensureNet().byId[state.methodId];
     parts = [{ route: "map", label: "图谱" }, { route: state.route === "q" ? "method" : "", label: named ? named.title : "方法" }];
     if (state.route === "q") parts.push({ label: "这一题" });
+    if (state.route === "drill") parts.push({ label: "练习" });
   }
   else if (state.route === "review") parts = [{ label: "回顾" }];
   else if (state.route === "record") parts = [{ label: "我的记录" }];
@@ -6275,6 +6453,7 @@ function topBar() {
 
 /** Paint the current route. */
 function render() {
+  if (consumePendingOpen()) return;
   const views = {
     today: viewToday,
     book: viewBook,
@@ -6285,6 +6464,7 @@ function render() {
     q: viewQ,
     map: viewMap,
     brief: viewBrief,
+    drill: viewDrill,
     practice: viewPractice,
     test: viewPractice,
     result: viewResult,
@@ -6424,7 +6604,7 @@ function onHash() {
 
 /** Return whether the route is one this prototype draws. */
 function viewsHas(name) {
-  return ["today", "book", "chapter", "section", "kp", "method", "q", "map", "brief", "practice", "test", "result", "review", "record", "evidence"].indexOf(name) >= 0;
+  return ["today", "book", "chapter", "section", "kp", "method", "q", "map", "brief", "drill", "practice", "test", "result", "review", "record", "evidence"].indexOf(name) >= 0;
 }
 
 window.addEventListener("hashchange", onHash);

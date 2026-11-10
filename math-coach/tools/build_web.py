@@ -234,6 +234,13 @@ def main():
     for p in sorted(glob.glob(os.path.join(CONTENT, "questions", "*", "*.kp.jsonl"))):
         for r in read_jsonl(p):
             q_kp[r["uid"]] = r
+    q_by_id = {q.get("id"): q for q in questions if q.get("id")}
+    q_for_kp = {}
+    for qid, row in q_kp.items():
+        for tag in row.get("kp_tags") or []:
+            uid = tag.get("kp_uid")
+            if uid and qid in q_by_id:
+                q_for_kp.setdefault(uid, []).append(qid)
 
     # ---- 题目按节归组；sec_title 一律取教材目录，不用题库自带的旧标题 ----
     vols = load_volumes()
@@ -560,6 +567,24 @@ def main():
         }
         if d.get("tier") and d.get("tier") != "core":
             payload["tier"] = d["tier"]
+        practice = []
+        for qid in q_for_kp.get(kid, [])[:4]:
+            q = q_by_id.get(qid) or {}
+            stem = (q.get("stem_plain") or q.get("stem") or "").replace("\n", " ").strip()
+            if len(stem) > 80:
+                stem = stem[:80] + "…"
+            if stem.count("$") % 2:
+                cut = stem.rfind("$")
+                stem = (stem[:cut].rstrip() + "…") if cut > 0 else stem.replace("$", "")
+            practice.append({
+                "id": qid,
+                "stem": stem,
+                "vol": q.get("volume_id") or q.get("_vol"),
+                "sec": q.get("section_no"),
+                "ch": q.get("chapter_no"),
+            })
+        if practice:
+            payload["practice"] = practice
         return payload
 
     def skill_payload(sid):
