@@ -1,0 +1,63 @@
+wiki/zh/07-data-pipeline-and-gates.md
+  s_f7fe7e394ee45d::t_325890695b7252 1-70
+wiki/README.md
+  s_401d7d528a2e6b::t_054de4b08a45c4 1-9
+wiki/en/01-overview.md
+  s_401d7d528a2e6b::t_f3d74f028a665d 1-84
+wiki/en/02-repository-layout.md
+  s_401d7d528a2e6b::t_d1aa9f54864e14 1-93
+wiki/en/03-classic-data-model.md
+  s_401d7d528a2e6b::t_eadc655ae82bdf 1-71
+wiki/en/04-diagnosis-engine.md
+  s_401d7d528a2e6b::t_dd332b9be12c33 1-81
+wiki/en/05-classic-frontend.md
+  s_401d7d528a2e6b::t_f420a2dc8d0310 1-71
+wiki/en/06-math-coach.md
+  s_401d7d528a2e6b::t_6a2cfa90bf909b 1-122
+wiki/en/07-data-pipeline-and-gates.md
+  s_401d7d528a2e6b::t_1320ae5eae61a4 1-73
+wiki/en/08-development-workflow.md
+  s_401d7d528a2e6b::t_3b378e6752ac18 1-86
+wiki/en/README.md
+  s_401d7d528a2e6b::t_2e50d0413cb326 1-32
+wiki/zh/01-overview.md
+  s_401d7d528a2e6b::t_6b842a82687261 1-72
+wiki/zh/02-repository-layout.md
+  s_401d7d528a2e6b::t_e6390b6f295215 1-92
+wiki/zh/03-classic-data-model.md
+  s_401d7d528a2e6b::t_8f9da8dd4bbf6a 1-65
+wiki/zh/04-diagnosis-engine.md
+  s_401d7d528a2e6b::t_6ef3e19030b3a4 1-70
+wiki/zh/05-classic-frontend.md
+  s_401d7d528a2e6b::t_091f7066524b59 1-68
+wiki/zh/06-math-coach.md
+  s_401d7d528a2e6b::t_4905f2d175ee8c 1-108
+wiki/zh/08-development-workflow.md
+  s_401d7d528a2e6b::t_4ce246f1657f17 1-83
+wiki/zh/README.md
+  s_401d7d528a2e6b::t_73eee1dc09e143 1-33
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "2f5501810019bae5457392471ee4188760704a20",
+  "prompts": {},
+  "sessions": {
+    "s_401d7d528a2e6b": {
+      "agent_id": {
+        "tool": "devin",
+        "id": "s_401d7d528a2e6b",
+        "model": "unknown"
+      },
+      "human_author": "gordonwhu1982 <129141243+gordonwhu1982@users.noreply.github.com>"
+    },
+    "s_f7fe7e394ee45d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "445ce362-ceb0-4917-928b-14b30209f3d6",
+        "model": "grok-4.7"
+      },
+      "human_author": "gordonwhu1982 <129141243+gordonwhu1982@users.noreply.github.com>"
+    }
+  }
+}
