@@ -288,12 +288,48 @@ test('题库：isTestable 看题库；有题库时 hasBank 为 true，回退模�
   assert.strictEqual(G.bank.T[0].type, 'legacy');
 });
 
-test('第一题答对 → 掌握，并推断祖先掌握；只问 1 题', () => {
-  const [s, seq] = run2(E.createSession(G2, ['T']), { T: ['correct'] });
+test('confirm=1：第一题答对 → 掌握，并推断祖先掌握；只问 1 题', () => {
+  const [s, seq] = run2(E.createSession(G2, ['T'], { confirm: 1 }), { T: ['correct'] });
   assert.deepStrictEqual(seq, ['T#1']);
   ['T', 'P1', 'P2', 'R'].forEach((id) => assert.strictEqual(E.statusOf(s, id), 'mastered', id));
   assert.strictEqual(s.status.T.src, 'direct');
   assert.strictEqual(s.status.R.src, 'inferred');
+});
+
+test('默认 confirm=3：连续答对 3 题才掌握；只对 1 题不算掌握、继续出题', () => {
+  let s = E.createSession(G2, ['T']);
+  assert.strictEqual(s.confirm, 3);
+  assert.strictEqual(E.needConfirm(G2, s, 'T'), 3);
+  s = E.applyAnswer(G2, s, 'T', 'correct');
+  assert.strictEqual(s.status.T, undefined);
+  assert.strictEqual(E.nextQuestion(G2, s), 'T');
+  assert.strictEqual(E.nextItem(G2, s).attempt, 2);
+  s = E.applyAnswer(G2, s, 'T', 'correct');
+  assert.strictEqual(s.status.T, undefined);
+  s = E.applyAnswer(G2, s, 'T', 'correct');
+  assert.strictEqual(E.statusOf(s, 'T'), 'mastered');
+  ['P1', 'P2', 'R'].forEach((id) => assert.strictEqual(E.statusOf(s, id), 'mastered', id));
+  assert.strictEqual(E.nextQuestion(G2, s), null);
+});
+
+test('confirm=3 但题库只有 2 题：答对 2 题即掌握', () => {
+  const topics2 = [mk('M', { diagnostic_question: undefined })];
+  const qs2 = [mq('M', 1, 's'), mq('M', 2, 'b')];
+  const Gx = E.buildGraph(topics2, [], qs2);
+  let s2 = E.createSession(Gx, ['M'], { confirm: 3 });
+  assert.strictEqual(E.needConfirm(Gx, s2, 'M'), 2);
+  s2 = E.applyAnswer(Gx, s2, 'M', 'correct');
+  assert.strictEqual(s2.status.M, undefined);
+  s2 = E.applyAnswer(Gx, s2, 'M', 'correct');
+  assert.strictEqual(E.statusOf(s2, 'M'), 'mastered');
+});
+
+test('confirm 非法值回退到默认 3；可选 2/3/5', () => {
+  assert.strictEqual(E.clampConfirm(2), 2);
+  assert.strictEqual(E.clampConfirm(5), 5);
+  assert.strictEqual(E.clampConfirm(4), 3);
+  assert.strictEqual(E.clampConfirm('x'), 3);
+  assert.strictEqual(E.createSession(G2, ['T'], { confirm: 5 }).confirm, 5);
 });
 
 test('第一题错 → 再出第二题（同一知识点），此时还没有结论、不回溯', () => {
@@ -308,7 +344,8 @@ test('第一题错 → 再出第二题（同一知识点），此时还没有结
 });
 
 test('错 + 错 → 薄弱，并向先修回溯（P1、P2 依次，再深入 R）', () => {
-  const [s, seq] = run2(E.createSession(G2, ['T']), {
+  // confirm=1：先修答对一次即掌握，方便检查回溯顺序
+  const [s, seq] = run2(E.createSession(G2, ['T'], { confirm: 1 }), {
     T: ['wrong', 'skip'], P1: ['wrong', 'wrong'], R: ['correct'], P2: ['correct']
   });
   assert.deepStrictEqual(seq, ['T#1', 'T#2', 'P1#1', 'P1#2', 'R#1', 'P2#1']);
@@ -336,7 +373,7 @@ test('错 + 对 → 不稳（shaky），且不向先修回溯', () => {
 });
 
 test('不稳的先修若同时被别处判为薄弱，路径含它及其后代', () => {
-  const [s] = run2(E.createSession(G2, ['T']), {
+  const [s] = run2(E.createSession(G2, ['T'], { confirm: 1 }), {
     T: ['wrong', 'wrong'], P1: ['wrong', 'correct'], P2: ['wrong', 'wrong'], R: ['correct']
   });
   assert.strictEqual(E.statusOf(s, 'P1'), 'shaky');
@@ -348,27 +385,32 @@ test('不稳的先修若同时被别处判为薄弱，路径含它及其后代',
   assertTopological(sum.path.map((p) => p.id), G2);
 });
 
-test('第二题优先 basic；第一题已是 basic 时取同难度，没有就取最容易的剩余题', () => {
-  const firstDiffs = new Set();
+test('第一题优先 standard；答对再出 challenge；答错再出 basic', () => {
   for (let i = 0; i < 60; i++) {
-    const s1 = E.applyAnswer(G2, E.createSession(G2, ['P2'], { seed: 'k' + i }), 'P2', 'wrong');
-    const first = E.questionById(G2, s1.answers[0].qid);
-    firstDiffs.add(first.difficulty);
-    assert.notStrictEqual(first.difficulty, 'advanced', '有非 advanced 题时第一题不出 advanced');
-    const second = E.nextItem(G2, s1).question;
-    if (first.difficulty === 'standard') assert.strictEqual(second.id, 'P2_q3', '第二题应是唯一的 basic');
-    else assert.strictEqual(second.difficulty, 'standard', '第一题是 basic 时没有别的 basic，取同级以上最容易的');
+    const s0 = E.createSession(G2, ['P2'], { seed: 'k' + i });
+    const first = E.nextItem(G2, s0).question;
+    assert.strictEqual(first.difficulty, 'standard', '有 standard 时第一题应是 standard');
+    const sWrong = E.applyAnswer(G2, s0, 'P2', 'wrong');
+    assert.strictEqual(E.nextItem(G2, sWrong).question.id, 'P2_q3', '答错后应出唯一的 basic');
+    const sRight = E.applyAnswer(G2, s0, 'P2', 'correct');
+    assert.strictEqual(E.nextItem(G2, sRight).question.difficulty, 'advanced', '答对后应出拓展档');
   }
-  assert.ok(firstDiffs.has('standard') && firstDiffs.has('basic'), '随机应能抽到不同难度');
-  // 没有 basic 时取同难度：标准×3 + 提高×1
+  // 没有 standard 时第一题退到 basic（仍不出拓展）
   const topics3 = [mk('M', { diagnostic_question: undefined })];
+  const qsB = [mq('M', 1, 'b'), mq('M', 2, 'b'), mq('M', 3, 'a')];
+  const GB = E.buildGraph(topics3, [], qsB);
+  for (let i = 0; i < 20; i++) {
+    const it = E.nextItem(GB, E.createSession(GB, ['M'], { seed: i }));
+    assert.strictEqual(it.question.difficulty, 'basic');
+  }
+  // 没有 basic 时，答错后取同难度 standard
   const qs3 = [mq('M', 1, 's'), mq('M', 2, 's'), mq('M', 3, 's'), mq('M', 4, 'a')];
   const G3 = E.buildGraph(topics3, [], qs3);
   for (let i = 0; i < 20; i++) {
     const s1 = E.applyAnswer(G3, E.createSession(G3, ['M'], { seed: i }), 'M', 'wrong');
     assert.strictEqual(E.nextItem(G3, s1).question.difficulty, 'standard');
   }
-  // 第一题是 standard 且存在更容易的非 basic 题不可能（只有 3 档）；提高题只在没有其它选择时才出
+  // 只有拓展档时才出拓展
   const qs4 = [mq('M', 1, 'a'), mq('M', 2, 'a')];
   const G4 = E.buildGraph(topics3, [], qs4);
   const s4 = E.applyAnswer(G4, E.createSession(G4, ['M'], { seed: 1 }), 'M', 'wrong');
@@ -609,13 +651,13 @@ function bfsAncestors(id) {
   return seen;
 }
 
-test('数据可加载：小学 242 + 初中 315 + 高中必修 143 + 选择性必修 128，没有外部节点；课标含第一学段', () => {
+test('数据可加载：小学 284 + 初中 315 + 高中必修 143 + 选择性必修 128，没有外部节点；课标含第一学段', () => {
   const mathTopics = topics.filter((t) => String(t.id).startsWith('cnm_'));
   const mathDeps = deps.filter((d) => String(d.topicId).startsWith('cnm_'));
-  assert.strictEqual(mathTopics.length, 828);
-  assert.strictEqual(mathDeps.length, 1366);
+  assert.strictEqual(mathTopics.length, 870);
+  assert.strictEqual(mathDeps.length, 1459);
   assert.strictEqual(topics.filter((t) => t.external).length, 0);
-  assert.strictEqual(mathTopics.filter((t) => t.grade <= 6).length, 242);
+  assert.strictEqual(mathTopics.filter((t) => t.grade <= 6).length, 284);
   assert.strictEqual(mathTopics.filter((t) => t.grade >= 7 && t.grade <= 9).length, 315);
   assert.strictEqual(mathTopics.filter((t) => t.grade === 10 || t.grade === 11).length, 143);
   assert.strictEqual(mathTopics.filter((t) => t.grade >= 12).length, 128);
@@ -632,7 +674,7 @@ test('英语：小学 197、初中 180–260、高中 220–320，不与数学�
   const primary = enTopics.filter((t) => String(t.id).startsWith('cne_p'));
   const junior = enTopics.filter((t) => String(t.id).startsWith('cne_j'));
   const seniorEn = enTopics.filter((t) => String(t.id).startsWith('cne_h'));
-  assert.strictEqual(primary.length, 208);
+  assert.strictEqual(primary.length, 275);
   assert.ok(junior.length >= 180 && junior.length <= 260, '初中英语知识点 ' + junior.length);
   assert.ok(seniorEn.length >= 220 && seniorEn.length <= 320, '高中英语知识点 ' + seniorEn.length);
   assert.strictEqual(enTopics.length, primary.length + junior.length + seniorEn.length);
@@ -675,9 +717,10 @@ test('英语：小学 197、初中 180–260、高中 220–320，不与数学�
   assert.strictEqual(en8.label, '八年级上册');
   assert.ok(en8.ids.length > 0 && en8.ids.every((id) => id.startsWith('cne_j') && RG.byId[id].grade === 8 && RG.byId[id].semester === '上'));
   assert.ok(E.gradeTargets(RG, '八上').ids.every((id) => id.startsWith('cnm_')));
-  const en9 = E.gradeTargets(RG, '九全', 'english');
-  assert.strictEqual(en9.label, '九年级全一册');
-  assert.ok(en9.ids.length > 0 && en9.ids.every((id) => id.startsWith('cne_j') && RG.byId[id].grade === 9 && RG.byId[id].semester === '全'));
+  const en9 = E.gradeTargets(RG, '九上', 'english');
+  assert.strictEqual(en9.label, '九年级上册');
+  assert.ok(en9.ids.length > 0 && en9.ids.every((id) => id.startsWith('cne_j') && RG.byId[id].grade === 9 && RG.byId[id].semester === '上'));
+  assert.strictEqual(E.gradeTargets(RG, '九全', 'english'), null);
   const enGrade9 = E.gradeTargets(RG, '九年级', 'english');
   assert.ok(enGrade9.volumes.indexOf('九全') >= 0 && enGrade9.ids.every((id) => id.startsWith('cne_')));
   const mathGrade9 = E.gradeTargets(RG, '九年级');
@@ -686,6 +729,20 @@ test('英语：小学 197、初中 180–260、高中 220–320，不与数学�
     E.parseChapter('八年级下册 第8单元 Have you read Treasure Island yet'),
     { volume: '八下', chapterNo: '第8单元', chapterName: 'Have you read Treasure Island yet', section: '' }
   );
+  assert.deepStrictEqual(
+    E.parseChapter('七年级上册 待核'),
+    { volume: '七上', chapterNo: '待核', chapterName: '未挂到具体单元', section: '' }
+  );
+  const en7 = E.gradeTargets(RG, '七上', 'english');
+  assert.ok(en7.ids.indexOf('cne_j001') >= 0);
+  assert.strictEqual(en7.ids.filter((id) => RG.byId[id].chapter === '七年级上册 待核').length, 5);
+  assert.deepStrictEqual(
+    E.parseChapter('七年级下册 待核'),
+    { volume: '七下', chapterNo: '待核', chapterName: '未挂到具体单元', section: '' }
+  );
+  const en7b = E.gradeTargets(RG, '七下', 'english');
+  const pending7b = en7b.ids.filter((id) => RG.byId[id].chapter === '七年级下册 待核').sort();
+  assert.deepStrictEqual(pending7b, ['cne_j093', 'cne_j096', 'cne_j097']);
   assert.deepStrictEqual(
     E.parseChapter('必修第一册 欢迎单元 Welcome Unit'),
     { volume: '必修一', chapterNo: '欢迎单元', chapterName: 'Welcome Unit', section: '' }
@@ -716,10 +773,15 @@ test('英语：小学 197、初中 180–260、高中 220–320，不与数学�
   const ces = stdFile.items.filter((it) => String(it.id).startsWith('ces-2022:'));
   const ces3 = ces.filter((it) => String(it.id).indexOf('ces-2022:3.') === 0);
   assert.ok(ces.length >= 20 && ces3.length >= 20, '三级课标 ' + ces3.length);
-  assert.ok(ces.every((it) => it.verbatim === false && it.page_or_ref === '待核'));
+  const enPageOk = (it) => it.verbatim === false && (
+    it.page_or_ref === '待核' || (/印刷页/.test(it.page_or_ref) && /转述/.test(it.page_or_ref))
+  );
+  assert.ok(ces.every(enPageOk));
+  assert.ok(ces.some((it) => it.page_or_ref === '待核') && ces.some((it) => /印刷页/.test(it.page_or_ref)));
   const cesH = stdFile.items.filter((it) => String(it.id).startsWith('ces-2017:H.'));
   assert.ok(cesH.length >= 20, '高中英语课标 ' + cesH.length);
-  assert.ok(cesH.every((it) => it.verbatim === false && it.page_or_ref === '待核'));
+  assert.ok(cesH.every(enPageOk));
+  assert.ok(cesH.some((it) => it.page_or_ref === '待核') && cesH.some((it) => /印刷页/.test(it.page_or_ref)));
   assert.ok(cesH.some((it) => String(it.id).indexOf('ces-2017:H.B.') === 0));
   assert.ok(cesH.some((it) => String(it.id).indexOf('ces-2017:H.S.') === 0));
   assert.strictEqual(stdFile.english.senior.year, 2025);
@@ -955,6 +1017,9 @@ test('题库：每个正式知识点至少 3 题；id 唯一且格式正确；�
     assert.ok(qs.length >= 3, t.id + ' 只有 ' + qs.length + ' 题');
     const ds = new Set(qs.map((q) => q.difficulty));
     assert.ok(ds.has('basic') && ds.has('standard'), t.id + ' 缺少 basic 或 standard');
+    if (t.grade >= 1 && t.grade <= 6 && String(t.id).startsWith('cnm_p')) {
+      assert.ok(ds.has('challenge'), t.id + ' 缺少 challenge');
+    }
     assert.ok(qs.some((q) => q.id === t.id + '_q1'), t.id + ' 缺 q1');
     assert.ok(qs.filter((q) => q.id !== t.id + '_q1').some((q) => q.difficulty === 'basic'), t.id + ' 除 q1 外没有 basic');
   });
@@ -964,7 +1029,7 @@ test('题库：type / difficulty 合法；必填字段非空；numeric + choice 
   let auto = 0;
   questions.forEach((q) => {
     assert.ok(['numeric', 'choice', 'short', 'self'].includes(q.type), q.id);
-    assert.ok(['basic', 'standard', 'advanced'].includes(q.difficulty), q.id);
+    assert.ok(['basic', 'standard', 'challenge', 'advanced'].includes(q.difficulty), q.id);
     ['prompt', 'answer', 'explanation'].forEach((f) => assert.ok(typeof q[f] === 'string' && q[f].trim(), q.id + ' ' + f));
     if (q.type === 'numeric' || q.type === 'choice') auto++;
   });
@@ -998,6 +1063,46 @@ test('题库：带 figure 的题是可解析的内联 SVG，不引用外网；�
     });
   });
   assert.ok(n >= 80, '带图的题太少：' + n);
+});
+
+test('题库：初中生物有内联结构示意图', () => {
+  const bio = questions.filter((q) => String(q.topicId || '').startsWith('cnb_') && q.figure);
+  assert.ok(bio.length >= 35 && bio.length <= 50, '生物配图题数 ' + bio.length);
+  ['cnb_j003_q1', 'cnb_j004_q1', 'cnb_j050_q3'].forEach((id) => {
+    const q = questions.find((item) => item.id === id);
+    assert.ok(q && q.figure && q.figure.indexOf('currentColor') > 0, id);
+    assert.ok(q.figure.indexOf('viewBox=') > 0, id);
+  });
+});
+
+test('题库：初中地理有内联示意图', () => {
+  const geo = questions.filter((q) => String(q.topicId || '').startsWith('cng_') && q.figure);
+  assert.ok(geo.length >= 35 && geo.length <= 50, '地理配图题数 ' + geo.length);
+  ['cng_j001_q3', 'cng_j005_q3', 'cng_j034_q1'].forEach((id) => {
+    const q = questions.find((item) => item.id === id);
+    assert.ok(q && q.figure && q.figure.indexOf('currentColor') > 0, id);
+    assert.ok(q.figure.indexOf('viewBox=') > 0, id);
+  });
+});
+
+test('题库：初中化学有内联示意图', () => {
+  const chem = questions.filter((q) => String(q.topicId || '').startsWith('cnk_') && q.figure);
+  assert.ok(chem.length >= 35 && chem.length <= 50, '化学配图题数 ' + chem.length);
+  ['cnk_j010_q1', 'cnk_j007_q2', 'cnk_j024_q1'].forEach((id) => {
+    const q = questions.find((item) => item.id === id);
+    assert.ok(q && q.figure && q.figure.indexOf('currentColor') > 0, id);
+    assert.ok(q.figure.indexOf('viewBox=') > 0, id);
+  });
+});
+
+test('题库：初中物理有内联示意图', () => {
+  const phy = questions.filter((q) => /^cnp_\d/.test(String(q.id || '')) && q.figure);
+  assert.ok(phy.length >= 48, '初中物理配图题数 ' + phy.length);
+  ['cnp_016_q3', 'cnp_033_q2', 'cnp_049_q3', 'cnp_065_q4', 'cnp_004_q3'].forEach((id) => {
+    const q = questions.find((item) => item.id === id);
+    assert.ok(q && q.figure && q.figure.indexOf('currentColor') > 0, id);
+    assert.ok(q.figure.indexOf('viewBox=') > 0, id);
+  });
 });
 
 test('题库：choice 题有 3–4 个选项、key 不重复、answer 是某个选项的 key', () => {
@@ -1180,8 +1285,11 @@ test('带题库的图：每个正式知识点可测、外部节点不可测；ha
 console.log('带题库的真实诊断');
 
 /** 学生：known 一次答对；flaky 第一题错第二题对；其余两题都错 */
-function simulateBank(targets, known, flaky, limit, seed) {
-  let s = E.createSession(RGQ, targets, { limit: limit, seed: seed == null ? 'sim' : seed });
+function simulateBank(targets, known, flaky, limit, seed, confirm) {
+  let s = E.createSession(RGQ, targets, {
+    limit: limit, seed: seed == null ? 'sim' : seed,
+    confirm: confirm == null ? E.DEFAULT_CONFIRM : confirm
+  });
   const asked = [];
   for (let guard = 0; guard < 2000; guard++) {
     const it = E.nextItem(RGQ, s);
@@ -1215,9 +1323,10 @@ test('小学回溯：答错初中「正数与负数」会问到小学，学习�
   assertTopological(sum.path.map((p) => p.id), RGQ);
 });
 
-test('带题库：一致的学生 + 无限题量 => 薄弱集合与根因精确还原；会的 1 题、不会的 2 题', () => {
+test('带题库：一致的学生 + 无限题量 => 薄弱集合与根因精确还原；会的 confirm 题、不会的 2 题', () => {
   const rand = rng(20261018);
   let cases = 0;
+  const conf = E.DEFAULT_CONFIRM;
   for (let round = 0; round < 3; round++) {
     const known = makeStudent(rand, [0.04, 0.12, 0.3][round]);
     formal.forEach((t) => {
@@ -1234,7 +1343,10 @@ test('带题库：一致的学生 + 无限题量 => 薄弱集合与根因精确�
       assert.deepStrictEqual(sorted(sum.roots.map((r) => r.id)), sorted(expectRoots), '根因 ' + t.id);
       const perTopic = {};
       asked.forEach((a) => { const id = a.split('#')[0]; perTopic[id] = (perTopic[id] || 0) + 1; });
-      Object.keys(perTopic).forEach((id) => assert.strictEqual(perTopic[id], known.has(id) ? 1 : 2, id));
+      Object.keys(perTopic).forEach((id) => {
+        const want = known.has(id) ? E.needConfirm(RGQ, s, id) : 2;
+        assert.strictEqual(perTopic[id], want, id);
+      });
       const pathIds = sum.path.map((p) => p.id);
       assertTopological(pathIds, RGQ);
       sum.weak.forEach((id) => assert.ok(pathIds.includes(id), '薄弱点应在路径中 ' + id));
@@ -1242,6 +1354,7 @@ test('带题库：一致的学生 + 无限题量 => 薄弱集合与根因精确�
     });
   }
   assert.ok(cases >= 900);
+  assert.strictEqual(conf, 3);
 });
 
 test('带题库：任何一个知识点“第一题错、第二题对” => 不稳、只问 2 题、不回溯先修、进学习路径', () => {
@@ -1261,7 +1374,7 @@ test('带题库：任何一个知识点“第一题错、第二题对” => 不�
   assert.ok(withPrereq > 200);
 });
 
-test('带题库：混合学生（会 / 不稳 / 不会）——每个点最多 2 题，记录的状态与学生一致', () => {
+test('带题库：混合学生（会 / 不稳 / 不会）——会的点最多 confirm 题，其余最多 2 题；状态与学生一致', () => {
   const rand = rng(99);
   const known = makeStudent(rand, 0.1);
   const flaky = new Set(topics.filter((t) => !t.external && !known.has(t.id) && rand() < 0.3).map((t) => t.id));
@@ -1269,7 +1382,10 @@ test('带题库：混合学生（会 / 不稳 / 不会）——每个点最多 2
     const { s, asked } = simulateBank([t.id], known, flaky, 9999);
     const cnt = {};
     asked.forEach((a) => { const id = a.split('#')[0]; cnt[id] = (cnt[id] || 0) + 1; });
-    Object.keys(cnt).forEach((id) => assert.ok(cnt[id] <= 2, id));
+    Object.keys(cnt).forEach((id) => {
+      const maxN = known.has(id) ? E.needConfirm(RGQ, s, id) : 2;
+      assert.ok(cnt[id] <= maxN, id + ' ' + cnt[id] + ' > ' + maxN);
+    });
     Object.keys(s.status).forEach((id) => {
       const st = s.status[id];
       if (st.src !== 'direct') { assert.strictEqual(st.s, 'mastered'); return; }
@@ -1327,7 +1443,7 @@ test('带题库：重测时避开已出过的题（avoid 里的题尽量不再�
     total++;
     if (it.attempt === 1 && seen.includes(it.question.id)) {
       // 只有当该知识点的非 advanced 题全都出过时才可能重复
-      const fresh = RGQ.bank[it.topicId].filter((q) => !seen.includes(q.id) && q.difficulty !== 'advanced');
+      const fresh = RGQ.bank[it.topicId].filter((q) => !seen.includes(q.id) && q.difficulty !== 'advanced' && q.difficulty !== 'challenge');
       assert.strictEqual(fresh.length, 0, it.topicId + ' 还有没出过的题却重复了');
       repeats++;
     }
@@ -1338,8 +1454,11 @@ test('带题库：重测时避开已出过的题（avoid 里的题尽量不再�
 
 console.log('整年级 / 整册筛查');
 
-function screenRun(spec, student, limit, seed) {
-  let s = E.createSession(RGQ, spec.ids, { mode: 'screen', limit: limit, seed: seed == null ? 'scr' : seed });
+function screenRun(spec, student, limit, seed, confirm) {
+  let s = E.createSession(RGQ, spec.ids, {
+    mode: 'screen', limit: limit, seed: seed == null ? 'scr' : seed,
+    confirm: confirm == null ? E.DEFAULT_CONFIRM : confirm
+  });
   for (let guard = 0; guard < 2000; guard++) {
     const it = E.nextItem(RGQ, s);
     if (!it) break;
@@ -1363,8 +1482,69 @@ test('gradeTargets：一年级 = 一上 + 一下，七上只含七上；写法�
   assert.deepStrictEqual(g1.volumes, ['一上', '一下']);
   assert.strictEqual(g1.ids.length, up.ids.length + down.ids.length);
   assert.deepStrictEqual(sorted(g1.ids), sorted(up.ids.concat(down.ids)));
-  const want = formal.filter((t) => t.grade === 1).length;
+  const want = formal.filter((t) => t.grade === 1 && E.subjectOf(t) === 'math').length;
   assert.strictEqual(g1.ids.length, want);
+  const g1zh = E.gradeTargets(RGQ, '一年级', 'chinese');
+  assert.strictEqual(g1zh.ids.length, 79); // 一上 41 + 一下 38
+  assert.ok(g1zh.ids.every((id) => id.startsWith('cnc_p')));
+  const g7zh = E.gradeTargets(RGQ, '七上', 'chinese');
+  assert.strictEqual(g7zh.ids.length, 29);
+  assert.ok(g7zh.ids.every((id) => id.startsWith('cnc_j') && RGQ.byId[id].grade === 7 && RGQ.byId[id].semester === '上'));
+  const g7zhYear = E.gradeTargets(RGQ, '七年级', 'chinese');
+  assert.strictEqual(g7zhYear.ids.length, 59);
+  assert.ok(g7zhYear.ids.every((id) => id.startsWith('cnc_j') && RGQ.byId[id].grade === 7));
+  const g9zh = E.gradeTargets(RGQ, '九下', 'chinese');
+  assert.strictEqual(g9zh.ids.length, 28);
+  assert.ok(g9zh.ids.every((id) => id.startsWith('cnc_j') && RGQ.byId[id].grade === 9 && RGQ.byId[id].semester === '下'));
+  assert.strictEqual(E.subjectOf(RGQ.byId[g7zh.ids[0]]), 'chinese');
+  assert.strictEqual(E.subjectOf({ id: 'cnc_j001' }), 'chinese');
+  const g1sci = E.gradeTargets(RGQ, '一年级', 'science');
+  assert.strictEqual(g1sci.ids.length, 30); // 一上 15 + 一下 15
+  assert.ok(g1sci.ids.every((id) => id.startsWith('cns_')));
+  const g6sci = E.gradeTargets(RGQ, '六下', 'science');
+  assert.ok(g6sci.ids.length >= 15 && g6sci.ids.every((id) => RGQ.byId[id].grade === 6 && RGQ.byId[id].semester === '下'));
+  const g1mor = E.gradeTargets(RGQ, '一年级', 'morality');
+  assert.strictEqual(g1mor.ids.length, 32); // 一上 16 + 一下 16
+  assert.ok(g1mor.ids.every((id) => id.startsWith('cnd_')));
+  const g6mor = E.gradeTargets(RGQ, '六下', 'morality');
+  assert.ok(g6mor.ids.length >= 10 && g6mor.ids.every((id) => RGQ.byId[id].grade === 6 && RGQ.byId[id].semester === '下'));
+  const g7his = E.gradeTargets(RGQ, '七上', 'history');
+  assert.strictEqual(g7his.ids.length, 21);
+  assert.ok(g7his.ids.every((id) => id.startsWith('cnh_')));
+  const g9his = E.gradeTargets(RGQ, '九下', 'history');
+  assert.strictEqual(g9his.ids.length, 23);
+  assert.ok(g9his.ids.every((id) => id.startsWith('cnh_') && RGQ.byId[id].grade === 9 && RGQ.byId[id].semester === '下'));
+  const g7geo = E.gradeTargets(RGQ, '七上', 'geography');
+  assert.strictEqual(g7geo.ids.length, 17);
+  assert.ok(g7geo.ids.every((id) => id.startsWith('cng_')));
+  const g8geo = E.gradeTargets(RGQ, '八下', 'geography');
+  assert.strictEqual(g8geo.ids.length, 14);
+  assert.ok(g8geo.ids.every((id) => id.startsWith('cng_') && RGQ.byId[id].grade === 8 && RGQ.byId[id].semester === '下'));
+  assert.strictEqual(E.gradeTargets(RGQ, '九上', 'geography'), null);
+  const g7bio = E.gradeTargets(RGQ, '七上', 'biology');
+  assert.strictEqual(g7bio.ids.length, 22);
+  assert.ok(g7bio.ids.every((id) => id.startsWith('cnb_')));
+  const g8bio = E.gradeTargets(RGQ, '八下', 'biology');
+  assert.strictEqual(g8bio.ids.length, 13);
+  assert.ok(g8bio.ids.every((id) => id.startsWith('cnb_') && RGQ.byId[id].grade === 8 && RGQ.byId[id].semester === '下'));
+  assert.strictEqual(E.gradeTargets(RGQ, '九上', 'biology'), null);
+  const g7bioYear = E.gradeTargets(RGQ, '七年级', 'biology');
+  assert.strictEqual(g7bioYear.ids.length, 40);
+  assert.ok(g7bioYear.ids.every((id) => id.startsWith('cnb_') && RGQ.byId[id].grade === 7));
+  assert.strictEqual(E.subjectOf(RGQ.byId[g7bio.ids[0]]), 'biology');
+  const g9chem = E.gradeTargets(RGQ, '九上', 'chemistry');
+  assert.strictEqual(g9chem.ids.length, 27);
+  assert.ok(g9chem.ids.every((id) => id.startsWith('cnk_')));
+  const g9chemDown = E.gradeTargets(RGQ, '九下', 'chemistry');
+  assert.strictEqual(g9chemDown.ids.length, 18);
+  assert.ok(g9chemDown.ids.every((id) => id.startsWith('cnk_') && RGQ.byId[id].grade === 9 && RGQ.byId[id].semester === '下'));
+  assert.strictEqual(E.gradeTargets(RGQ, '八上', 'chemistry'), null);
+  assert.strictEqual(E.gradeTargets(RGQ, '七上', 'chemistry'), null);
+  const g9chemYear = E.gradeTargets(RGQ, '九年级', 'chemistry');
+  assert.strictEqual(g9chemYear.ids.length, 45);
+  assert.ok(g9chemYear.ids.every((id) => id.startsWith('cnk_') && RGQ.byId[id].grade === 9));
+  assert.strictEqual(E.subjectOf(RGQ.byId[g9chem.ids[0]]), 'chemistry');
+  assert.ok(E.gradeTargets(RGQ, '九上').ids.every((id) => id.startsWith('cnm_')));
   const g7 = E.gradeTargets(RGQ, '七年级');
   assert.strictEqual(g7.ids.length, formal.filter((t) => t.grade === 7 && String(t.id).startsWith('cnm_')).length);
   assert.ok(g7.ids.every((id) => id.startsWith('cnm_')));
@@ -1453,15 +1633,22 @@ test('筛查：题量不超过上限（一年级 / 七年级 / 七上；全错�
 });
 
 test('筛查：全对的学生只需很少几题（答对即推断先修）；一年级默认上限内能问完', () => {
+  // confirm=1：验证「答对即推断先修」仍能把整年级压到很少题
   const g7 = E.gradeTargets(RGQ, '七年级');
-  const s = screenRun(g7, allRight, 40);
+  const s = screenRun(g7, allRight, 40, 'scr', 1);
   const sum = E.summarize(RGQ, s);
   assert.ok(sum.asked < g7.ids.length / 2, '全对却问了 ' + sum.asked);
   assert.strictEqual(sum.mastered.length, g7.ids.length);
+  // 默认 confirm=3：题量够时仍能问完一年级（indexStudent）
   const g1 = E.gradeTargets(RGQ, '一年级');
-  const s1 = screenRun(g1, indexStudent, E.SCREEN_LIMIT);
+  const s1 = screenRun(g1, indexStudent, Math.max(E.SCREEN_LIMIT, g1.ids.length * E.DEFAULT_CONFIRM));
   assert.strictEqual(E.summarize(RGQ, s1).finished, true);
   assert.strictEqual(E.summarize(RGQ, s1).untested.length, 0);
+  // 默认 confirm=3 + 上限 40：七年级全对无法在一题掌握的旧意义上问完，但 asked 仍 < 知识点数×confirm
+  const s3 = screenRun(g7, allRight, 40);
+  const sum3 = E.summarize(RGQ, s3);
+  assert.ok(sum3.asked <= 40);
+  assert.ok(sum3.mastered.length > 0);
 });
 
 test('筛查：到上限没测到的点标「未测」，且题量 = 上限', () => {
@@ -1583,6 +1770,210 @@ test('普通整章 / 单点诊断不受影响：不带 mode 的会话仍回溯�
   const sum = E.summarize(RGQ, s);
   assert.strictEqual(sum.mode, 'target');
   sum.roots.forEach((r) => assert.deepStrictEqual(r.outOfScopePrereqs, []));
+});
+
+console.log('筛查只沿 hard 先修推断掌握（#34）');
+
+function hardReachFrom(graph, directIds) {
+  const reach = new Set();
+  const walk = (id) => graph.prereqs[id].forEach((p) => {
+    if (p.strength === 'hard' && !reach.has(p.id)) { reach.add(p.id); walk(p.id); }
+  });
+  directIds.forEach(walk);
+  return reach;
+}
+
+function screenTrace(spec, student, limit, seed, confirm) {
+  let s = E.createSession(RGQ, spec.ids, {
+    mode: 'screen', limit: limit, seed: seed == null ? 'scr' : seed,
+    confirm: confirm == null ? E.DEFAULT_CONFIRM : confirm
+  });
+  const steps = [];
+  for (let guard = 0; guard < 2000; guard++) {
+    const q = E.nextQuestion(RGQ, s);
+    if (!q) break;
+    const attempt = (s.attempts[q] || []).length + 1;
+    s = E.applyAnswer(RGQ, s, q, student(q, attempt));
+    steps.push({ id: q, attempt: attempt, status: s.status[q] ? s.status[q].s : null });
+  }
+  return { s: s, steps: steps };
+}
+
+test('筛查：答对后只沿 hard 先修推断掌握，soft 先修保持未测', () => {
+  const scope = ['F', 'E', 'C', 'D', 'B', 'T'];
+  let s = E.createSession(G, scope, { mode: 'screen' });
+  assert.strictEqual(E.nextQuestion(G, s), 'T');
+  s = E.applyAnswer(G, s, 'T', 'correct');
+  assert.strictEqual(s.status.T.src, 'direct');
+  ['C', 'D', 'E', 'F', 'X'].forEach((id) => {
+    assert.strictEqual(E.statusOf(s, id), 'mastered', id);
+    assert.strictEqual(s.status[id].src, 'inferred', id);
+  });
+  assert.strictEqual(E.statusOf(s, 'B'), 'unknown');
+  assert.strictEqual(E.nextQuestion(G, s), 'B');
+});
+
+test('筛查：soft 先修答对后才推断它自己的 hard 祖先', () => {
+  let s = E.createSession(G, ['F', 'E', 'C', 'D', 'B', 'T'], { mode: 'screen' });
+  s = E.applyAnswer(G, s, 'T', 'correct');
+  s = E.applyAnswer(G, s, 'B', 'correct');
+  assert.strictEqual(s.status.B.src, 'direct');
+  assert.strictEqual(E.nextQuestion(G, s), null);
+  const sum = E.summarize(G, s);
+  assert.deepStrictEqual(sum.untested, []);
+});
+
+test('筛查多跳：soft 边切断其后的 hard 链；target 模式仍推断全部祖先', () => {
+  const topicsS = [mk('R'), mk('S'), mk('A')];
+  const depsS = [
+    { topicId: 'S', prerequisiteId: 'R', strength: 'hard' },
+    { topicId: 'A', prerequisiteId: 'S', strength: 'soft' }
+  ];
+  const GS = E.buildGraph(topicsS, depsS);
+  let scr = E.createSession(GS, ['R', 'S', 'A'], { mode: 'screen' });
+  scr = E.applyAnswer(GS, scr, 'A', 'correct');
+  assert.strictEqual(E.statusOf(scr, 'A'), 'mastered');
+  assert.strictEqual(E.statusOf(scr, 'S'), 'unknown');
+  assert.strictEqual(E.statusOf(scr, 'R'), 'unknown');
+  let tgt = E.createSession(GS, ['A']);
+  tgt = E.applyAnswer(GS, tgt, 'A', 'correct');
+  assert.strictEqual(E.statusOf(tgt, 'S'), 'mastered');
+  assert.strictEqual(E.statusOf(tgt, 'R'), 'mastered');
+  assert.strictEqual(tgt.status.R.src, 'inferred');
+  let scr2 = E.createSession(GS, ['R', 'S', 'A'], { mode: 'screen' });
+  scr2 = E.applyAnswer(GS, scr2, 'A', 'correct');
+  assert.deepStrictEqual(scr2.status, scr.status);
+});
+
+test('筛查 soft-only：只有 soft 先修的点答对后不推断任何祖先', () => {
+  const topicsS = [mk('P'), mk('Q'), mk('W')];
+  const depsS = [
+    { topicId: 'W', prerequisiteId: 'P', strength: 'soft' },
+    { topicId: 'W', prerequisiteId: 'Q', strength: 'soft' }
+  ];
+  const GS = E.buildGraph(topicsS, depsS);
+  let s = E.createSession(GS, ['P', 'Q', 'W'], { mode: 'screen' });
+  s = E.applyAnswer(GS, s, 'W', 'correct');
+  assert.deepStrictEqual(Object.keys(s.status), ['W']);
+  const asked = [];
+  for (let i = 0; i < 10; i++) {
+    const q = E.nextQuestion(GS, s);
+    if (!q) break;
+    asked.push(q);
+    s = E.applyAnswer(GS, s, q, 'correct');
+  }
+  assert.deepStrictEqual(sorted(asked), ['P', 'Q']);
+  assert.strictEqual(E.summarize(GS, s).untested.length, 0);
+});
+
+test('筛查 hard-soft 混合：hard 祖先推断、soft 旁支仍要问', () => {
+  const topicsS = [mk('H1'), mk('H2'), mk('S1'), mk('T')];
+  const depsS = [
+    { topicId: 'H2', prerequisiteId: 'H1', strength: 'hard' },
+    { topicId: 'T', prerequisiteId: 'H2', strength: 'hard' },
+    { topicId: 'T', prerequisiteId: 'S1', strength: 'soft' }
+  ];
+  const GS = E.buildGraph(topicsS, depsS);
+  let s = E.createSession(GS, ['H1', 'H2', 'S1', 'T'], { mode: 'screen' });
+  s = E.applyAnswer(GS, s, 'T', 'correct');
+  assert.strictEqual(E.statusOf(s, 'H2'), 'mastered');
+  assert.strictEqual(E.statusOf(s, 'H1'), 'mastered');
+  assert.strictEqual(s.status.H1.src, 'inferred');
+  assert.strictEqual(E.statusOf(s, 'S1'), 'unknown');
+  assert.strictEqual(E.nextQuestion(GS, s), 'S1');
+});
+
+test('筛查：推断掌握不覆盖直接判定', () => {
+  let s = E.createSession(G, ['F', 'E', 'C', 'D', 'B', 'T'], { mode: 'screen' });
+  s = E.applyAnswer(G, s, 'E', 'wrong');
+  s = E.applyAnswer(G, s, 'T', 'correct');
+  assert.strictEqual(E.statusOf(s, 'E'), 'weak');
+  assert.strictEqual(E.statusOf(s, 'C'), 'mastered');
+});
+
+test('筛查全对（历史七上，confirm=3，limit=40）：不是 3 题结束整册掌握', () => {
+  const g = E.gradeTargets(RGQ, '七上', 'history');
+  const { s, steps } = screenTrace(g, allRight, 40, 'h34', 3);
+  const sum = E.summarize(RGQ, s);
+  const unique = Array.from(new Set(steps.map((x) => x.id)));
+  assert.ok(sum.asked > 3, '全对只问了 ' + sum.asked + ' 题');
+  assert.ok(unique.length > 1, '全对只问了 1 个知识点 ' + unique.join(','));
+  assert.ok(sum.mastered.length < g.ids.length || sum.asked === 40,
+    '未到上限却把整册标掌握：asked=' + sum.asked + ' mastered=' + sum.mastered.length);
+  const afterFirstMaster = steps.find((x) => x.id === unique[0] && x.status === 'mastered');
+  assert.ok(afterFirstMaster);
+  const idx = steps.indexOf(afterFirstMaster);
+  assert.ok(idx >= 2, 'confirm=3 应在第 3 题才掌握，实际 index=' + idx);
+  // 第 3 题掌握后不得把远古点沿 soft 链推断掉
+  const s3 = E.replay(RGQ, g.ids, s.answers.slice(0, idx + 1), { mode: 'screen', limit: 40, seed: 'h34', confirm: 3 });
+  assert.strictEqual(E.statusOf(s3, unique[0]), 'mastered');
+  assert.strictEqual(E.statusOf(s3, 'cnh_j001'), 'unknown', '末点掌握不应沿 soft 推断到远古人类活动');
+  const direct = Object.keys(s.status).filter((id) => s.status[id].src === 'direct' && s.status[id].s === 'mastered');
+  const reach = hardReachFrom(RGQ, direct);
+  Object.keys(s.status).filter((id) => s.status[id].src === 'inferred').forEach((id) => {
+    assert.ok(reach.has(id), id + ' 被沿非 hard 路径推断掌握');
+  });
+});
+
+test('筛查首题错（历史七上）：确认题对则不稳，不因推断提前结束', () => {
+  const g = E.gradeTargets(RGQ, '七上', 'history');
+  const firstWrong = (id, attempt) => (attempt === 1 ? 'wrong' : 'correct');
+  const { s, steps } = screenTrace(g, firstWrong, 40, 'h34w', 3);
+  const sum = E.summarize(RGQ, s);
+  assert.strictEqual(steps[0].status, null, '第一题错时尚无结论');
+  assert.strictEqual(s.status[steps[0].id].s, 'shaky');
+  assert.ok(sum.asked > 3);
+  assert.ok(new Set(steps.map((x) => x.id)).size > 1);
+  assert.ok(sum.shaky.length >= 1);
+  const inferred = Object.keys(s.status).filter((id) => s.status[id].src === 'inferred');
+  const directM = Object.keys(s.status).filter((id) => s.status[id].src === 'direct' && s.status[id].s === 'mastered');
+  const reach = hardReachFrom(RGQ, directM);
+  inferred.forEach((id) => assert.ok(reach.has(id), id));
+});
+
+test('筛查混合（历史七上）：部分对部分错时，掌握点的推断仍只走 hard', () => {
+  const g = E.gradeTargets(RGQ, '七上', 'history');
+  // 末点 j021 全对；其 soft 先修 j020 全错。j020 一定会出现在下一题（hard 不推断它）。
+  const mixed = (id) => (id === 'cnh_j020' ? 'wrong' : 'correct');
+  const { s, steps } = screenTrace(g, mixed, 40, 'h34m', 3);
+  const sum = E.summarize(RGQ, s);
+  assert.ok(sum.asked > 3);
+  assert.ok(sum.weak.length + sum.shaky.length > 0 || steps.some((x) => x.status === 'weak' || x.status === 'shaky'));
+  const directM = Object.keys(s.status).filter((id) => s.status[id].src === 'direct' && s.status[id].s === 'mastered');
+  const reach = hardReachFrom(RGQ, directM);
+  Object.keys(s.status).filter((id) => s.status[id].src === 'inferred').forEach((id) => {
+    assert.ok(reach.has(id), id + ' 混合作答下仍被沿 soft 推断');
+  });
+  const inScope = new Set(g.ids);
+  s.answers.forEach((a) => assert.ok(inScope.has(a.id), '问到范围外 ' + a.id));
+});
+
+test('筛查跨册过滤：历史七上不问卷内以外的点', () => {
+  const g = E.gradeTargets(RGQ, '七上', 'history');
+  const inScope = new Set(g.ids);
+  [[allRight, 40], [allWrong, 40], [indexStudent, 40]].forEach(([stu, limit]) => {
+    const s = screenRun(g, stu, limit, 'h34x', 3);
+    s.answers.forEach((a) => assert.ok(inScope.has(a.id), a.id));
+    const sum = E.summarize(RGQ, s);
+    sum.mastered.concat(sum.shaky, sum.weak, sum.untested).forEach((id) => assert.ok(inScope.has(id)));
+  });
+  const g7 = E.gradeTargets(RGQ, '七年级', 'history');
+  assert.ok(g7.ids.length > g.ids.length);
+  const extra = g7.ids.filter((id) => !inScope.has(id));
+  const s = screenRun(g, allRight, 40, 'h34x2', 3);
+  extra.forEach((id) => assert.ok(!s.answers.some((a) => a.id === id), '问到了七下 ' + id));
+});
+
+test('筛查真实数据（历史七上 confirm=1）：推断点均可沿 hard 到达，且不是 1 题结束', () => {
+  const g = E.gradeTargets(RGQ, '七上', 'history');
+  const s = screenRun(g, allRight, 1000, 'scr', 1);
+  const direct = Object.keys(s.status).filter((id) => s.status[id].src === 'direct' && s.status[id].s === 'mastered');
+  const reach = hardReachFrom(RGQ, direct);
+  const inferred = Object.keys(s.status).filter((id) => s.status[id].src === 'inferred');
+  inferred.forEach((id) => assert.ok(reach.has(id), id + ' 不应沿 soft 先修推断'));
+  assert.ok(direct.length > 3, '只直接问了 ' + direct.length + ' 个点');
+  assert.strictEqual(E.summarize(RGQ, s).mastered.length, g.ids.length);
+  assert.ok(!inferred.includes('cnh_j001') || reach.has('cnh_j001'));
 });
 
 console.log('\n' + passed + ' passed, ' + failed + ' failed');

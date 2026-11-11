@@ -29,16 +29,21 @@
 (function () {
   var hash = location.hash.replace(/^#/, "");
   try { hash = decodeURIComponent(hash); } catch (e) { /* 保持原样 */ }
-  if (/^cnm_[A-Za-z0-9]+$/.test(hash)) {
-    location.replace("explore/#" + encodeURIComponent(hash));
-    return;
-  }
-  if (/^cne_[A-Za-z0-9]+$/.test(hash)) {
-    location.replace("explore/?subject=english#" + encodeURIComponent(hash));
-    return;
-  }
-  if (/^cnp_[A-Za-z0-9]+$/.test(hash)) {
-    location.replace("explore/?subject=physics#" + encodeURIComponent(hash));
+  var topicRoutes = {
+    cnm_: "explore/#",
+    cne_: "explore/?subject=english#",
+    cnp_: "explore/?subject=physics#",
+    cnc_: "explore/?subject=chinese#",
+    cns_: "explore/?subject=science#",
+    cnd_: "explore/?subject=morality#",
+    cnh_: "explore/?subject=history#",
+    cng_: "explore/?subject=geography#",
+    cnb_: "explore/?subject=biology#",
+    cnk_: "explore/?subject=chemistry#"
+  };
+  var topic = /^(cnm_|cne_|cnp_|cnc_|cns_|cnd_|cnh_|cng_|cnb_|cnk_)[A-Za-z0-9]+$/.exec(hash);
+  if (topic) {
+    location.replace(topicRoutes[topic[1]] + encodeURIComponent(hash));
     return;
   }
   var frame = document.getElementById("view");

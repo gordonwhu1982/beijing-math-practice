@@ -24,7 +24,7 @@ python -m http.server 8000        # 或 dev/start-server.bat（页面靠 fetch �
 | 入口 | 地址 |
 | --- | --- |
 | 原来的首页 | `/classic.html` |
-| 英语 / 物理 | `/?subject=english` · `/?subject=physics` |
+| 原来的学科页 | `classic.html?subject=` 后接 `chinese`、`science`、`morality`、`history`、`geography`、`biology`、`chemistry`、`english`、`physics` |
 | 知识图谱 | `/explore/` |
 | 自适应诊断 | `/diagnose/`（演示 `/diagnose/?target=cnm_221&demo=1`） |
 | 学习档案 | `/children/` |
@@ -46,12 +46,12 @@ sw.js          PWA 离线缓存（命名空间 bmp-pwa-*）
 ## 改数据前必须知道的硬约束
 
 1. **`scripts/validate.py` 是入库闸门**：题目 `id` 必须形如 `<topicId>_q<N>`；字段只能取 `Q_FIELDS` 白名单内的键
-   （`id, topicId, difficulty, type, prompt, answer, choices, accept, verify, figure, unordered, percent, fixed_from_source, hideChoiceText`）。
+   （`id, topicId, difficulty, type, prompt, answer, choices, accept, explanation, verify, figure, unordered, percent, fixed_from_source, hideChoiceText`）。
    新增字段会直接判 `VALIDATION FAILED`，需同步改白名单。
-2. **难度只有三档** `basic / standard / advanced`；每个知识点有题数下限要求（现约 4 题/点）。
+2. **难度只有三档** `basic / standard / challenge`（旧名 `advanced` 仍视为 `challenge`）；每个知识点有题数下限要求（现约 4 题/点）。
 3. **判题可靠性**：`diagnose/engine.js` 只能自动判 `choice` 与 `numeric`（数值走 NFKC 归一 + 精确有理数比较），
    `short / self` 一律人工自评；`verify` 不参与前端判题，只被 `verify_questions.py` 在 AST 白名单沙箱内求值。
-4. **知识点编号规则** `cnm_/cne_/cnp_` + 位数固定，`Q_ID_RE` 会校验；`external: true` 的节点不出题。
+4. **知识点编号规则** `cnm_`、`cne_`、`cnp_`、`cnc_`、`cns_`、`cnd_`、`cnh_`、`cng_`、`cnb_`、`cnk_` 加固定位数，`Q_ID_RE` 会校验；`external: true` 的节点不出题。
 
 ## 数据说明
 
