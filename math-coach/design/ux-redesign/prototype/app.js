@@ -145,7 +145,7 @@ const state = {
   mapPanX: 0,
   mapPanY: 0,
   mapShowAll: false,
-  kpBand: "core",
+  kpBand: "olympiad",
   methodCards: false,
   mapSideOpen: true,
   mapSkill: "",
@@ -466,7 +466,8 @@ function persistDrafts() {
       chapterFrom: state.chapterFrom,
       todayVol: state.todayVol,
       todayChapter: state.todayChapter,
-      todaySec: state.todaySec
+      todaySec: state.todaySec,
+      kpBand: state.kpBand
     }
   });
   try { sessionStorage.setItem("mc-proto-drafts", payload); } catch (error) { /* prototype only */ }
@@ -656,6 +657,7 @@ function homeRoute() {
     return "review";
   }
   if (state.source === "drill") return "drill";
+  if (state.source === "today:one") return "today";
   if (state.source === "review" || state.source === "kp") return state.source === "kp" ? "kp" : "review";
   if (state.source === "section" || state.source === "chapter" || state.source === "map") return "section";
   return "today";
@@ -797,13 +799,13 @@ function shownKps(list) {
 function kpBandSwitch() {
   const bands = [["core", "只看课本"], ["extend", "连培优"], ["olympiad", "再加竞赛"]];
   return '<div class="tier-switch">' + bands.map(function (item) {
-    const on = (state.kpBand || "core") === item[0] ? " on" : "";
+    const on = (state.kpBand || "olympiad") === item[0] ? " on" : "";
     return '<button type="button" class="link' + on + '" data-kp-band="' + item[0] + '">' + item[1] + "</button>";
   }).join("") + "</div>";
 }
 
 function hiddenBandNote(extendCount, olympCount) {
-  const cap = state.kpBand || "core";
+  const cap = state.kpBand || "olympiad";
   const parts = [];
   if (cap === "core" && extendCount) parts.push(extendCount + " 个培优");
   if (cap !== "olympiad" && olympCount) parts.push(olympCount + " 个竞赛");
@@ -859,6 +861,12 @@ function practicePack(source) {
   return { ids: gradableFrom(ensureItems(pick.sec.vol, pick.sec.sec)), title: sectionHeading(pick.sec) + " · 练习", vol: pick.sec.vol, no: pick.sec.sec };
 }
 
+/** One question on the today page. Clicking it practices that question alone. */
+function todayQButton(id, index, stem, meta) {
+  return '<button type="button" class="qcell" data-today-q="' + esc(id) + '"><span class="stem">' +
+    (index + 1) + ". " + stem + '</span><span class="muted">' + meta + "</span></button>";
+}
+
 /** Today page. Every chapter can be chosen. Only 12.1 uses the handwritten six. */
 function viewToday() {
   state.nav = "today";
@@ -909,17 +917,17 @@ function viewToday() {
     }).join("");
   const questions = demo
     ? QUESTIONS.map(function (item, index) {
-      return '<article class="qcell"><p class="stem">' + (index + 1) + ". " + item.stem + '</p><p class="muted">' +
-        item.kp + (item.kind === "blank" ? " · 填空" : item.kind === "open" ? " · 自己判" : "") + "</p></article>";
+      const tag = item.kp + (item.kind === "blank" ? " · 填空" : item.kind === "open" ? " · 自己判" : "");
+      return todayQButton(item.id, index, esc(item.stem), esc(tag));
     }).join("")
     : bankIds.map(function (id, index) {
       const item = BANK[id];
       const tag = item.kind === "blank" ? "填空" : item.kind === "open" ? "自己对答案" : "选择";
-      return '<article class="qcell"><p class="stem">' + (index + 1) + ". " + mathHtml(item.stem) + '</p><p class="muted">' + mathHtml(item.kp) + " · " + tag + "</p></article>";
+      return todayQButton(id, index, mathHtml(item.stem), mathHtml(item.kp) + " · " + tag);
     }).join("");
   const qTitle = demo ? "今天这 6 道" : (bankIds.length ? "这一节的 " + bankIds.length + " 道" : "这一节的题");
   const qBody = questions || '<p class="muted">' + blurb + "</p>";
-  return '<h1>今天练这一节</h1>' + todayPicker(pick) + '<div class="today"><div class="today-side"><section class="card task"><span class="chip">' + chip + "</span>" +
+  return '<h1>今天练这一节</h1>' + todayPicker(pick) + kpBandSwitch() + '<div class="today"><div class="today-side"><section class="card task"><span class="chip">' + chip + "</span>" +
     '<div class="hero">' + hero + "</div><p class=\"muted\">" + (demo ? "课本第 74 页 · 6 个知识点" : kps.length + " 个知识点") + "</p><p>" + blurb + "</p>" +
     '<div class="row"><button class="btn" id="start"' + (!resume && !demo && !bankIds.length ? " disabled" : "") + ">" + startLabel + "</button>" + extra +
     '</div></section><section class="card points"><h2>' + (demo ? "这一节先看这 4 个" : "这一节的知识点") + '</h2><div class="kp-rows">' + (rows || "<p>这一节还没有知识点。</p>") +
@@ -1058,7 +1066,7 @@ function viewBook() {
     }).join("") : "";
     return '<button type="button" class="vol" data-book-vol="' + esc(vol.vol) + '">' + esc(vol.title) + " · " + chapters.length + " 章 · " + (open ? "收起" : "展开") + "</button>" + body;
   }).join("");
-  return '<h1>课本</h1><div class="book-list">' + html + "</div>";
+  return '<h1>课本</h1>' + kpBandSwitch() + '<div class="book-list">' + html + "</div>";
 }
 
 /** Chapter page. Sections come from the graph. The playable test stays on chapter 12. */
@@ -1102,7 +1110,7 @@ function viewChapter() {
     ? weakPoints().map(function (point) { return "<p>" + esc(point.name) + " · " + point.why + "</p>"; }).join("")
     : '<p class="muted">' + (Object.keys(state.answers).length ? "这一章还看不出哪里不稳。" : "还没练过这一章。整章测试只接在 12.1。") + "</p>")
     : '<p class="muted">点进一节可以练这一节的选择题。整章测试还只接在第 12 章。</p>';
-  return "<h1>" + esc(title) + '</h1><div class="chapter-page"><div class="chapter-body"><section class="card"><h2>这一章的节</h2><p class="muted">' +
+  return "<h1>" + esc(title) + "</h1>" + kpBandSwitch() + '<div class="chapter-page"><div class="chapter-body"><section class="card"><h2>这一章的节</h2><p class="muted">' +
     secs.length + " 节 · " + kpTotal + ' 个知识点</p><div class="kp-rows scroll">' + rows + "</div></section>" +
     '<section class="card"><h2>这一章哪里不稳</h2>' + weak + "</section></div>" +
     '<div class="chapter-side">' + actions + "</div></div>";
@@ -4595,7 +4603,7 @@ function hintPanelHtml() {
 
 function viewPractice() {
   const testNav = state.source === "test" && state.testScope === "review";
-  state.nav = testNav || state.source === "review" ? "review" : state.source === "today" ? "today" : "book";
+  state.nav = testNav || state.source === "review" ? "review" : (state.source === "today" || state.source === "today:one") ? "today" : "book";
   if (hashParam("load") === "1") {
     const head = state.mode === "test" ? "测试" : (state.practiceTitle || "12.1 三角形 · 练习");
     return '<div class="practice-fit"><h1>' + head + '</h1><div class="work"><section class="card"><p>正在打开……</p></section>' +
@@ -5151,6 +5159,24 @@ function bind() {
       requestLeave(link.getAttribute("data-dest"));
     };
   });
+  document.querySelectorAll("[data-today-q]").forEach(function (button) {
+    button.onclick = function () {
+      const id = button.getAttribute("data-today-q");
+      if (!id) return;
+      const pick = todayPick();
+      const pack = practicePack("today");
+      state.practiceTitle = (pick.sec ? sectionHeading(pick.sec) : "这一节") + " · 这一题";
+      state.practiceVol = pack.vol;
+      state.practiceNo = pack.no;
+      state.practiceKp = "";
+      if (pick.sec) {
+        state.volId = pick.sec.vol;
+        state.chNo = String(pick.sec.ch);
+        state.secId = pick.sec.sec;
+      }
+      startQueue([id], "single", "today:one");
+    };
+  });
   const start = document.getElementById("start");
   if (start) {
     start.onclick = function () {
@@ -5314,7 +5340,8 @@ function bind() {
   if (backToday) backToday.onclick = function () { go("today"); };
   document.querySelectorAll("[data-kp-band]").forEach(function (button) {
     button.onclick = function () {
-      state.kpBand = button.getAttribute("data-kp-band") || "core";
+      state.kpBand = button.getAttribute("data-kp-band") || "olympiad";
+      persistDrafts();
       render();
     };
   });
@@ -6680,6 +6707,7 @@ function applyPlace(data) {
   if (typeof place.todayVol === "string") state.todayVol = place.todayVol;
   if (typeof place.todayChapter === "string" || typeof place.todayChapter === "number") state.todayChapter = String(place.todayChapter);
   if (typeof place.todaySec === "string") state.todaySec = place.todaySec;
+  if (place.kpBand === "core" || place.kpBand === "extend" || place.kpBand === "olympiad") state.kpBand = place.kpBand;
   if (place.chapterFrom === "book" || place.chapterFrom === "map" || place.chapterFrom === "record") {
     state.chapterFrom = place.chapterFrom;
   }
