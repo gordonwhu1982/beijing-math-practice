@@ -1,0 +1,23 @@
+math-coach/design/ux-redesign/prototype/app.css
+  s_a69cf496b4f47b::t_061c671277e034 408-409,599-610,1317-1335,1337,1340-1341,1343-1346
+math-coach/design/ux-redesign/prototype/app.js
+  s_a69cf496b4f47b::t_1945164d73d039 148,469-470,660,802,808,864-869,920-921,926,930,1069,1113,4606,5162-5179,5343-5344,6710
+math-coach/design/ux-redesign/prototype/index.html
+  s_a69cf496b4f47b::t_497476fba80153 7,32
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "ebf0539b43dd0c436976dc4570859525bde1ee3d",
+  "prompts": {},
+  "sessions": {
+    "s_a69cf496b4f47b": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "c45394b2-3be8-4173-b2e4-896ef6b3af7e",
+        "model": "unknown"
+      },
+      "human_author": "gordonwhu1982 <129141243+gordonwhu1982@users.noreply.github.com>"
+    }
+  }
+}
