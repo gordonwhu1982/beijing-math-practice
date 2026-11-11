@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>math-coach 原型 · 平板练习</title>
+  <link rel="stylesheet" href="app.css?v=166">
+  <link rel="stylesheet" href="../../../assets/vendor/katex/katex.min.css">
+</head>
+<body>
+  <div class="stage">
+  <div class="app">
+    <nav class="nav" id="nav" aria-label="主导航"></nav>
+    <main class="main" id="main"></main>
+  </div>
+  </div>
+  <div class="scrim" id="scrim"></div>
+  <script>
+    window.MC = window.MC || {};
+    window.MC.put = function (key, value) { window.MC[key] = value; };
+    window.MC.core = {
+      esc: function (value) {
+        return String(value == null ? "" : value)
+          .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      }
+    };
+  </script>
+  <script src="../../../runtime/web/js/fig.js?v=1"></script>
+  <script src="../../../runtime/web/data/figures.js?v=133"></script>
+  <script src="../../../runtime/web/data/graph.js?v=131"></script>
+  <script src="../../../assets/vendor/katex/katex.min.js"></script>
+  <script src="app.js?v=175"></script>
+</body>
+</html>

@@ -191,7 +191,11 @@ aside.card.hint-side { align-items: stretch; }
 .hint-row { width: 100%; }
 .sheet-panel { width: 100%; box-sizing: border-box; margin-top: 12px; padding: 12px; background: var(--c-primary-soft); border-radius: var(--r-md); }
 .sheet-panel h3 { margin: 0 0 8px; font-size: var(--fs-body); }
-.dots { display: flex; gap: 8px; align-items: center; }
+.dots { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.practice-fit .head { align-items: flex-start; min-width: 0; }
+.practice-fit .head > div { flex: 1; min-width: 0; }
+.practice-fit .head > .btn,
+.practice-fit .head > .link { flex: none; }
 .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--c-line); border: 0; padding: 0; }
 .dot.now { width: 16px; height: 16px; background: var(--c-primary); }
 .dot.ok { background: var(--c-ok); }
@@ -393,19 +397,92 @@ aside.card.hint-side { align-items: stretch; }
 .kp-note.mix { background: var(--c-peek-soft); }
 .kp-note.slip { background: var(--c-bad-soft); }
 .kp-note.when { background: var(--c-ok-soft); }
-.kp-rel { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; align-items: stretch; margin: 0; }
-.kp-rel section { background: var(--c-surface); border-radius: var(--r-md); box-shadow: var(--shadow-card); padding: 12px; }
-.kp-rel section .link { display: block; margin-top: 4px; white-space: normal; text-align: left; }
-.kp-rel section.is-now { background: var(--c-primary-soft); box-shadow: none; }
-.kp-rel section.is-now strong { color: var(--c-primary); }
+.kp-counts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 0; }
+.kp-count {
+  min-height: 64px;
+  margin: 0;
+  padding: 8px 4px;
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+  background: var(--c-surface);
+  color: var(--c-text-2);
+  font: inherit;
+  font-size: var(--fs-small);
+  line-height: 1.2;
+  text-align: center;
+  cursor: pointer;
+}
+.kp-count b { display: block; margin-bottom: 2px; font-size: var(--fs-h2); font-weight: 700; line-height: 1.2; }
+.kp-count.pre { background: var(--c-ok-soft); border-color: #b7e0cc; }
+.kp-count.pre b { color: var(--c-ok); }
+.kp-count.post { background: var(--c-primary-soft); border-color: #c9d6f8; }
+.kp-count.post b { color: var(--c-primary); }
+.kp-count.skill { background: var(--c-peek-soft); border-color: #f0ddb0; }
+.kp-count.skill b { color: var(--c-peek); }
+/* 练习题这一格沿用原来计数的统计紫，和竞赛档的紫不是一回事。 */
+.kp-count.q { background: #f2e4fd; border-color: #e0c6f4; }
+.kp-count.q b { color: #8b2fbd; }
+.kp-count:disabled { background: var(--c-surface); border-color: var(--c-line); color: var(--c-text-off); cursor: default; }
+.kp-count:disabled b { color: var(--c-text-off); }
+.kp-count.is-on { border-width: 2px; padding: 7px 3px; }
+.kp-open { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 0; padding: 12px; background: var(--c-surface); border-radius: var(--r-md); box-shadow: var(--shadow-card); }
+.kp-open .link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid #c9d6f8;
+  border-radius: var(--r-md);
+  background: var(--c-primary-soft);
+  color: var(--c-primary);
+  font-size: var(--fs-question);
+  font-weight: 600;
+  line-height: 1.35;
+  white-space: normal;
+  text-align: left;
+}
+.kp-open .link em {
+  flex: none;
+  margin-right: 8px;
+  font-style: normal;
+  font-size: var(--fs-small);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+/* 难度五档，沿用练习里已有的基础、中档、提高、挑战色。竞赛题用竞赛紫。 */
+.kp-open .link.is-band-basic { background: #dcf5ef; color: #0a7660; border-color: #9ed9cb; }
+.kp-open .link.is-band-standard { background: #e3ecfe; color: #2554d6; border-color: #b9ccf5; }
+.kp-open .link.is-band-advanced { background: #fdeed6; color: #8a5009; border-color: #f0d3a4; }
+.kp-open .link.is-band-challenge { background: #fde5dd; color: #a52d10; border-color: #f3c2b4; }
+.kp-open .link.is-band-competition { background: #F3E8FF; color: #5B21B6; border-color: #7c3aed; }
+/* 知识点类型。概念蓝、定理绿、性质与公式分开，事实用中性灰。做法用深青绿，避开培优橙和竞赛紫。 */
+.kp-open .link.is-kpt-concept,
+.kp-open .link.is-kpt-representation { background: var(--c-primary-soft); color: var(--c-primary); border-color: #c9d6f8; }
+.kp-open .link.is-kpt-theorem { background: var(--c-ok-soft); color: var(--c-ok); border-color: #b7e0cc; }
+.kp-open .link.is-kpt-property { background: #f2e4fd; color: #8b2fbd; border-color: #e0c6f4; }
+.kp-open .link.is-kpt-formula { background: var(--c-peek-soft); color: var(--c-peek); border-color: #f0ddb0; }
+.kp-open .link.is-kpt-skill,
+.kp-open .link.is-kpt-method,
+.kp-open .link.is-kpt-model { background: #d9f4e9; color: #05603f; border-color: #9ed9cb; }
+.kp-open .link.is-kpt-fact,
+.kp-open .link.is-kpt-context,
+.kp-open .link.is-kpt-activity { background: var(--c-skip-soft); color: var(--c-skip); border-color: var(--c-line); }
+.kp-open .link.is-extend { background: #FFF3E4; color: #8A4E12; border-color: #e08a2e; }
+.kp-open .link.is-olymp { background: #F3E8FF; color: #5B21B6; border-color: #7c3aed; }
+.kp-open .link.is-more { background: transparent; color: var(--c-primary); border-color: transparent; }
 .kp-block h2 { margin: 0 0 8px; }
 .kp-block h2:not(:first-child) { margin-top: 8px; }
 .kp-method { background: var(--c-surface); border-radius: var(--r-md); box-shadow: var(--shadow-card); padding: 12px 14px; margin: 0 0 10px; }
 .kp-method .link { display: inline; min-height: 0; padding: 0; font-size: var(--fs-question); font-weight: 650; white-space: normal; text-align: left; line-height: 1.4; }
 .kp-method p { margin: 6px 0 0; color: var(--c-text); line-height: 1.55; }
-.kp-ideas p { margin: 0 0 4px; }
+.kp-thoughts { margin: 0; padding: 0; background: transparent; box-shadow: none; }
+.kp-open .link.is-thought { background: #fff; color: #7A5B16; border-color: #e0c56a; }
+.kp-open .link.is-thought.is-on { border-width: 2px; padding: 7px 11px; }
+.kp-thought-note { margin: 8px 0 0; padding: 2px 0 2px 12px; border-left: 3px solid #d0a24a; color: var(--c-text); font-size: var(--fs-body); line-height: 1.55; }
 .today-side { display: flex; flex-direction: column; gap: 12px; }
 .today .qgrid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); align-content: start; }
+.qband { margin: 0 0 12px; }
+.qband > summary { cursor: pointer; font-size: var(--fs-h3); font-weight: 650; margin: 0 0 8px; }
 .today .qcell { min-width: 0; }
 .two, .board { grid-template-columns: 1fr 1fr; }
 .two { align-items: start; }
@@ -540,9 +617,10 @@ aside.card.hint-side { align-items: stretch; }
   min-height: 44px;
   margin-left: 18px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 4px;
   text-align: left;
   background: #f7f9fc;
   border: 0;
@@ -550,7 +628,26 @@ aside.card.hint-side { align-items: stretch; }
   padding: 8px 14px;
   font-size: var(--fs-body);
   cursor: pointer;
+  height: auto;
+  white-space: normal;
 }
+.book-list .sec-row > span:first-child,
+.chapter-body .kp-row > strong {
+  max-width: 100%;
+  line-height: 1.4;
+}
+.chapter-body .kp-row {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  height: auto;
+  gap: 4px;
+  white-space: normal;
+}
+.review-row p,
+.result-row p { overflow-wrap: break-word; }
+.review-row .katex,
+.result-row .katex { font-size: 1em; }
 .kp-rows.scroll { max-height: 52vh; overflow: auto; padding-right: 4px; }
 .col .link.sec { margin-left: 8px; font-size: var(--fs-small); }
 .book-list .vol, .book-list .ch-row {
@@ -932,6 +1029,26 @@ button.qcell:hover, button.qcell:focus-visible { background: var(--c-primary-sof
 .focus-net.dense .seed.side-bottom > span {
   white-space: normal;
 }
+.focus-net.dense.ring .seed:not(.here) > span {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+.focus-net.dense.ring .seed.side-left > span { right: calc(100% + 2px); }
+.focus-net.dense.ring .seed.side-right > span { left: calc(100% + 2px); }
+.focus-net.dense.ring .seed.side-top > span {
+  bottom: calc(100% + 2px);
+  display: block;
+  -webkit-line-clamp: unset;
+  overflow: visible;
+}
+.focus-net.dense.ring .seed.side-bottom > span {
+  top: calc(100% + 2px);
+  display: block;
+  -webkit-line-clamp: unset;
+  overflow: visible;
+}
 .book-net .seed { width: 22px; height: 22px; transform: translate(-50%, -50%); }
 .book-net .seed i { width: 18px; height: 18px; margin: 2px; }
 .book-net .seed.here { width: 32px; height: 32px; }
@@ -1261,6 +1378,110 @@ textarea.process {
   color: var(--c-ok);
   border: 1px solid var(--c-ok);
 }
+.is-kpt-concept, .is-kpt-representation { --kpt: var(--c-primary); --kpt-bg: var(--c-primary-soft); --kpt-bd: #c9d6f8; }
+.is-kpt-theorem { --kpt: var(--c-ok); --kpt-bg: var(--c-ok-soft); --kpt-bd: #b7e0cc; }
+.is-kpt-property { --kpt: #8b2fbd; --kpt-bg: #f2e4fd; --kpt-bd: #e0c6f4; }
+.is-kpt-formula { --kpt: var(--c-peek); --kpt-bg: var(--c-peek-soft); --kpt-bd: #f0ddb0; }
+.is-kpt-skill, .is-kpt-method, .is-kpt-model { --kpt: #05603f; --kpt-bg: #d9f4e9; --kpt-bd: #9ed9cb; }
+.is-kpt-fact, .is-kpt-context, .is-kpt-activity { --kpt: var(--c-skip); --kpt-bg: var(--c-skip-soft); --kpt-bd: var(--c-line); }
+.is-tier-book { --mark: var(--c-primary); --mark-bg: var(--c-primary-soft); --mark-bd: #c9d6f8; }
+.is-extend { --mark: #8A4E12; --mark-bg: #FFF3E4; --mark-bd: #e08a2e; }
+.is-olymp { --mark: #5B21B6; --mark-bg: #F3E8FF; --mark-bd: #7c3aed; }
+.is-thought { --mark: #7A5B16; --mark-bg: #fff; --mark-bd: #e0c56a; }
+.is-band-basic { --mark: #0a7660; --mark-bg: #dcf5ef; --mark-bd: #9ed9cb; }
+.is-band-standard { --mark: #2554d6; --mark-bg: #e3ecfe; --mark-bd: #b9ccf5; }
+.is-band-advanced { --mark: #8a5009; --mark-bg: #fdeed6; --mark-bd: #f0d3a4; }
+.is-band-challenge { --mark: #a52d10; --mark-bg: #fde5dd; --mark-bd: #f3c2b4; }
+.is-band-competition { --mark: #5B21B6; --mark-bg: #F3E8FF; --mark-bd: #7c3aed; }
+.is-kpt-concept, .is-kpt-representation,
+.is-kpt-theorem, .is-kpt-property, .is-kpt-formula,
+.is-kpt-skill, .is-kpt-method, .is-kpt-model,
+.is-kpt-fact, .is-kpt-context, .is-kpt-activity {
+  --mark: var(--kpt);
+  --mark-bg: var(--kpt-bg);
+  --mark-bd: var(--kpt-bd);
+}
+.method-more .method-kps .link[class*="is-kpt-"],
+.method-links .link[class*="is-kpt-"],
+.q-also .link[class*="is-kpt-"] {
+  background: var(--kpt-bg);
+  color: var(--kpt);
+  border-color: var(--kpt-bd);
+}
+.kp-row[class*="is-kpt-"] { border-left: 3px solid var(--kpt); }
+.kp-row[class*="is-kpt-"] em,
+.method-kps .link em,
+.method-links .link em,
+.q-also .link em,
+.side .link em {
+  font-style: normal;
+  font-size: var(--fs-small);
+  font-weight: 700;
+  margin-right: 8px;
+  color: var(--kpt, inherit);
+}
+.layer-board .col .link[class*="is-kpt-"] { color: var(--kpt); border-left: 3px solid var(--kpt); }
+.layer-board .col .link.is-thought { color: #7A5B16; border-left: 3px solid #d0a24a; }
+.kp-row.is-extend { border-left: 3px solid #e08a2e; }
+.kp-row.is-olymp { border-left: 3px solid #7c3aed; }
+.method-more .method-names .link.mark,
+.method-more .method-kps .link.mark,
+.method-links .link.mark,
+.q-also .link.mark,
+.map .side .link.mark,
+.kp-method .link.mark,
+.kp-open .link.mark {
+  background: var(--mark-bg);
+  color: var(--mark);
+  border-color: var(--mark-bd);
+}
+.method-links .link.mark { border-radius: var(--r-md); white-space: normal; }
+.map .side .link.mark,
+.kp-method .link.mark {
+  display: inline-flex;
+  align-items: center;
+  width: auto;
+  max-width: 100%;
+  min-height: 36px;
+  margin: 0 0 6px;
+  padding: 6px 10px;
+  border: 1px solid var(--mark-bd);
+  border-radius: var(--r-md);
+}
+.kp-row.mark {
+  background: var(--mark-bg);
+  border-color: var(--mark-bd);
+  border-left: 3px solid var(--mark);
+}
+.kp-row.mark strong { color: var(--mark); }
+.kp-row.mark .muted { color: var(--c-text-2); }
+.layer-board .col .link.mark {
+  justify-content: flex-start;
+  gap: 8px;
+  background: var(--mark-bg);
+  color: var(--mark);
+  border-color: var(--mark-bd);
+  border-left: 3px solid var(--mark);
+}
+.kp-row.mark.is-extend,
+.layer-board .col .link.mark[class*="is-kpt-"].is-extend { border-left-color: #e08a2e; }
+.kp-row.mark.is-olymp,
+.layer-board .col .link.mark[class*="is-kpt-"].is-olymp { border-left-color: #7c3aed; }
+.link.mark > em,
+.kp-row.mark em,
+.method-names .link em {
+  flex: none;
+  font-style: normal;
+  font-weight: 700;
+  font-size: var(--fs-small);
+  margin-right: 8px;
+}
+.layer-board .col .link.mark .role {
+  margin-left: auto;
+  color: var(--c-text-2);
+  font-size: var(--fs-small);
+  font-weight: 650;
+}
 .method-more .method-names .link:focus-visible,
 .method-more .method-kps .link:focus-visible {
   outline: 2px solid var(--c-focus);
@@ -1339,7 +1560,8 @@ textarea.process {
   .nav, .nav.rail { width: auto; display: flex; gap: 8px; overflow: auto; }
 }
 @media (max-width: 800px) {
-  .map, .two, .kp-rel, .method-order, .method-pair { grid-template-columns: 1fr; }
+  .map, .two, .method-order, .method-pair { grid-template-columns: 1fr; }
+  .kp-counts { grid-template-columns: 1fr 1fr; }
   .layer-board .map,
   .layer-board .map.with-card { grid-template-columns: 1fr; grid-template-rows: none; overflow-x: hidden; }
   .layer-board .map > .col,
