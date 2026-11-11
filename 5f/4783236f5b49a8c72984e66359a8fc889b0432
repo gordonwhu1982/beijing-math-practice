@@ -1,0 +1,137 @@
+math-coach/design/ux-redesign/prototype/app.css
+  s_f7fe7e394ee45d::t_4a873bf32542d9 194-198,400-472,478-481,484-485,620-623,631-637,639-650,1032-1051,1381-1484,1563-1564
+math-coach/design/ux-redesign/prototype/app.js
+  s_f7fe7e394ee45d::t_c4c18f62077fcf 152,175-177,213-217,219,221-233,235,239,244,253,258,264,285,308,316,321-369,389-393,397,406,424-425,427,489-490,492-493,497-515,530,574,683-684,708,720,724-735,769-814,1006,1010,1037,1044-1045,1049,1065,1067-1079,1082-1104,1106-1108,1110,1112,1114,1242-1243,1273-1274,1290-1300,1353,1355-1360,1367-1368,1373-1374,1377,1383,1386,1389,1396,1399-1400,1402-1404,1410,1419-1420,1453,1455-1458,1460-1482,1503,1526-1561,1569-1572,1590-1634,1668,1670-1672,1678,1683-1685,1687-1696,1699,1702,1707-1733,1744,1783,1785,1787-1790,1794,1830,1832-1835,1837-1838,1841,1884,1948-1949,1951-1963,1969,2068-2075,2082,2137,2189-2206,2228-2252,2254,2269-2270,2422,2505,2535-2540,2967,2970-2971,2988-2989,3425-3429,3438-3471,3473-3520,3523-3612,3614-3764,3766-3770,3772-3783,3785-3795,3797-3819,3823-3830,3986-3987,3989-3990,4371-4382,4385,4429,4479-4480,4487-4488,4498,4738,4763,4886-4888,4890-4893,4897-4902,4905,4910,4921,4926,4989,4993,5005,5010-5011,5019,5026,5060,5084,5096,5104,5111-5112,5130,5190-5196,5198-5199,5259,5261,5275-5276,5296,5323,5351,5353,5361,5368-5370,5372,5390,5425,5471-5474,5476-5477,5486,5488-5490,5492,5495,5500,5550-5557,5559,5582-5592,5617,5646-5649,5652-5664,5738-5740,5742,5747,5800,5802-5803,5859-5863,5958-5966,5982-5991,6107-6124,6129,6239-6249,6318,6660-6662,6897-6905,6941-6945,6970,6982-6983,7071-7072,7107,7226,7244,7422,7425-7430
+math-coach/design/ux-redesign/prototype/index.html
+  s_f7fe7e394ee45d::t_3baf08c0b16fbf 7,32
+math-coach/.cursor/agents/developer.md
+  s_d6fb3ac92879e9::t_64246d0a86fd48 1-52
+math-coach/.cursor/agents/interaction-designer.md
+  s_d6fb3ac92879e9::t_59509597dd1b37 1-65
+math-coach/.cursor/agents/product-analyst.md
+  s_d6fb3ac92879e9::t_4c6fb0ca26e658 1-54
+math-coach/.cursor/agents/qa-engineer.md
+  s_d6fb3ac92879e9::t_27d032a37d12c7 1-57
+math-coach/.cursor/agents/system-architect.md
+  s_d6fb3ac92879e9::t_cc066e3397cd64 1-59
+math-coach/.cursor/agents/ui-designer.md
+  s_d6fb3ac92879e9::t_0237b78d5ca0f3 1-67
+math-coach/.cursor/agents/ux-designer.md
+  s_d6fb3ac92879e9::t_be8824ed1dfe71 1-67
+math-coach/design/ux-round2/00_PROJECT_REVIEW.md
+  s_d6fb3ac92879e9::t_9cf4c80b018da0 1-78
+math-coach/design/ux-round2/01_CURRENT_PAGE_INVENTORY.md
+  s_d6fb3ac92879e9::t_08ccc6cc44e5f0 1-28
+math-coach/design/ux-round2/02_CURRENT_UI_AUDIT.md
+  s_d6fb3ac92879e9::t_ae4ec5dec19a26 1-141
+math-coach/design/ux-round2/03_HISTORICAL_VERSION_REVIEW.md
+  s_d6fb3ac92879e9::t_98cb7a8d8ea427 1-158
+math-coach/design/ux-round2/04_REFERENCE_PROJECT_REVIEW.md
+  s_d6fb3ac92879e9::t_1619484863f887 1-86
+math-coach/design/ux-round2/05_CONTENT_COUNTS.md
+  s_d6fb3ac92879e9::t_acf7cf344c2707 1-173
+math-coach/design/ux-round2/05_KNOWLEDGE_CONTENT_AUDIT.md
+  s_d6fb3ac92879e9::t_1809b4590329bd 1-32
+math-coach/design/ux-round2/06_COMPETITOR_COMPARISON.md
+  s_d6fb3ac92879e9::t_c9e5b22fbe98c4 1-25
+math-coach/design/ux-round2/07_UX_IMPROVEMENT_PLAN.md
+  s_d6fb3ac92879e9::t_3dd6a21835561b 1-95
+math-coach/design/ux-round2/08_GRAPH_REDESIGN_SPEC.md
+  s_d6fb3ac92879e9::t_3d33f4e119b839 1-125
+math-coach/design/ux-round2/09_INFORMATION_ARCHITECTURE.md
+  s_d6fb3ac92879e9::t_8bc0eaaaacbc25 1-151
+math-coach/design/ux-round2/10_INTERACTION_REDESIGN.md
+  s_d6fb3ac92879e9::t_9380b14d410e2d 1-167
+math-coach/design/ux-round2/11_COMPONENT_SPEC.md
+  s_d6fb3ac92879e9::t_1167f3c251fd1e 1-208
+math-coach/design/ux-round2/12_INTERACTION_SPEC.md
+  s_d6fb3ac92879e9::t_66faada73829bf 1-180
+math-coach/design/ux-round2/13_VISUAL_SYSTEM.md
+  s_d6fb3ac92879e9::t_3751fee8a492ff 1-144
+math-coach/design/ux-round2/14_DESIGN_PROTOTYPE_GUIDE.md
+  s_d6fb3ac92879e9::t_2ddf9a352e5f36 1-64
+math-coach/design/ux-round2/15_RESPONSIVE_AND_ACCESSIBILITY.md
+  s_d6fb3ac92879e9::t_43c6023adee6a5 1-112
+math-coach/design/ux-round2/16_UX_REVIEW.md
+  s_d6fb3ac92879e9::t_8e847126c918f6 1-47
+math-coach/design/ux-round2/17_UI_REVIEW.md
+  s_d6fb3ac92879e9::t_f256c27bb8132d 1-26
+math-coach/design/ux-round2/18_CONTENT_REVIEW.md
+  s_d6fb3ac92879e9::t_2a5d82a566087d 1-107
+math-coach/design/ux-round2/19_GRAPH_REVIEW.md
+  s_d6fb3ac92879e9::t_95bd573889479d 1-49
+math-coach/design/ux-round2/20_IMPLEMENTATION_HANDOFF.md
+  s_d6fb3ac92879e9::t_a0ef3530e803ea 1-191
+math-coach/design/ux-round2/21_FINAL_ACCEPTANCE.md
+  s_d6fb3ac92879e9::t_e7e1ff7b05c94b 1-67
+math-coach/design/ux-round2/22_CLICK_V128.md
+  s_d6fb3ac92879e9::t_73ddd96c074988 1-221
+math-coach/design/ux-round2/23_CLICK_ISOLATED.md
+  s_d6fb3ac92879e9::t_7bd2967ffdcddf 1-47
+math-coach/design/ux-round2/AGENT_REGISTRY.md
+  s_d6fb3ac92879e9::t_dba28818d872ee 1-52
+math-coach/design/ux-round2/BACKLOG.md
+  s_d6fb3ac92879e9::t_28e961aee29f46 1-18
+math-coach/design/ux-round2/DECISIONS.md
+  s_d6fb3ac92879e9::t_fd7c9138d9f98c 1-13
+math-coach/design/ux-round2/ISSUES.md
+  s_d6fb3ac92879e9::t_844f6b5724eef6 1-25
+math-coach/design/ux-round2/ITERATION_LOG.md
+  s_d6fb3ac92879e9::t_cbeed6ae570071 1-23
+math-coach/design/ux-round2/prototype/app.css
+  s_d6fb3ac92879e9::t_f67463a0e2d98b 1-1471
+math-coach/design/ux-round2/prototype/app.js
+  s_d6fb3ac92879e9::t_43937b62a68c3c 1-6716
+math-coach/design/ux-round2/prototype/index.html
+  s_d6fb3ac92879e9::t_5ea21127a201f4 1-34
+math-coach/design/ux-round2/screenshots/current/INDEX.md
+  s_d6fb3ac92879e9::t_c0652da13688eb 1-35
+math-coach/design/ux-round3/00_TEAM.md
+  s_d6fb3ac92879e9::t_335d39b28ffae9 1-20
+math-coach/design/ux-round3/01_PAGE_INVENTORY.md
+  s_d6fb3ac92879e9::t_0986a2f455df6f 1-337
+math-coach/design/ux-round3/02_INTERACTION.md
+  s_d6fb3ac92879e9::t_2cdc318f9f1002 1-279
+math-coach/design/ux-round3/03_UI_IPAD.md
+  s_d6fb3ac92879e9::t_abd9c23d196f58 1-109
+math-coach/design/ux-round3/04_TEACHING.md
+  s_d6fb3ac92879e9::t_6d29af520c8da3 1-209
+math-coach/design/ux-round3/05_OPTIMIZATION_PLAN.md
+  s_d6fb3ac92879e9::t_7797678e7a3f30 1-98
+math-coach/design/ux-round3/06_NEXT_PLAN.md
+  s_d6fb3ac92879e9::t_153fbe81750929 1-92
+math-coach/design/ux-round3/07_DELIVERY.md
+  s_d6fb3ac92879e9::t_43510cbd8f0ca9 1-28
+math-coach/design/ux-round3/08_ROUND.md
+  s_d6fb3ac92879e9::t_c56a5cf4b82f41 1-15
+math-coach/design/ux-round3/09_NEXT_PLAN.md
+  s_d6fb3ac92879e9::t_07d990efa9069a 1-70
+math-coach/design/ux-round3/10_NEXT_PLAN.md
+  s_d6fb3ac92879e9::t_30cc88cb8d59e4 1-60
+math-coach/design/ux-round3/11_NEXT_PLAN.md
+  s_d6fb3ac92879e9::t_a3c089038ee2b4 1-34
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "5f4783236f5b49a8c72984e66359a8fc889b0432",
+  "prompts": {},
+  "sessions": {
+    "s_d6fb3ac92879e9": {
+      "agent_id": {
+        "tool": "devin",
+        "id": "s_d6fb3ac92879e9",
+        "model": "unknown"
+      },
+      "human_author": "gordonwhu1982 <129141243+gordonwhu1982@users.noreply.github.com>"
+    },
+    "s_f7fe7e394ee45d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "445ce362-ceb0-4917-928b-14b30209f3d6",
+        "model": "grok-4.7"
+      },
+      "human_author": "gordonwhu1982 <129141243+gordonwhu1982@users.noreply.github.com>"
+    }
+  }
+}
