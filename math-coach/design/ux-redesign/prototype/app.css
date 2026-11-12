@@ -1857,12 +1857,16 @@ a.btn { display: inline-flex; align-items: center; justify-content: center; text
    题干 16 → 18px；题干与选项里的公式再放一档（KaTeX 行内分数本来就是 0.7em 的
    scriptstyle，不放大就只能看到一堆小数字）。定义行（.kp-with-def）的正文从
    --fs-small 提到 --fs-body，公式同步 1.1，读 10.2 分式基本性质那种定义才不吃力。 */
-:root { --fs-stem: 18px; --math-scale: 1.15em; --math-stem: 1.35em; --math-opt: 1.6em; }
+:root { --fs-stem: 18px; --math-scale: 1.15em; --math-stem: 1.35em; --math-opt: 1.6em; --math-plain: 1.06em; }
 /* 注意：这几档必须是带单位的 em。写成裸数字 1.2 时 font-size: var(--math-opt) 是非法声明，
    整条被浏览器丢掉，公式仍按 16px 渲染——第一版就是这么哑掉的（实测 .choice .katex 仍 16px）。 */
 .stem { font-size: var(--fs-stem); line-height: 1.75; }
-.stem .katex { font-size: var(--math-stem); }
-.list button .katex, .choice .katex { font-size: var(--math-opt); }
+/* 一行里只放大带分数的公式：纯数字/字母 1.06em 与中文齐平，含分数才抬到 --math-stem。
+   理由（用户两次反馈）：一律放大时「AB = 5」和「的取值范围是」一样高，孩子看到一行两种字号。 */
+.stem .katex { font-size: var(--math-plain); }
+.stem .katex.is-frac { font-size: var(--math-stem); }
+.list button .katex, .choice .katex { font-size: var(--math-plain); }
+.list button .katex.is-frac, .choice .katex.is-frac { font-size: var(--math-opt); }
 .kp-row.kp-with-def .katex { font-size: var(--math-scale); }
 .kp-row.kp-with-def .muted { font-size: var(--fs-body); }
 
@@ -1907,7 +1911,9 @@ a.btn { display: inline-flex; align-items: center; justify-content: center; text
      里面的分式盒 39–41px 就会被记成「被容器裁掉」。 */
   line-height: normal;
 }
-.choice.is-solo .katex, .list button.is-solo .katex { font-size: 2.15em; }
+/* 选项整条就是一个公式时要比行内大一点（它没有中文陪衬），但仍然只有分式才抬到最大档。 */
+.choice.is-solo .katex, .list button.is-solo .katex { font-size: var(--math-stem); }
+.choice.is-solo .katex.is-frac, .list button.is-solo .katex.is-frac { font-size: 2.15em; }
 .choice .opt-k { flex: 0 0 auto; margin-right: 12px; font-size: 15px; font-weight: 700; color: var(--c-text-3, #8b93a1); letter-spacing: .5px; }
 .choice.picked .opt-k { color: var(--c-primary); }
 .choice { display: flex; align-items: center; }

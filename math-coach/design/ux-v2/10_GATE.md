@@ -234,3 +234,13 @@ node design/ux-v2/tools/qa/smoke.mjs --strict   # 验收线，也应 0 失败
 - 缓存串（`bust.mjs`）：`app.css 6cc1b8d8 → a0c02ef1`、`app.js c59ed670 → 5182e4a5`；`bust.mjs --check` 四条 [ok]。
 - 出图：`screenshots/today-12-1-fix.png`（1180）、`screenshots/today-12-1-fix-1024.png`（1024）。
 - 探针：`C:/Users/liang.gao5/AppData/Local/Temp/probe_flat.mjs`（`W/H/CH/SEC/SHOT` 环境变量，走 `picks` 同款改 value 派 change），打印 `.gt` 字号、纯数字与分式两组字号、分数盒高、折行数、越界数。
+
+## §23 v0.16：练习页也只放大分式（全站一条判据）
+
+- **路由 30 → 31 条**（新增 `practice-12-1`），两视口 = **62 次**：`smoke.mjs` 与 `--strict` 各 62 次 **0 失败 rc=0**（`screenshots/smoke.json` / `smoke-strict.json`）。
+- 代码：`app.js` 的 `markFrac()` 选择器由「两处预览」扩到全站 `.katex`；`app.css` 新增 `--math-plain:1.06em`，并给题干/选项/整条公式选项各拆两档（`1.06em` / 原来的 `1.35em`、`1.6em`、`2.15em`）。
+- 新增全站度量 `mathPlainBad` / `mathFracSmall`（在 `MEASURE` 里，每条路由都跑）：纯数字 > 1.12× 宿主字号、或分式 < 1.15× 宿主字号，都直接判红。
+- 实测：12.1 题干 24.3 → **19.1px**（正文 18px）；10.2 题干分式 24.3px、选项分式 25.6px 均不变；整条公式选项 38.7 → 24.3px（含分数仍 38.7px）。
+- 负例：`.stem .katex` 回 1.35em → 两条断言同时红；`.stem .katex.is-frac` 压到 1.06em → `含分数的公式没放大 1 处（19/18）` 红。
+- 缓存串（`bust.mjs`）：`app.css a0c02ef1 → 941d3226`、`app.js 5182e4a5 → 0b1af704`。
+- 出图：`screenshots/practice-one-12-1-ab5.png`（用户报的那道「AB = 5」，1180）、`screenshots/practice-plain-12-1.png`（12.1 一组的第 1 题）、`screenshots/practice-math-10-2.png`（分式仍大）、`screenshots/practice-math-11-2.png`。
