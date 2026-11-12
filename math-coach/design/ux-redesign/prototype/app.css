@@ -1916,11 +1916,16 @@ a.btn { display: inline-flex; align-items: center; justify-content: center; text
 /* 账本里只是「这题长什么样」的一行预览，跟着正题放到 18px + 1.35em 会把 1024 宽的右栏顶穿
    （实测 .qband-list .qcell .stem .math-keep 宽 332px，右边越过视口 14px）。预览回小字号并允许折行。 */
 .qband-list .qcell .stem { font-size: var(--fs-small, 14px); }
-.qband-list .qcell .stem .katex { font-size: 1.3em; }
+/* 只有含分数的公式才放大：1.3em 落在「10」「5」「18 cm」这类纯数字上，数字比中文高一头，
+   同一行像两种字体拼起来（第八轮只量了分式，没量同一行的纯数字，所以漏了）。 */
+.qband-list .qcell .stem .katex { font-size: 1.1em; }
+.qband-list .qcell .stem .katex.is-frac { font-size: 1.3em; }
 
 /* 「今天先做这 N 道」的题干预览也一样看不清：基准 14px 乘 1.21 = 16.94px，分式的分子分母只剩 12px，
    一道 6/8 在屏上就是个灰点。预览只有一行，正文吃 --fs-body(15px)、公式 1.5em = 22.5px；
    最长的分数式在 22.5px 下约 80px，263px 的行宽装得下（1024 宽实测 ovf 0）。 */
 .grow .gt { font-size: var(--fs-body); line-height: 1.45; }
-.grow .gt .katex { font-size: 1.6em; }
+/* 预览：纯数字/字母跟正文齐高（1.06em）；带分数的才放大到 1.6em（分数盒约 30px）。 */
+.grow .gt .katex { font-size: 1.06em; }
+.grow .gt .katex.is-frac { font-size: 1.6em; }
 .katex { display: inline-block; }

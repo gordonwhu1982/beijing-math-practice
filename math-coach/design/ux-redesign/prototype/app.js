@@ -7180,7 +7180,17 @@ function topBar() {
     为什么不切：切在 $..$ 中间会把公式拆坏（见 briefStem 的注释）；为什么改字号不改行高：预览是缩略图，
     长式子在小图里本来就该小一点；为什么必须有下限：缩到读不出数就白画了。下限 11px（外层）≈ 公式 17px。
     只在渲染后跑一趟，不做持续监听：这批节点每次重绘都重建。 */
+/* 预览里的公式分两类：含分数（.mfrac）的才放大，纯数字/字母跟正文齐高。
+   为什么用类不用 CSS :has()：判据要能直接查 .katex.is-frac，也省得赌浏览器特性。
+   为什么必须在 fitTightMath 之前跑：它读的是最终字号，先打标记再判断有没有超宽。 */
+function markFrac() {
+  Array.prototype.forEach.call(document.querySelectorAll('.glist .gt .katex, .qband-list .qcell .stem .katex'), function (k) {
+    k.classList.toggle('is-frac', !!k.querySelector('.mfrac'));
+  });
+}
+
 function fitTightMath() {
+  markFrac();
   const hosts = document.querySelectorAll('.glist .gt, .qband-list .qcell .stem');
   Array.prototype.forEach.call(hosts, function (host) {
     const box = host.clientWidth;

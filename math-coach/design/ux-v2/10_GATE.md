@@ -224,3 +224,13 @@ node design/ux-v2/tools/qa/smoke.mjs --strict   # 验收线，也应 0 失败
 - 基线自证：`UXV2_PRE=/design/ux-redesign/prototype/ UXV2_PORT=8792 UXV2_CDP=9492 node design/ux-v2/tools/qa/smoke.mjs` → **58 次 0 失败**（`screenshots/smoke-baseline.json`）。`cdp.mjs` 的 `PRE` 因此改成 `process.env.UXV2_PRE || '/design/ux-v2/app/'`。
 - `sync_baseline.mjs --check` → 「结果: 基线 == ux-v2/app」，rc=0（`screenshots/baseline-sync.json`）；`UXV2_APP=…/prototype node tools/qa/bust.mjs --check` → 四条 `[ok]`。
 - 负例天然存在：同步前 `--check` 报 5 处不一致（3 个内容不同 + `js/core.js`、`js/state.js` 基线缺），rc=1。
+
+## §22 v0.15：预览里只有带分数的公式才放大
+
+- **路由 29 → 30 条**（新增 `ledger-plain-12-1`），两视口 = **60 次**：`smoke.mjs` 与 `--strict` 各 60 次 **0 失败 rc=0**（`screenshots/smoke.json` / `smoke-strict.json`）。
+- 代码：`app.js` 新增 `markFrac()`（`fitTightMath()` 第一行调用，给含 `.mfrac` 的 `.katex` 打 `is-frac`）；`app.css` 两档字号——`.grow .gt .katex{1.06em}` / `.katex.is-frac{1.6em}`，`.qband-list .qcell .stem .katex{1.1em}` / `.is-frac{1.3em}`。
+- 实测（1180 与 1024 两档一致）：12.1 中文 15px、纯数字 **15.9px**（改前 24）、折行 0、ovf 0；10.2 分式 24px、分数盒 29px（与上一轮一致，用户认可的那一版没被拉小）。
+- 负例：`markFrac` 关掉 → `看到「nofrac」…` 双视口红；`.grow .gt .katex` 改回 `1.6em` → `看到「big:24,24,24,24,24,24,24,24」…` 双视口红。
+- 缓存串（`bust.mjs`）：`app.css 6cc1b8d8 → a0c02ef1`、`app.js c59ed670 → 5182e4a5`；`bust.mjs --check` 四条 [ok]。
+- 出图：`screenshots/today-12-1-fix.png`（1180）、`screenshots/today-12-1-fix-1024.png`（1024）。
+- 探针：`C:/Users/liang.gao5/AppData/Local/Temp/probe_flat.mjs`（`W/H/CH/SEC/SHOT` 环境变量，走 `picks` 同款改 value 派 change），打印 `.gt` 字号、纯数字与分式两组字号、分数盒高、折行数、越界数。

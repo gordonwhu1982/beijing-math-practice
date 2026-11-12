@@ -90,3 +90,8 @@
 > - 自证：`--check` 报「基线 == ux-v2/app」；`UXV2_PRE=/design/ux-redesign/prototype/ node design/ux-v2/tools/qa/smoke.mjs` **58 次 0 失败**；`bust.mjs --check` 四条 [ok]。新 tag `ux-baseline-20261112.2`。
 > - 旧文档里「prototype 一个字都不许改」的口径作废，改成「同步进来的那一份必须是验过的」，见 `01_BASELINE_FREEZE.md` §6。
 > - 远端：仓此前没有 remote，本次建 GitHub 私有仓并推送（`main` + 全部 tag）。
+
+> 补记（2026-11-12 晚，预览里只有分数才放大）
+>
+> - 上一轮把预览公式一律 1.6em，结果 `10`/`3`/`18 cm` 这些纯数字比中文高一头（用户 m25453 截图）。改成 `markFrac()` 打 `is-frac`：只有含 `.mfrac` 的公式放大（1.6em），其余跟正文齐（1.06em）；账本格子同理（1.1em / 1.3em）。见 FD-63 与 10_GATE.md §22。
+> - 路由 29 → 30（`ledger-plain-12-1` 专盯「没有分数的预览」），闸门 60 次 × 2 档 0 失败；两条负例都红过。
