@@ -732,3 +732,11 @@
 - **判据 `fit`**：`map-names` 增加「浮层底边 ≤ 视口底边」（`fit = top + height <= innerHeight + 1`）。高度靠 CSS 猜过一次，就得有一条线把它钉住。
 - **判据 GHOST（新）**：`#map-cross` / `#map-side` 没 hidden，但 rect 的高或宽 < 8 就判红。来由是我自己找「点名」列表时被 `#map-cross` 骗过一次——容器在、里面只有一行标题、高 0，屏幕上一片空白，而「有元素、有文字、没 hidden」三条全满足。**元素存在不等于它看得见。** 负例：把测量里的 `if (!el || el.hidden) return` 临时改成「不看 hidden」→ `[FAIL] GHOST map 「map-side(0x0)」没隐藏但高度是 0：里面的内容一条也看不见，读者会以为没做出来`，RC=2；还原后 RC=0。
 - **判据代号 37 → 38**。证据：`out/probe_side.js`（两种宽度各一次开合，`ovf` 全 0、`errs` 全空）、`node tools/web_smoke.js` → **63/63 PASS**（`out/smoke_n4.log`）、`node tools/ux_asserts.js` → RC=0 共 29 次路由全 [ok]（`out/ux_n2.log`）、`bash tools/check_all.sh --web` → RC=0（`out/check_all_n4.log`）。
+
+### 2026-11-12 起：界面优化主线移到 design/ux-v2
+
+`design/ux-redesign/prototype/`（app.js v215 / app.css v181）是 cursor 那轮交付的原型，已冻结为基准：tag `ux-baseline-20261112` = `6c12ec3`，**不再改动这个目录**。
+新一轮在与原型同结构的副本 `design/ux-v2/app/` 上做，规划文档在 `design/ux-v2/00–10_*.md`，独立评审在 `design/ux-v2/reviews/`，验收脚本在 `design/ux-v2/tools/qa/`。
+
+看界面：仓根 `python -m http.server 8780` → `http://127.0.0.1:8780/design/ux-v2/app/#/today`（必须在仓根起服务，原型用 `../../../` 引 katex 与切片）。
+验收：`node design/ux-v2/tools/qa/smoke.mjs`（回归线 13px/32px）与 `--strict`（验收线 14px/40px），两条都要 0 失败；缓存串用 `node design/ux-v2/tools/qa/bust.mjs` 重算。
