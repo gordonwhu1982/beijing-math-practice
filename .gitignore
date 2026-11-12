@@ -14,3 +14,7 @@ out/
 data/verification_report.json
 # 独立复核的临时产物
 data/_second_pass/
+
+# git-ai 采集器的 post-commit 钩子在本机把 HOME 解析成字面量 ~，
+# 会在仓根建一个 ~/ 目录（日志与待发队列），不许进公开仓。
+/~/
