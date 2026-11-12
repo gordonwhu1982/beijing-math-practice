@@ -26,7 +26,7 @@
   --fs-question: 16px;
   --fs-body: 15px;
   --fs-btn: 15px;
-  --fs-small: 13px;
+  --fs-small: 14px;
   --s-1: 4px;
   --s-2: 6px;
   --s-3: 8px;
@@ -147,7 +147,13 @@ p { font-size: var(--fs-body); line-height: 1.45; margin: 6px 0; }
   color: var(--c-bad);
   border: 2px solid var(--c-bad);
 }
+/* 文字按钮也是手指要点的目标：inline 元素的 min-height 不生效，
+     显式 inline-flex 才撑得住 40px 的命中区（验收 A5）。 */
 .link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
   color: var(--c-primary);
   background: none;
   border: 0;
@@ -363,9 +369,11 @@ aside.card.hint-side { align-items: stretch; }
   gap: 10px;
   align-items: start;
 }
+/* 右列是「题目账本」：固定宽度的侧栏（和 chapter-page 的侧栏同一套读法），
+   不参与正文列的 1fr 拉伸，免得一行字被撑到 700px 宽。 */
 .today {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
   gap: 12px;
   align-items: start;
 }
@@ -480,9 +488,81 @@ aside.card.hint-side { align-items: stretch; }
 .kp-open .link.is-thought.is-on { border-width: 2px; padding: 7px 11px; }
 .kp-thought-note { margin: 8px 0 0; padding: 2px 0 2px 12px; border-left: 3px solid #d0a24a; color: var(--c-text); font-size: var(--fs-body); line-height: 1.55; }
 .today-side { display: flex; flex-direction: column; gap: 12px; }
-.today .qgrid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); align-content: start; }
-.qband { margin: 0 0 12px; }
-.qband > summary { cursor: pointer; font-size: var(--fs-h3); font-weight: 650; margin: 0 0 8px; }
+/* 题目账本：一道细分色带 + 五行比例尺。颜色全部沿用 --mark 家族，
+   和知识点页的题目跳转点是同一套色，同一档题在两页上是同一个颜色。 */
+.today-qs { position: sticky; top: 0; align-self: start; min-width: 0; }
+.today .qgrid { grid-template-columns: 1fr; align-content: start; margin: 2px 0 10px; padding-left: 10px; }
+.today .qcell { min-width: 0; }
+.qs-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.qs-head h2 { margin: 0; min-width: 0; }
+.qs-total { flex: none; font-size: var(--fs-small); color: var(--c-text-2); font-variant-numeric: tabular-nums; }
+.qs-total b { color: var(--c-text); font-weight: 650; font-size: var(--fs-h3); }
+.qbar { display: flex; gap: 2px; height: 8px; margin: 10px 0 6px; }
+.qbar > i { display: block; height: 100%; background: var(--mark); border-radius: 2px; }
+.qbar > i:first-child { border-radius: var(--r-pill) 2px 2px var(--r-pill); }
+.qbar > i:last-child { border-radius: 2px var(--r-pill) var(--r-pill) 2px; }
+.qledger { display: flex; flex-direction: column; }
+.qband-list {
+  max-height: min(46vh, 420px);
+  overflow: auto;
+  padding-right: 2px;
+  /* 展开只是回看，不是练习页：列表自己滚，账本不要被 24 道题拉成三千像素高。 */
+}
+.qband { margin: 0; border-top: 1px solid var(--c-line); }
+.qband:first-child { border-top: 0; }
+.qband > summary {
+  display: grid;
+  grid-template-columns: 3.4em minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-height: var(--btn-h);
+  padding: 0 10px;
+  margin: 0;
+  border-left: 3px solid var(--mark);
+  border-radius: 2px var(--r-md) var(--r-md) 2px;
+  cursor: pointer;
+  font-size: var(--fs-body);
+  font-weight: 600;
+  list-style: none;
+}
+.qband > summary::-webkit-details-marker { display: none; }
+.qband > summary:hover { background: var(--c-bg); }
+.qband[open] > summary { background: var(--mark-bg); }
+.qb-name { color: var(--mark); font-weight: 650; white-space: nowrap; }
+.qb-track { display: block; height: 6px; border-radius: var(--r-pill); background: var(--c-bg); overflow: hidden; }
+.qb-track > i { display: block; height: 100%; border-radius: inherit; background: var(--mark); opacity: .85; }
+.qb-n { color: var(--c-text-2); font-size: var(--fs-small); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.qb-n b { color: var(--c-text); font-weight: 650; font-size: var(--fs-body); }
+.qs-foot { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--c-line); }
+.qs-fact { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; font-size: var(--fs-small); color: var(--c-text-2); }
+.qs-fact + .qs-fact { margin-top: 2px; }
+.qs-fact b { color: var(--c-text); font-variant-numeric: tabular-nums; }
+.qs-foot p { margin: 6px 0 0; }
+.today-qs .grp { margin-top: 12px; }
+.today-qs .grp h2 { margin: 0 0 8px; }
+.glist { display: flex; flex-direction: column; }
+/* 这 8 道就是点「开始练」会拿到的 8 道：一行一道，左边那道色条是档位，
+   和上面账本、和知识点页的题目跳转点是同一套色。 */
+.grow {
+  display: grid;
+  grid-template-columns: 1.4em minmax(0, 1fr);
+  align-items: baseline;
+  column-gap: 8px;
+  padding: 7px 8px;
+  border: 0;
+  border-left: 3px solid var(--mark);
+  border-radius: 2px var(--r-md) var(--r-md) 2px;
+  background: transparent;
+  font: inherit;
+  color: var(--c-text);
+  text-align: left;
+  cursor: pointer;
+  min-height: var(--btn-h);
+}
+.grow:hover, .grow:focus-visible { background: var(--c-bg); }
+.grow .gn { color: var(--mark); font-weight: 650; font-variant-numeric: tabular-nums; text-align: right; }
+.grow .gt { font-size: var(--fs-small); line-height: 1.4; min-width: 0; }
+.grow .gm { grid-column: 2; font-size: var(--fs-small); color: var(--c-text-2); }
 .today .qcell { min-width: 0; }
 .two, .board { grid-template-columns: 1fr 1fr; }
 .two { align-items: start; }
@@ -1393,6 +1473,7 @@ textarea.process {
 .is-band-advanced { --mark: #8a5009; --mark-bg: #fdeed6; --mark-bd: #f0d3a4; }
 .is-band-challenge { --mark: #a52d10; --mark-bg: #fde5dd; --mark-bd: #f3c2b4; }
 .is-band-competition { --mark: #5B21B6; --mark-bg: #F3E8FF; --mark-bd: #7c3aed; }
+.is-band-other { --mark: var(--c-skip); --mark-bg: var(--c-skip-soft); --mark-bd: var(--c-line); }
 .is-kpt-concept, .is-kpt-representation,
 .is-kpt-theorem, .is-kpt-property, .is-kpt-formula,
 .is-kpt-skill, .is-kpt-method, .is-kpt-model,
@@ -1555,7 +1636,12 @@ textarea.process {
   .layer-board .map > .col:nth-child(3) .link { white-space: normal; }
 }
 @media (max-width: 980px) { .method-grid { grid-template-columns: 1fr; } }
+@media (max-width: 1100px) {
+  .today { grid-template-columns: minmax(0, 1fr) minmax(280px, 340px); }
+}
 @media (max-width: 900px) {
+  .today { grid-template-columns: 1fr; }
+  .today-qs { position: static; }
   .app { flex-direction: column; }
   .nav, .nav.rail { width: auto; display: flex; gap: 8px; overflow: auto; }
 }
@@ -1691,3 +1777,150 @@ textarea.process {
 .figbox { margin: 8px 0 2px; padding: 8px 8px 2px; background: #f8fafc; border: 1px solid var(--line, #e2e8f0); border-radius: 12px; }
 .figbox svg { width: 100%; max-width: 440px; height: auto; display: block; margin: 0 auto; background: #fff; border-radius: 8px; }
 .figbox figcaption { font-size: var(--fs-small); line-height: 1.45; color: var(--ink, #334155); margin: 8px 4px 6px; }
+
+/* 出口链接当按钮用：.btn 原本只按 <button> 调过，<a> 要补对齐与去下划线。 */
+a.btn { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+
+/* 还没选节的时候，方法/思想两栏只有一句「先选一节。」，却各占半屏，
+   节名单被压在 329px 的小窗里，12.10 以后要自己滚才看得见。没选节就把节名单拉满高。 */
+.layer-board.is-nosec .map > .col:nth-child(1) { grid-row: 1 / span 2; }
+/* 命中区底线（验收 A5 = 40px）：文字按钮与画布小控件都抬到 40。
+   不做「视觉 22px、命中 44px」的伪包装 —— 量什么就是什么。 */
+.link, .kp-back .link, .tier-switch .link { min-height: var(--btn-h); }
+.pano-strip .ch { min-height: var(--btn-h); }
+.field-zoom button { height: var(--btn-h); }
+.method-links .link { min-height: var(--btn-h); }
+.float-modes button { min-height: var(--btn-h); }
+
+/* ---- 课本页的册色与节签 ----------------------------------------------
+   六册各一个色相，只用来「认册」，不拿来装饰：册按钮的左边一条、章行左边一条、
+   节行的底色都取同一个 --vh，于是从上到下同一册同一种颜色，翻册即换色。
+   节行末尾那串小圆点是这一节知识点的类型构成（颜色与知识点行同一套 --kpt）。 */
+.v-701 { --vh: #0F766E; --vh-soft: #E7F4F1; }
+.v-702 { --vh: #1D4ED8; --vh-soft: #E9EFFD; }
+.v-801 { --vh: #6D28D9; --vh-soft: #F1EAFD; }
+.v-802 { --vh: #A21C63; --vh-soft: #FBEAF2; }
+.v-901 { --vh: #B45309; --vh-soft: #FDF0E3; }
+.v-902 { --vh: #166534; --vh-soft: #E9F5ED; }
+
+.book-list .vol { border-left: 4px solid var(--vh, var(--c-line)); }
+.book-list .vol .vol-name { font-weight: 700; }
+.book-list .vol .vol-meta { font-size: var(--fs-small); color: var(--vh, var(--c-text-2)); }
+.book-list .ch-row { border-left: 3px solid var(--vh, var(--c-line)); }
+.book-list .ch-row .ch-name { font-weight: 650; }
+.book-list .ch-row .ch-meta { font-size: var(--fs-small); color: var(--c-text-2); }
+.book-list .sec-row { background: var(--vh-soft, #f7f9fc); }
+.book-list .sec-row .sec-name { font-weight: 600; }
+.sec-dots { display: inline-flex; align-items: center; gap: 4px; margin-right: 8px; vertical-align: -1px; }
+.sec-dots i { display: block; width: 8px; height: 8px; border-radius: 50%; background: var(--kpt, var(--c-line)); }
+
+/* 知识点按类型分组：一类一行小标题，名字取类型色，右边一条细线接到行尾。
+   行里就不再重复印类型名（.kpt-group .kp-row em 收掉），颜色靠行的底色和左条继续传达。 */
+.kpt-group { display: flex; flex-direction: column; gap: 8px; }
+.kpt-head { display: flex; align-items: center; gap: 8px; min-height: 24px; }
+.kpt-name { font-size: var(--fs-small); font-weight: 700; color: var(--kpt, var(--c-text-2)); }
+.kpt-n { font-size: var(--fs-small); color: var(--c-text-2); font-variant-numeric: tabular-nums; }
+.kpt-head::after { content: ""; flex: 1 1 auto; height: 1px; background: color-mix(in srgb, var(--kpt, var(--c-line)) 24%, #fff); }
+.kpt-rows { display: flex; flex-direction: column; gap: 8px; }
+.kpt-group .kp-row em { display: none; }
+
+/* 册 / 章 / 节是三层，不能三层都长成同一张卡片：册是抬起来的卡，章是它下面的一条
+   横排抬头（不带阴影、不铺底），节才是可以点的浅色块。层级靠高度与底色拉开。 */
+.book-list button.ch-row {
+  background: transparent;
+  box-shadow: none;
+  min-height: 40px;
+  padding: 4px 12px;
+  border-radius: var(--r-md);
+}
+.book-list button.ch-row:hover { background: #fff; }
+.book-list .ch-row .ch-name { font-size: var(--fs-h3); }
+.book-list .vol { min-height: 52px; }
+.book-list .vol .vol-name { font-size: var(--fs-h2); }
+
+/* 方法按档分组：组头颜色用档色（课本蓝 / 培优琥珀 / 竞赛紫），与 chips 上的档色一致。 */
+.skt-group { display: flex; flex-direction: column; gap: 6px; margin: 0 0 10px; }
+.skt-group .kpt-head { min-height: 20px; }
+.skt-group.is-tier-book { --kpt: var(--c-primary); }
+.skt-group.is-extend { --kpt: #8A4E12; }
+.skt-group.is-olymp { --kpt: #5B21B6; }
+.skt-group .kpt-name { font-size: var(--fs-small); letter-spacing: 0.02em; }
+
+/* 组头已经写明是哪一类，chips 上不再重复印一次「课本」；桌面把知识点列表放开，
+   免得一个分组被 max-height 切在中间（切一半比长一点更难读）。 */
+.skt-group .link em { display: none; }
+@media (min-width: 1000px) {
+  .kp-rows.scroll { max-height: none; overflow: visible; }
+}
+
+/* ---- 字号与公式：题目放大、分式放大 ------------------------------------
+   题干 16 → 18px；题干与选项里的公式再放一档（KaTeX 行内分数本来就是 0.7em 的
+   scriptstyle，不放大就只能看到一堆小数字）。定义行（.kp-with-def）的正文从
+   --fs-small 提到 --fs-body，公式同步 1.1，读 10.2 分式基本性质那种定义才不吃力。 */
+:root { --fs-stem: 18px; --math-scale: 1.15em; --math-stem: 1.35em; --math-opt: 1.6em; }
+/* 注意：这几档必须是带单位的 em。写成裸数字 1.2 时 font-size: var(--math-opt) 是非法声明，
+   整条被浏览器丢掉，公式仍按 16px 渲染——第一版就是这么哑掉的（实测 .choice .katex 仍 16px）。 */
+.stem { font-size: var(--fs-stem); line-height: 1.75; }
+.stem .katex { font-size: var(--math-stem); }
+.list button .katex, .choice .katex { font-size: var(--math-opt); }
+.kp-row.kp-with-def .katex { font-size: var(--math-scale); }
+.kp-row.kp-with-def .muted { font-size: var(--fs-body); }
+
+/* ---- 章页（这一章的节）也要有册色 ------------------------------------
+   课本页的节行已经有 --vh-soft 底，章页用的是同一批节，不能还是白卡：
+   左边一条 3px 册色 + 极浅册色底，鼠标移上去恢复白底，让「可点」这件事仍然成立。 */
+.chapter-page .kp-row {
+  background: var(--vh-soft, #f7f9fc);
+  border-left: 3px solid var(--vh, var(--c-line));
+}
+.chapter-page .kp-row:hover, .chapter-page .kp-row:focus-visible { background: #fff; }
+
+/* ---- 只看课本 / 连培优 / 再加竞赛：一颗芯片一个档色 -------------------
+   这三颗是一个控件，全站只有 kpBandSwitch() 一处生成，所以样式也只写一处：
+   未选 = 白底 + 档色字 + 档色淡描边；选中 = 档色淡底 + 档色实描边 + 档色粗字。
+   档色复用 .is-tier-book / .is-extend / .is-olymp 已有的 --mark 家族，不另立一套。 */
+.tier-switch .link {
+  background: #fff;
+  border-color: color-mix(in srgb, var(--mark, var(--c-line)) 40%, #fff);
+  color: var(--mark, var(--c-text-2));
+  font-weight: 550;
+}
+.tier-switch .link.on {
+  background: var(--mark-bg, var(--c-primary-soft));
+  border-color: var(--mark, var(--c-primary));
+  color: var(--mark, var(--c-primary));
+  font-weight: 700;
+}
+.tier-switch .link:hover { background: var(--mark-bg, #fff); }
+
+/* 分式要真的看得清：选项整行给足高度，让 1.6em 的分数（分子分母各 0.7em）不被行高挤扁。 */
+.choice, .list button { min-height: 52px; }
+/* 选项整条只有一个公式（分式/根式）时，它有整行可用，不必和正文一样大：放到 2.15em，
+   分子分母各 0.7em 仍有 22px 左右，四行高度一撑起来就不会「一排小字飘在空行里」。 */
+/* 公式自己算高度：写死 line-height 会把 inline-block 框压矮，分式上下被裁（41+ 实测 49 vs 57）。 */
+.choice .katex, .list button .katex { line-height: normal; }
+/* math-keep 是行内元素，框高只跟字走，里面的 inline-block 分式（41px）会被记成「被裁」。
+   题目区和选项里让它自己也成块，框高跟着内容长。 */
+.choice .math-keep, .list button .math-keep, .work .card p .math-keep {
+  display: inline-block;
+  /* 行高也要交回 normal：盒子按正文字号的行高（1.75×18=31.5、33px）算，
+     里面的分式盒 39–41px 就会被记成「被容器裁掉」。 */
+  line-height: normal;
+}
+.choice.is-solo .katex, .list button.is-solo .katex { font-size: 2.15em; }
+.choice .opt-k { flex: 0 0 auto; margin-right: 12px; font-size: 15px; font-weight: 700; color: var(--c-text-3, #8b93a1); letter-spacing: .5px; }
+.choice.picked .opt-k { color: var(--c-primary); }
+.choice { display: flex; align-items: center; }
+.work .card p .katex, .stem .katex { line-height: normal; }
+
+/* 账本里只是「这题长什么样」的一行预览，跟着正题放到 18px + 1.35em 会把 1024 宽的右栏顶穿
+   （实测 .qband-list .qcell .stem .math-keep 宽 332px，右边越过视口 14px）。预览回小字号并允许折行。 */
+.qband-list .qcell .stem { font-size: var(--fs-small, 14px); }
+.qband-list .qcell .stem .katex { font-size: 1.3em; }
+
+/* 「今天先做这 N 道」的题干预览也一样看不清：基准 14px 乘 1.21 = 16.94px，分式的分子分母只剩 12px，
+   一道 6/8 在屏上就是个灰点。预览只有一行，正文吃 --fs-body(15px)、公式 1.5em = 22.5px；
+   最长的分数式在 22.5px 下约 80px，263px 的行宽装得下（1024 宽实测 ovf 0）。 */
+.grow .gt { font-size: var(--fs-body); line-height: 1.45; }
+.grow .gt .katex { font-size: 1.6em; }
+.katex { display: inline-block; }

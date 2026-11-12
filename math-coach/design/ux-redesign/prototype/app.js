@@ -95,104 +95,6 @@ const POINT_METHOD = {
   "三角形的记法": { method: "用符号 △", idea: "符号意识", line: "△ABC 读作三角形 ABC，不是角 ABC。" }
 };
 
-const state = {
-  route: "today",
-  nav: "today",
-  rail: false,
-  bookOpen: true,
-  bookVol: "801",
-  volId: "801",
-  chNo: "12",
-  secId: "12.1",
-  afterExplain: false,
-  queue: [],
-  index: 0,
-  mode: "practice",
-  source: "today",
-  picked: null,
-  revealed: false,
-  hintOpen: 0,
-  hintFold: {},
-  hintPanel: "",
-  hintUsed: {},
-  given: {},
-  blank: "",
-  formatNote: "",
-  explainId: null,
-  showOk: false,
-  processOpen: false,
-  processes: {},
-  openText: "",
-  awaitingJudge: false,
-  answers: {},
-  owedOn: {},
-  setMarks: {},
-  peeked: {},
-  setPeeked: {},
-  skippedIds: [],
-  drafts: {},
-  draft: null,
-  baseline: {},
-  testPicks: {},
-  testSkipped: {},
-  mapMode: "layer",
-  mapPoint: null,
-  mapCard: false,
-  mapNetNo: 12,
-  mapLevel: "course",
-  mapSection: "",
-  mapZoom: 1,
-  mapPanX: 0,
-  mapPanY: 0,
-  mapShowAll: false,
-  kpBand: "olympiad",
-  methodCards: false,
-  mapSideOpen: true,
-  mapSkill: "",
-  layerAll: false,
-  methodId: "",
-  drillKind: "kp",
-  qId: "",
-  qVol: "",
-  qNo: "",
-  mapBook: "801",
-  mapChapter: "801-12",
-  mapLiteracy: "",
-  mapMethod: "",
-  mapIdea: "",
-  chapterFrom: "book",
-  recordFrom: "review",
-  scrolls: {},
-  query: "",
-  searchOpen: false,
-  testBack: "",
-  checked: { "三角形的定义": false },
-  kpName: "三角形的定义",
-  kpMark: "",
-  kpQid: "",
-  kpSource: "",
-  kpTrail: [],
-  kpOpen: "",
-  kpOpenFor: "",
-  kpThought: "",
-  kpExplain: false,
-  kpFrom: "section",
-  testScope: "review",
-  pendingScope: "",
-  liveScope: "",
-  priorOwed: null,
-  chapterBefore: null,
-  lastChange: null,
-  exportNote: "",
-  flash: "",
-  aboutData: false,
-  ignoreHash: false,
-  todayVol: "801",
-  todayChapter: "12",
-  todaySec: "12.1",
-  practiceTitle: ""
-};
-
 /** Choice questions loaded from a section file, keyed by practice id. */
 const BANK = {};
 
@@ -232,6 +134,7 @@ function rememberRow(row, vol, sec) {
     BANK[id] = entry;
   }
   const fill = row.form === "fill" ? plainFill(row) : "";
+  const noOpts = row.form === "choice" && !(row.opts && row.opts.list && row.opts.list.length);
   if (!holdForSelfCheck(row) && row.form === "choice" && row.opts && row.opts.list && row.opts.list.length && row.opts.key) {
     const options = row.opts.list.map(function (opt) { return opt.text; });
     const answer = row.opts.list.findIndex(function (opt) { return opt.key === row.opts.key; });
@@ -250,7 +153,7 @@ function rememberRow(row, vol, sec) {
       return (opt.key ? opt.key + ". " : "") + (opt.text || "");
     }).join("　");
   }
-  store({ id: id, kind: "open", stem: stem, answer: row.ans || "", kp: kp, explain: row.note || "" });
+  store({ id: id, kind: "open", stem: stem, answer: row.ans || "", kp: kp, explain: row.note || "", noOpts: noOpts });
   return id;
 }
 
@@ -427,6 +330,13 @@ function retryIds() {
   });
 }
 
+/** Remember that this question itself opened a hint. Marks belong to the question, not to whoever is on screen when the set is handed in. */
+function markHintUse() {
+  const id = state.queue[state.index];
+  if (!id) return;
+  if (state.hintOpen > (state.hintUsed[id] || 0)) state.hintUsed[id] = state.hintOpen;
+}
+
 /** Write a mark for this set without treating older sets as already handed in. */
 function record(id, mark) {
   const item = questionById(id);
@@ -435,7 +345,6 @@ function record(id, mark) {
   if (mark === "bad" || mark === "empty" || mark === "peek" || mark === "skip") {
     if (!state.owedOn[id]) state.owedOn[id] = todayLabel();
   } else if (mark === "ok") delete state.owedOn[id];
-  if (state.hintOpen > 0) state.hintUsed[id] = state.hintOpen;
   if (item && item.kind === "open") state.given[id] = (state.mode === "test" ? state.testPicks[id] : state.openText) || "空着";
   else if (item && item.kind === "blank") state.given[id] = (state.mode === "test" ? state.testPicks[id] : state.blank) || "空着";
   else if (item && item.options && state.picked !== null && state.picked !== undefined) state.given[id] = item.options[state.picked];
@@ -593,6 +502,7 @@ function saveDraft() {
     testSkipped: Object.assign({}, state.testSkipped),
     setMarks: Object.assign({}, state.setMarks),
     setPeeked: Object.assign({}, state.setPeeked),
+    afterPeek: Object.assign({}, state.afterPeek),
     skippedIds: state.skippedIds.slice(),
     baseline: Object.assign({}, state.baseline),
     testScope: scope,
@@ -632,6 +542,7 @@ function resumeDraft(source) {
   state.testSkipped = Object.assign({}, draft.testSkipped || {});
   state.setMarks = Object.assign({}, draft.setMarks || {});
   state.setPeeked = Object.assign({}, draft.setPeeked || {});
+  state.afterPeek = Object.assign({}, draft.afterPeek || {});
   state.skippedIds = (draft.skippedIds || []).slice();
   state.baseline = Object.assign({}, draft.baseline);
   state.testScope = draft.testScope;
@@ -678,6 +589,9 @@ function beginQueue(ids, mode, source) {
   state.skippedIds = [];
   state.queue = ids.slice();
   state.index = 0;
+  /* 题号跟着题走。跳过后队列会轮转，位次必须从开场时的顺序来，不能读当前下标。 */
+  state.ord = {};
+  ids.forEach(function (id, at) { state.ord[id] = at + 1; });
   state.mode = mode;
   state.source = source;
   state.changeKey = queueChapterKey(ids);
@@ -946,10 +860,10 @@ function shownKps(list) {
 }
 
 function kpBandSwitch() {
-  const bands = [["core", "只看课本"], ["extend", "连培优"], ["olympiad", "再加竞赛"]];
+  const bands = [["core", "只看课本", "is-tier-book"], ["extend", "连培优", "is-extend"], ["olympiad", "再加竞赛", "is-olymp"]];
   return '<div class="tier-switch">' + bands.map(function (item) {
     const on = (state.kpBand || "olympiad") === item[0] ? " on" : "";
-    return '<button type="button" class="link' + on + '" data-kp-band="' + item[0] + '">' + item[1] + "</button>";
+    return '<button type="button" class="link ' + item[2] + on + '" data-kp-band="' + item[0] + '">' + item[1] + "</button>";
   }).join("") + "</div>";
 }
 
@@ -967,6 +881,20 @@ function nodesInSection(map, sec) {
   return (map[sec.sec] || []).filter(function (node) { return node.vol === sec.vol && kpShown(node); });
 }
 
+/* 12.1 曾经挂着一组手写示意题。真题切片已经就位（12.1 有 81 道），把这组关掉，
+   今天页与课本走同一条真实数据路径。留开关是为了还能回到旧样子。 */
+const DEMO12_1 = false;
+
+/** One sitting. Handing a child 81 questions at once is not a task, it is a wall. */
+const GROUP = 8;
+
+/** This set's questions plus how many of the section are still untouched. */
+function groupPack(ids) {
+  const left = ids.filter(function (id) { return !isFinal(state.answers[id]); });
+  const pool = left.length ? left : ids;
+  return { ids: pool.slice(0, GROUP), left: left.length, total: ids.length };
+}
+
 /** The section chosen on the today page. The handwritten set stays on 12.1. */
 function todayPick() {
   const cat = catalog();
@@ -975,7 +903,7 @@ function todayPick() {
   const chapter = chapters.filter(function (item) { return String(item.ch) === String(state.todayChapter); })[0] || chapters[0] || null;
   const secs = (chapter ? (cat.secsByCh[chapter.vol + "-" + chapter.ch] || []) : []).filter(sectionListed);
   const sec = secs.filter(function (item) { return item.sec === state.todaySec; })[0] || secs[0] || null;
-  return { cat: cat, vol: vol, chapters: chapters, chapter: chapter, secs: secs, sec: sec, demo: !!(sec && sec.vol === "801" && sec.sec === "12.1") };
+  return { cat: cat, vol: vol, chapters: chapters, chapter: chapter, secs: secs, sec: sec, demo: DEMO12_1 && !!(sec && sec.vol === "801" && sec.sec === "12.1") };
 }
 
 /** Volume, chapter and section lists from the graph. */
@@ -997,17 +925,22 @@ function todayPicker(pick) {
     '<label>节<select id="pick-sec">' + secOptions + "</select></label></div>";
 }
 
-/** Questions this page can mark for the open section. 12.1 keeps the six handwritten items. */
+/** Questions this page can mark: one group of GROUP, never the whole section. */
 function practicePack(source) {
   const demoIds = QUESTIONS.map(function (item) { return item.id; });
+  const demoPack = { ids: demoIds, title: "12.1 三角形 · 练习", vol: "801", no: "12.1", total: demoIds.length, left: demoIds.length };
   if (source === "section") {
     const sec = currentSection();
-    if (!sec || (sec.vol === "801" && sec.sec === "12.1")) return { ids: demoIds, title: "12.1 三角形 · 练习", vol: "801", no: "12.1" };
-    return { ids: gradableFrom(ensureItems(sec.vol, sec.sec), "", sec.vol, sec.sec), title: sectionHeading(sec) + " · 练习", vol: sec.vol, no: sec.sec };
+    if (!sec || (DEMO12_1 && sec.vol === "801" && sec.sec === "12.1")) return demoPack;
+    const all = gradableFrom(ensureItems(sec.vol, sec.sec), "", sec.vol, sec.sec);
+    const g = groupPack(all);
+    return { ids: g.ids, title: sectionHeading(sec) + " · 练习", vol: sec.vol, no: sec.sec, total: g.total, left: g.left };
   }
   const pick = todayPick();
-  if (!pick.sec || pick.demo) return { ids: demoIds, title: "12.1 三角形 · 练习", vol: "801", no: "12.1" };
-  return { ids: gradableFrom(ensureItems(pick.sec.vol, pick.sec.sec), "", pick.sec.vol, pick.sec.sec), title: sectionHeading(pick.sec) + " · 练习", vol: pick.sec.vol, no: pick.sec.sec };
+  if (!pick.sec || pick.demo) return demoPack;
+  const all = gradableFrom(ensureItems(pick.sec.vol, pick.sec.sec), "", pick.sec.vol, pick.sec.sec);
+  const g = groupPack(all);
+  return { ids: g.ids, title: sectionHeading(pick.sec) + " · 练习", vol: pick.sec.vol, no: pick.sec.sec, total: g.total, left: g.left };
 }
 
 /** One question on the today page. Clicking it practices that question alone. */
@@ -1035,6 +968,10 @@ function viewToday() {
   const kps = nodesInSection(pick.cat && pick.cat.kpsBySec, sec);
   const pack = !demo && sec ? ensureItems(sec.vol, sec.sec) : null;
   const bankIds = !demo && pack && !pack.missing ? gradableFrom(pack, "", sec.vol, sec.sec) : [];
+  const autoN = bankIds.filter(function (id) { return (BANK[id] || {}).kind === "blank"; }).length;
+  const noOptN = bankIds.filter(function (id) { return (BANK[id] || {}).noOpts; }).length;
+  const leftN = bankIds.filter(function (id) { return !isFinal(state.answers[id]); }).length;
+  const groupN = Math.min(GROUP, leftN || bankIds.length);
   const owed = retryIds().length;
   const openToday = stillOpen(state.drafts.today);
   const openNo = openToday ? (state.drafts.today.practiceNo || "12.1") : "";
@@ -1046,8 +983,12 @@ function viewToday() {
   if (!demo && !pack) blurb = "正在看这一节有没有能交卷的题。";
   else if (!demo && pack && (pack.missing || !(pack.items || []).length)) blurb = "这一节还没有题目。可以先看知识点和图谱。";
   else if (!demo && !bankIds.length) blurb = "这一节还没有题目。";
-  else if (!demo) blurb = "这一节有 " + bankIds.length + " 道。标着「选择」和「填空」的会自动对，标着「自己对答案」的做完自己对。";
-  const startLabel = resume || (demo ? "开始练 · 6 题" : (bankIds.length ? "开始练 · " + bankIds.length + " 题" : "这一节还不能练"));
+  else if (!demo) {
+    blurb = "这一节 " + bankIds.length + " 道，其中 " + autoN + " 道填得进答案、能自动判；这次先做 " + groupN + " 道" +
+      (leftN && leftN < bankIds.length ? "（还有 " + leftN + " 道没做过）" : "") + "。";
+    if (noOptN) blurb += "另有 " + noOptN + " 道选择题的原题选项没有录进题库，这几道按「自己对答案」处理。";
+  }
+  const startLabel = resume || (demo ? "开始练 · 6 题" : (bankIds.length ? "开始练 · 这一组 " + groupN + " 题" : "这一节还不能练"));
   const owedBar = owed
     ? '<div class="card owed"><span class="muted">有 ' + owed + ' 道要重做</span> <button class="link" id="to-review">去回顾 ›</button></div>'
     : "";
@@ -1061,9 +1002,7 @@ function viewToday() {
     ? [["三角形的定义", "课本第 74 页"], ["三角形的元素", "边、角、顶点"], ["三边关系", "两边之和大于第三边"], ["三角形的记法", "△ABC"]].map(function (pair) {
       return '<button class="kp-row" data-kp-name="' + pair[0] + '"><strong>' + pair[0] + '</strong><span class="muted">' + pair[1] + "</span></button>";
     }).join("")
-    : kps.map(function (kp) {
-      return markRow(kp, mathHtml(kpLabel(kp.title)), 'data-kp-name="' + esc(kp.id) + '"');
-    }).join("");
+    : kpGroupHtml(kps, function (kp) { return 'data-kp-name="' + esc(kp.id) + '"'; }, null);
   const oneKeys = openDraftsByPrefix("today:one:").filter(function (key) {
     const draft = state.drafts[key];
     return !sec || draft.practiceNo === sec.sec;
@@ -1088,8 +1027,13 @@ function viewToday() {
       const key = order.indexOf(row.band) >= 0 ? row.band : "other";
       (buckets[key] = buckets[key] || []).push(row);
     });
+    const bands = order.filter(function (key) { return buckets[key] && buckets[key].length; });
+    const totalN = bands.reduce(function (sum, key) { return sum + buckets[key].length; }, 0);
+    const share = function (n) { return totalN ? Math.max(6, Math.round((n / totalN) * 100)) : 100; };
     let n = 0;
-    qInner = order.filter(function (key) { return buckets[key] && buckets[key].length; }).map(function (key) {
+    qInner = '<div class="qbar" aria-hidden="true">' + bands.map(function (key) {
+      return '<i class="is-band-' + key + '" style="width:' + share(buckets[key].length) + '%"></i>';
+    }).join("") + '</div><div class="qledger">' + bands.map(function (key) {
       const cells = buckets[key].map(function (row) {
         const id = "bank-" + row.id;
         const item = BANK[id];
@@ -1100,18 +1044,77 @@ function viewToday() {
         return button;
       }).join("");
       const label = bandLabel(key) || "其他";
-      return '<details class="qband"><summary>' + esc(label) + " · " + buckets[key].length +
-        ' 道</summary><div class="qgrid">' + cells + "</div></details>";
-    }).join("");
+      const done = buckets[key].filter(function (row) { return isFinal(state.answers["bank-" + row.id]); }).length;
+      return '<details class="qband is-band-' + key + '"><summary><span class="qb-name">' + esc(label) +
+        '</span><span class="qb-track"><i style="width:' + share(buckets[key].length) + '%"></i></span><span class="qb-n"><b>' +
+        buckets[key].length + '</b> 道' + (done ? " · 已做 " + done : "") +
+        '</span></summary><div class="qgrid qband-list">' + cells + '</div></details>';
+    }).join("") + "</div>";
   }
   const qTitle = demo ? "今天这 6 道手写示意" : (bankIds.length ? "这一节的 " + bankIds.length + " 道" : "这一节的题");
+  const doneN = bankIds.length - leftN;
+  const qBadge = demo || !bankIds.length ? "" : '<b>' + doneN + '</b> / ' + bankIds.length + ' 已做';
+  const qFoot = demo || !bankIds.length ? "" : '<div class="qs-foot">' +
+    '<p class="muted">这一组 ' + groupN + ' 道从最前面开始取，做完一组再来一组。</p></div>';
+  /* 题干只留开头一小段，但公式整段保留：切在 $...$ 中间会把 KaTeX 拆坏，
+     也会让预览里的公式变成一串反斜杠命令。 */
+  const trimCut = function (t) {
+    const clean = t.replace(/[\s，。；：、,.;:]+$/, '');
+    const marks = ['，', '。', '；', '：', '、', '；', ',', '.'];
+    let at = -1;
+    marks.forEach(function (m) { at = Math.max(at, clean.lastIndexOf(m)); });
+    if (at >= 0 && at >= Math.floor(clean.length * 0.55)) return clean.slice(0, at);
+    return clean;
+  };
+  const briefStem = function (stem) {
+    const text = String(stem || '');
+    const re = /\$\$[\s\S]*?\$\$|\$[^$]*\$/g;
+    const parts = [];
+    const LIMIT = 18;
+    let last = 0, shown = 0, m;
+    while ((m = re.exec(text))) {
+      const plain = text.slice(last, m.index);
+      if (shown + plain.length > LIMIT) {
+        parts.push(plain.slice(0, Math.max(0, LIMIT - shown)));
+        return { text: trimCut(parts.join('')), cut: true };
+      }
+      parts.push(plain);
+      shown += plain.length;
+      parts.push(m[0]);
+      shown += 4;
+      last = m.index + m[0].length;
+      if (shown >= LIMIT) return { text: trimCut(parts.join('')), cut: true };
+    }
+    const rest = text.slice(last);
+    if (shown + rest.length > LIMIT) {
+      parts.push(rest.slice(0, Math.max(0, LIMIT - shown)));
+      return { text: trimCut(parts.join('')), cut: true };
+    }
+    parts.push(rest);
+    return { text: parts.join(''), cut: false };
+  };
+  const bandOf = {};
+  if (pack && pack.items) pack.items.forEach(function (row) { bandOf['bank-' + row.id] = row.band; });
+  const groupIds = demo || !bankIds.length ? [] : groupPack(bankIds).ids;
+  const groupList = groupIds.map(function (id, i) {
+    const row = BANK[id] || {};
+    const band = bandOf[id] || 'basic';
+    const label = bandLabel(band);
+    const brief = briefStem(row.stem);
+    const kind = row.kind === 'blank' ? '填空' : row.kind === 'open' ? '自己对答案' : '选择';
+    return '<button type="button" class="grow is-band-' + band + '" data-today-q="' + esc(id) + '">' +
+      '<span class="gn">' + (i + 1) + '</span><span class="gt">' + mathHtml(brief.text) + (brief.cut ? '…' : '') + '</span>' +
+      '<span class="gm">' + esc(label === band ? '其他' : label) + ' · ' + kind + '</span></button>';
+  }).join("");
   const pointNote = demo ? '<p class="muted">这里先列 4 个，不是这一节的全部知识点。</p>' : "";
   return '<h1>今天练这一节</h1>' + todayPicker(pick) + kpBandSwitch() + '<div class="today"><div class="today-side"><section class="card task"><span class="chip">' + chip + "</span>" +
     '<div class="hero">' + hero + "</div><p class=\"muted\">" + (demo ? "课本第 74 页 · 手写示意" : kps.length + " 个知识点") + "</p><p>" + blurb + "</p>" +
     '<div class="row"><button class="btn" id="start"' + (!resume && !demo && !bankIds.length ? " disabled" : "") + ">" + startLabel + "</button>" + extra +
     "</div>" + oneBar + '</section><section class="card points"><h2>' + (demo ? "这一节先看这 4 个" : "这一节的知识点") + "</h2>" + pointNote + '<div class="kp-rows">' + (rows || "<p>这一节还没有知识点。</p>") +
     "</div></section>" + owedBar + progress + "</div>" +
-    '<section class="card qs"><h2>' + qTitle + "</h2>" + qInner + "</section></div>";
+    '<div class="today-qs"><section class="card qs"><div class="qs-head"><h2>' + qTitle + "</h2>" + (qBadge ? '<span class="qs-total">' + qBadge + "</span>" : "") + '</div>' + qInner + qFoot + "</section>" +
+    (groupList ? '<section class="card grp"><div class="qs-head"><h2>今天先做这 ' + groupIds.length + ' 道</h2>' + (groupIds.length ? '<span class="qs-total">一组 ' + (typeof GROUP === 'number' ? GROUP : groupIds.length) + ' 道</span>' : '') + '</div><div class="glist">' + groupList + '</div></section>' : '') +
+    '</div></div>';
 }
 
 /** True when any of the six demo questions already has a final mark. */
@@ -1240,11 +1243,11 @@ function viewBook() {
       const secHtml = secs.map(function (sec) {
         const count = nodesInSection(cat.kpsBySec, sec).length;
         const glance = sectionGlance(sec);
-        return '<button type="button" class="sec-row" data-book-sec="' + esc(sec.sec) + '" data-book-vol="' + esc(sec.vol) + '" data-book-ch="' + esc(sec.ch) + '"><span>' + esc(sectionHeading(sec)) + '</span><span class="muted">' + count + " 个知识点" + (glance ? " · " + mathHtml(glance) : "") + "</span></button>";
+        return '<button type="button" class="sec-row" data-book-sec="' + esc(sec.sec) + '" data-book-vol="' + esc(sec.vol) + '" data-book-ch="' + esc(sec.ch) + '"><span class="sec-name">' + esc(sectionHeading(sec)) + '</span><span class="muted sec-meta"><span class="sec-dots" aria-hidden="true">' + secDots(sec) + '</span>' + count + " 个知识点" + (glance ? " · " + mathHtml(glance) : "") + "</span></button>";
       }).join("");
-      return '<div class="ch-block"><button type="button" class="ch-row" data-book-ch="' + esc(ch.ch) + '" data-book-vol="' + esc(ch.vol) + '"><span>' + esc(ch.title) + '</span><span class="muted">' + secs.length + " 节 · " + kpCount + " 个知识点</span></button>" + secHtml + "</div>";
+      return '<div class="ch-block v-' + esc(ch.vol) + '"><button type="button" class="ch-row" data-book-ch="' + esc(ch.ch) + '" data-book-vol="' + esc(ch.vol) + '"><span class="ch-name">' + esc(ch.title) + '</span><span class="ch-meta">' + secs.length + " 节 · " + kpCount + " 个知识点" + "</span></button>" + secHtml + "</div>";
     }).join("") : "";
-    return '<button type="button" class="vol" data-book-vol="' + esc(vol.vol) + '">' + esc(vol.title) + " · " + chapters.length + " 章 · " + (open ? "收起" : "展开") + "</button>" + body;
+    return '<button type="button" class="vol v-' + esc(vol.vol) + '" data-book-vol="' + esc(vol.vol) + '"><span class="vol-name">' + esc(vol.title) + '</span><span class="vol-meta">' + chapters.length + " 章 · " + (open ? "收起" : "展开") + "</span></button>" + body;
   }).join("");
   return '<h1>课本</h1>' + kpBandSwitch() + '<div class="book-list">' + html + "</div>";
 }
@@ -1266,12 +1269,12 @@ function viewChapter() {
   }
   const cat = catalog();
   const secs = ((cat && cat.secsByCh[chapter.vol + "-" + chapter.ch]) || []).filter(sectionListed);
-  const demo = chapter.vol === "801" && String(chapter.ch) === "12";
+  const demo = DEMO12_1 && chapter.vol === "801" && String(chapter.ch) === "12";
   const rows = secs.map(function (sec) {
     const count = nodesInSection(cat.kpsBySec, sec).length;
     const note = demo && sec.sec === "12.1" ? (sectionDone() ? " · 示意题练过" : " · 有示意题") : "";
     const glance = sectionGlance(sec);
-    return '<button type="button" class="kp-row" data-book-sec="' + esc(sec.sec) + '" data-book-vol="' + esc(sec.vol) + '" data-book-ch="' + esc(sec.ch) + '"><strong>' + esc(sectionHeading(sec)) + '</strong><span class="muted">' + count + " 个知识点" + note + (glance ? " · " + mathHtml(glance) : "") + "</span></button>";
+    return '<button type="button" class="kp-row" data-book-sec="' + esc(sec.sec) + '" data-book-vol="' + esc(sec.vol) + '" data-book-ch="' + esc(sec.ch) + '"><strong>' + esc(sectionHeading(sec)) + '</strong><span class="muted sec-meta"><span class="sec-dots" aria-hidden="true">' + secDots(sec) + '</span>' + count + " 个知识点" + note + (glance ? " · " + mathHtml(glance) : "") + "</span></button>";
   }).join("");
   const first = secs[0];
   const testHere = demo && stillOpen(state.drafts["test:chapter"]);
@@ -1298,8 +1301,8 @@ function viewChapter() {
     : demo
       ? '<p class="muted">' + (Object.keys(state.answers).length ? "这一章还看不出哪里不稳。" : "还没练过这一章。整章测试只接在 12.1。") + "</p>"
       : '<p class="muted">点进一节可以练。标着「选择」和「填空」的会自动对，标着「自己对答案」的做完自己对。整章测试还只接在第 12 章。</p>';
-  return "<h1>" + esc(title) + "</h1>" + kpBandSwitch() + '<div class="chapter-page"><div class="chapter-body"><section class="card"><h2>这一章的节</h2><p class="muted">' +
-    secs.length + " 节 · " + kpTotal + ' 个知识点</p><div class="kp-rows scroll">' + rows + "</div></section>" +
+  return "<h1>" + esc(title) + "</h1>" + kpBandSwitch() + '<div class="chapter-page v-' + esc(chapter.vol) + '"><div class="chapter-body"><section class="card"><h2>这一章的节</h2><p class="muted">' +
+    secs.length + " 节 · " + kpTotal + " 个知识点" + '</p><div class="kp-rows scroll">' + rows + "</div></section>" +
     '<section class="card"><h2>这一章哪里不稳</h2>' + weak + "</section></div>" +
     '<div class="chapter-side">' + actions + "</div></div>";
 }
@@ -1343,15 +1346,14 @@ function viewSection() {
     allKps.filter(function (node) { return node.tier === "extend"; }).length,
     allKps.filter(function (node) { return node.tier === "olympiad"; }).length
   );
-  const demo = sec.vol === "801" && sec.sec === "12.1";
+  const demo = DEMO12_1 && sec.vol === "801" && sec.sec === "12.1";
   const study = sectionStudy(sec);
   const pageLine = !study.loading && study.page ? '<p class="muted">' + esc(study.page) + "</p>" : "";
-  const points = kps.map(function (kp) {
+  const points = kpGroupHtml(kps, function (kp) { return 'data-kp-name="' + esc(kp.id) + '"'; }, function (kp) {
     const rec = kpRecord(kp);
     const sentence = rec && rec.definition ? firstSentence(rec.definition) : "";
-    const def = sentence ? '<span class="muted">' + mathHtml(sentence) + "</span>" : "";
-    return markRow(kp, mathHtml(kpLabel(kp.title)), 'data-kp-name="' + esc(kp.id) + '"', "", def);
-  }).join("");
+    return sentence ? '<span class="muted">' + mathHtml(sentence) + "</span>" : "";
+  });
   function skillButton(skill, prefix) {
     const name = (prefix ? esc(prefix) + " · " : "") + mathHtml(kpLabel(skill.title));
     return markButton(skill, name, 'data-open-skill="' + esc(skill.id) + '"');
@@ -1386,21 +1388,27 @@ function viewSection() {
     note = '<p class="muted">上面是图谱里这一节的知识点，今天先列的 4 个不是这份名单。能交卷的还是原来的 6 道示意题。</p>';
   } else {
     const pack = ensureItems(sec.vol, sec.sec);
-    const count = pack && !pack.missing ? gradableFrom(pack, "", sec.vol, sec.sec).length : 0;
+    const ids = pack && !pack.missing ? gradableFrom(pack, "", sec.vol, sec.sec) : [];
+    const count = ids.length;
+    const autoN = ids.filter(function (id) { return (BANK[id] || {}).kind === "blank"; }).length;
+    const noOptN = ids.filter(function (id) { return (BANK[id] || {}).noOpts; }).length;
+    const leftN = ids.filter(function (id) { return !isFinal(state.answers[id]); }).length;
+    const groupN = Math.min(GROUP, leftN || count);
     if (!pack) note = '<p class="muted">正在看这一节有没有能交卷的题。</p>';
     else if (pack.missing || !(pack.items || []).length) note = '<p class="muted">这一节还没有题目。</p>';
     else if (!count) note = '<p class="muted">这一节还没有题目。</p>';
     else {
-      actions = '<button class="btn" id="start">开始练 · ' + count + ' 题</button>' +
+      actions = '<button class="btn" id="start">开始练 · 这一组 ' + groupN + ' 题</button>' +
         '<button type="button" class="link" id="see-section-map">在图里看这一节</button>';
-      note = '<p class="muted">这一节有 ' + count + ' 道。标着「选择」和「填空」的会自动对，标着「自己对答案」的做完自己对。</p>';
+      note = '<p class="muted">这一节 ' + count + ' 道，其中 ' + autoN + ' 道填得进答案、能自动判；一次做 ' + groupN + ' 道。' +
+        (noOptN ? '另有 ' + noOptN + ' 道选择题的原题选项没有录进题库，按「自己对答案」处理。' : '') + '</p>';
     }
   }
   const methodBlock = homeSkills.length
-    ? '<div class="chapter-notes"><p>方法</p><div class="method-links">' + homeSkills.map(function (skill) { return skillButton(skill, ""); }).join("") + "</div></div>"
+    ? '<div class="chapter-notes">' + skillGroupHtml(homeSkills, function (skill) { return skillButton(skill, ""); }) + "</div>"
     : '<p class="chapter-notes">这一节在图谱里还没有挂方法。</p>';
   const usedBlock = usedSkills.length
-    ? '<div class="chapter-notes"><p>还会用到</p><div class="method-links">' + usedSkills.map(function (skill) { return skillButton(skill, skill.sec || ""); }).join("") + "</div></div>"
+    ? '<div class="chapter-notes"><p>还会用到</p>' + skillGroupHtml(usedSkills, function (skill) { return skillButton(skill, skill.sec || ""); }) + "</div>"
     : "";
   const doors = sec.sec === "12.M" ? ["K801-12.3-13", "K801-12.3-09", "K801-12.8-11", "K801-12.10-06", "K801-12.10-10"] : [];
   const doorHtml = doors.length
@@ -1418,14 +1426,6 @@ function viewSection() {
     (points || "<p>这一节还没有知识点。</p>") + "</div></section>" +
     methodBlock + usedBlock + doorHtml + note + "</div>" +
     '<div class="chapter-side"><p class="muted">' + (demo && sectionDone() ? "示意题练过" : demo ? "示意题还没练" : "标着「选择」和「填空」的会自动对，标着「自己对答案」的做完自己对。") + "</p>" + actions + "</div></div>";
-}
-
-/** First sentence of a definition already stored on the point. No sentence is invented. */
-function firstSentence(text) {
-  const value = String(text || "").trim();
-  if (!value) return "";
-  const cut = value.search(/[。！？]/);
-  return cut >= 0 ? value.slice(0, cut + 1) : value;
 }
 
 /** Put the breadcrumb on this point's own book, chapter and section. */
@@ -1516,10 +1516,6 @@ function kpLinked(node) {
     else if (q.stem) rows.push({ id: q.id, vol: vol, sec: sec, stem: q.stem, form: "", ans: "", note: "" });
   });
   return rows;
-}
-
-function formName(form) {
-  return { choice: "选择", fill: "填空", proof: "证明", solution: "解答", calculation: "计算", construction: "作图" }[form] || "题目";
 }
 
 /** The query result: related questions, one row each. Doing a question happens after a click. */
@@ -2160,14 +2156,33 @@ function ensureSlice(key, src) {
   ensureSlice.pending[key] = 1;
   const script = document.createElement("script");
   script.src = src;
-  script.onload = function () { ensureSlice.pending[key] = 0; render(); };
+  script.onload = function () { ensureSlice.pending[key] = 0; sliceReady(); };
   script.onerror = function () {
     ensureSlice.pending[key] = 0;
     window.MC[key] = window.MC[key] || { missing: 1 };
-    render();
+    sliceReady();
   };
   document.head.appendChild(script);
+  sliceWatchdog();
   return null;
+}
+
+/** 一片到位不等于该重绘：一个页面常要好几片，逐片重绘会把输入框一起换掉。
+ *  规则：还有片在路上就什么都不做，最后一片落地后 40ms 画一次。 */
+let renderTimer = 0, renderWatchdog = 0;
+function sliceReady() {
+  if (!ensureSlice.pending) ensureSlice.pending = {};
+  if (renderWatchdog) { clearTimeout(renderWatchdog); renderWatchdog = 0; }
+  const busy = Object.keys(ensureSlice.pending).some(function (k) { return ensureSlice.pending[k]; });
+  if (busy) return;
+  if (renderTimer) clearTimeout(renderTimer);
+  renderTimer = setTimeout(function () { renderTimer = 0; render(); }, 40);
+}
+
+/** 有片在路上就等着；但最多等 800ms——脚本被挂住也要先把已经到的东西画出来，不许冻在旧屏。 */
+function sliceWatchdog() {
+  if (renderWatchdog) return;
+  renderWatchdog = setTimeout(function () { renderWatchdog = 0; if (renderTimer) { clearTimeout(renderTimer); renderTimer = 0; } render(); }, 800);
 }
 
 function ensureSec(vol, sec) {
@@ -2182,28 +2197,6 @@ function ensureEx(vol, no) {
   return ensureSlice("ex:" + vol + "-" + no, "../../../runtime/web/data/sec/" + vol + "-" + no + ".ex.js?v=131");
 }
 
-function bandLabel(band) {
-  return { basic: "基础", standard: "中档", advanced: "提高", challenge: "挑战", competition: "竞赛" }[band] || band || "";
-}
-
-function bandClass(band) {
-  if (band === "standard" || band === "advanced" || band === "challenge" || band === "competition") return " is-band-" + band;
-  return " is-band-basic";
-}
-
-function kpTypeName(type) {
-  return {
-    concept: "概念", theorem: "定理", property: "性质", skill: "技能", method: "方法",
-    formula: "公式", representation: "表示法", fact: "事实", model: "模型",
-    context: "情境", activity: "活动"
-  }[type] || "";
-}
-
-function kpTypeClass(type) {
-  if (kpTypeName(type)) return " is-kpt-" + type;
-  return " is-kpt-concept";
-}
-
 function skillBundle(id) {
   const net = ensureNet();
   const skill = net && net.byId[id];
@@ -2211,18 +2204,6 @@ function skillBundle(id) {
   const sec = ensureSec(skill.vol, skill.sec);
   const rec = sec && (sec.skills || []).filter(function (item) { return item.uid === id; })[0];
   return { net: net, skill: skill, sec: sec, rec: rec || null };
-}
-
-function methodTierName(tier) {
-  if (tier === "extend") return "培优";
-  if (tier === "olympiad") return "竞赛";
-  return "课本";
-}
-
-function methodTierClass(tier) {
-  if (tier === "extend") return " is-extend";
-  if (tier === "olympiad") return " is-olymp";
-  return "";
 }
 
 /** 名单上的分类名和颜色类。方法看档，知识点看类型，思想、题目各看各的。 */
@@ -2244,12 +2225,64 @@ function markButton(node, inner, attrs, extra) {
   return '<button type="button" class="link mark' + mark.cls + edge + (extra || "") + '"' + (attrs ? " " + attrs : "") + "><em>" + esc(mark.label) + "</em>" + inner + "</button>";
 }
 
+/* 方法按档分组：课本 / 培优 / 竞赛各一组，组头写明是哪一类、有几个，chips 仍是一排。
+   render 由调用处给（同一条方法在不同页面带的上下文不同），这里只管分组与组头。 */
+const SKT_ORDER = [["book", "课本"], ["extend", "培优"], ["olympiad", "竞赛"]];
+function skillGroupHtml(list, render) {
+  const buckets = {};
+  (list || []).forEach(function (skill) {
+    const key = skill.tier === "extend" ? "extend" : skill.tier === "olympiad" ? "olympiad" : "book";
+    (buckets[key] = buckets[key] || []).push(skill);
+  });
+  const out = [];
+  SKT_ORDER.forEach(function (pair) {
+    const items = buckets[pair[0]];
+    if (!items || !items.length) return;
+    out.push('<div class="skt-group is-tier-' + pair[0] + '"><div class="kpt-head"><span class="kpt-name">' + pair[1] +
+      '方法</span><span class="kpt-n">' + items.length + '</span></div><div class="method-links">' +
+      items.map(function (skill) { return render(skill); }).join("") + "</div></div>");
+  });
+  return out.join("");
+}
+
 function markRow(node, titleHtml, attrs, extra, defHtml) {
   const mark = markSpec(node);
   const edge = node && node.kind === "knowledge_point" ? methodTierClass(node.tier) : "";
   return '<button type="button" class="kp-row mark' + (defHtml ? " kp-with-def" : "") + mark.cls + edge + (extra || "") + '" ' + attrs + "><strong><em>" + esc(mark.label) + "</em>" + titleHtml + "</strong>" + (defHtml || "") + "</button>";
 }
 
+/* 知识点按类型分组：同一类只印一次小标题，行里就不再重复类型名（.kpt-group 里用 CSS 收掉 em）。
+   顺序按「先看懂是什么，再看怎么用」排，不按数据出现的先后。 */
+const KPT_ORDER = ["theorem", "concept", "property", "formula", "representation", "method", "skill", "model", "fact", "activity", "context"];
+function kpGroupHtml(kps, attrsOf, defOf) {
+  const buckets = {};
+  (kps || []).forEach(function (kp) {
+    const key = kp && kp.kp_type ? kp.kp_type : "other";
+    (buckets[key] = buckets[key] || []).push(kp);
+  });
+  const keys = Object.keys(buckets).sort(function (a, b) {
+    const ia = KPT_ORDER.indexOf(a), ib = KPT_ORDER.indexOf(b);
+    return (ia < 0 ? 90 : ia) - (ib < 0 ? 90 : ib);
+  });
+  return keys.map(function (key) {
+    const rows = buckets[key].map(function (kp) {
+      const def = defOf ? defOf(kp) : "";
+      return markRow(kp, mathHtml(kpLabel(kp.title)), attrsOf ? attrsOf(kp) : "", "", def);
+    }).join("");
+    return '<div class="kpt-group is-kpt-' + esc(key) + '"><div class="kpt-head"><span class="kpt-name">' +
+      esc(kpTypeName(key) || "知识点") + '</span><span class="kpt-n">' + buckets[key].length + '</span></div><div class="kpt-rows">' + rows + "</div></div>";
+  }).join("");
+}
+/* 一节里都有哪几类知识点：几个小圆点，颜色和知识点行同一套。 */
+function secDots(sec) {
+  const cat = catalog();
+  const kps = nodesInSection(cat && cat.kpsBySec, sec);
+  const seen = {};
+  kps.forEach(function (kp) { const key = kp.kp_type || "concept"; seen[key] = (seen[key] || 0) + 1; });
+  return Object.keys(seen).sort(function (a, b) { return seen[b] - seen[a]; }).map(function (key) {
+    return '<i class="is-kpt-' + esc(key) + '" title="' + esc(kpTypeName(key) || key) + " " + seen[key] + '"></i>';
+  }).join("");
+}
 function methodChip(id, label, tier) {
   return "<p>" + markButton({ kind: "skill", tier: tier }, mathHtml(label), 'data-open-skill="' + esc(id) + '"') + "</p>";
 }
@@ -2308,16 +2341,6 @@ function courseByNo(no) {
     if (COURSE_NODES[i].no === no) return COURSE_NODES[i];
   }
   return null;
-}
-
-/** Dots and lines. Coordinates are percentages of the field. */
-function bookTone(no) {
-  if (no <= 3) return "t1";
-  if (no <= 9) return "t2";
-  if (no <= 13) return "t3";
-  if (no <= 17) return "t4";
-  if (no <= 22) return "t5";
-  return "t6";
 }
 
 function ringSlots(count, cx, cy, rx, ry) {
@@ -2536,105 +2559,6 @@ function crowdLabel(title) {
   const text = shortKp(title);
   if (text.length <= 8) return text;
   return text.slice(0, 6).replace(/[（(、，,\s]+$/g, "") + "…";
-}
-
-function shortKp(title) {
-  const cut = plainMath(kpLabel(title));
-  if (cut.length <= 12) return cut;
-  let end = 12;
-  const re = /\$[^$]*\$/g;
-  let match;
-  while ((match = re.exec(cut))) {
-    if (end > match.index && end < match.index + match[0].length) end = match.index;
-  }
-  if (end < 4) return cut;
-  return cut.slice(0, end).replace(/[$、，,\s]+$/, "") + "…";
-}
-
-function kpLabel(title) {
-  const text = String(title || "");
-  const warn = text.match(/^易错[：:](.+)$/);
-  if (warn) return warn[1];
-  return text.split(/[：:]/)[0] || text;
-}
-
-function coreKp(node) {
-  return !!node && node.kind === "knowledge_point" && node.kp_type !== "context" && node.kp_type !== "activity";
-}
-
-function commaLines(text) {
-  const value = String(text || "");
-  if (value.length <= 14 || value.indexOf("、") < 0) return esc(value);
-  const parts = value.split("、");
-  let line = "";
-  const lines = [];
-  parts.forEach(function (part, index) {
-    const piece = part + (index < parts.length - 1 ? "、" : "");
-    if (line && (line + piece).length > 12) {
-      lines.push(line);
-      line = piece;
-    } else line += piece;
-  });
-  if (line) lines.push(line);
-  return lines.map(esc).join("<br>");
-}
-
-function plainMath(value) {
-  return String(value == null ? "" : value).replace(/\$\$([\s\S]*?)\$\$|\$([^$]*)\$/g, function (_all, display, inline) {
-    return texPlain(display != null ? display : inline);
-  });
-}
-
-function texPlain(tex) {
-  let text = String(tex || "");
-  let guard = 0;
-  while (text.indexOf("\\sqrt") >= 0 && guard < 8) {
-    text = text.replace(/\\sqrt\{([^{}]*)\}/g, "√$1").replace(/\\sqrt\s*([0-9A-Za-z]+)/g, "√$1");
-    guard += 1;
-  }
-  text = text.replace(/\\frac\{([^{}]*)\}\{([^{}]*)\}/g, "$1/$2");
-  text = text.replace(/\\triangle/g, "△").replace(/\\angle/g, "∠").replace(/\\degree/g, "°")
-    .replace(/\\cdot/g, "·").replace(/\\times/g, "×").replace(/\\perp/g, "⊥");
-  text = text.replace(/\\[a-zA-Z]+/g, "");
-  return text.replace(/[{}]/g, "").replace(/\s+/g, "");
-}
-
-function mathHtml(value) {
-  const text = String(value == null ? "" : value);
-  const katex = window.katex;
-  if (!katex || text.indexOf("$") < 0) return esc(text);
-  const out = [];
-  let last = 0;
-  const re = /\$\$([\s\S]*?)\$\$|\$([^$]*)\$/g;
-  const punct = "、，。；：！？,.;:!?）)]】》」』";
-  let match;
-  while ((match = re.exec(text))) {
-    out.push(esc(text.slice(last, match.index)));
-    const tex = (match[1] != null ? match[1] : match[2]).trim();
-    const display = match[1] != null;
-    let html;
-    try {
-      html = katex.renderToString(tex, { throwOnError: false, output: "html", strict: false, displayMode: display });
-      if (html.indexOf("katex-error") >= 0) html = esc(match[0]);
-    } catch (err) {
-      html = esc(match[0]);
-    }
-    let end = match.index + match[0].length;
-    let tail = "";
-    while (end < text.length && punct.indexOf(text.charAt(end)) >= 0) {
-      tail += text.charAt(end);
-      end += 1;
-    }
-    out.push('<span class="math-keep">' + html + esc(tail) + "</span>");
-    last = end;
-    re.lastIndex = end;
-  }
-  out.push(esc(text.slice(last)));
-  return out.join("");
-}
-
-function volTone(vol) {
-  return { "701": "t1", "702": "t2", "801": "t3", "802": "t4", "901": "t5", "902": "t6" }[vol] || "t1";
 }
 
 function relaxNet(pos, edges) {
@@ -4146,8 +4070,6 @@ function bindMapView() {
   };
 }
 
-function round1(n) { return Math.round(n * 10) / 10; }
-
 const VOLS = [
   { id: "701", name: "七上", tone: "t1" },
   { id: "702", name: "七下", tone: "t2" },
@@ -4156,21 +4078,6 @@ const VOLS = [
   { id: "901", name: "九上", tone: "t5" },
   { id: "902", name: "九下", tone: "t6" }
 ];
-
-function cellGrid(list, x0, y0, x1, y1) {
-  const count = list.length || 1;
-  const cols = Math.max(1, Math.ceil(Math.sqrt(count)));
-  const rows = Math.ceil(count / cols);
-  return list.map(function (item, index) {
-    const col = index % cols;
-    const row = Math.floor(index / cols);
-    return {
-      item: item,
-      x: round1(x0 + (col + 0.5) * (x1 - x0) / cols),
-      y: round1(y0 + (row + 0.5) * (y1 - y0) / rows)
-    };
-  });
-}
 
 function graphCourseField(net) {
   const nodes = [];
@@ -4240,24 +4147,6 @@ function graphCourseField(net) {
     : "默认只画各章，章名里有第几章。绿线是先修，已经画淡。要看节和知识点，打开「全部点」。";
   if (!showAll) spreadChapters(nodes);
   return dotField(nodes, lines, note, "", "course");
-}
-
-function chapterLabelHtml(node) {
-  const no = node.no || node.ch;
-  const name = String(node.title || "").replace(/^第\d+章\s*/, "");
-  const head = "第" + no + "章";
-  const breaks = {
-    "一元一次不等式和一元一次不等式组": "一元一次不等式和",
-    "二次函数和反比例函数": "二次函数和",
-    "综合运用数学知识解决实际问题": "综合运用数学知识",
-    "投影、视图与展开图": "投影、视图与",
-    "概念、命题与证明": "概念、命题与",
-    "数据的收集与描述": "数据的收集与",
-    "概率的求法与应用": "概率的求法与"
-  };
-  const cutAt = breaks[name];
-  if (!cutAt) return esc(head + (name ? " " + name : ""));
-  return esc(head + " " + cutAt) + "<br>" + esc(name.slice(cutAt.length));
 }
 
 function chapterChip(node) {
@@ -4372,12 +4261,6 @@ function chapterSections(no) {
   const list = (SECTIONS[Number(no)] || []).slice();
   if (Number(no) === 12 && (state.kpBand || "olympiad") === "olympiad") list.push(["12.M", "专题"]);
   return list;
-}
-
-function bandWord() {
-  if (state.kpBand === "core") return "只看课本";
-  if (state.kpBand === "extend") return "连培优";
-  return "再加竞赛";
 }
 
 function graphChapterRadial(net, no) {
@@ -4532,12 +4415,6 @@ function columnYs(count, top, bottom, step) {
     ys.push(round1(start + index * (span / (count - 1))));
   }
   return ys;
-}
-
-function methodRank(method) {
-  if (method.tier === "olympiad") return 2;
-  if (method.tier === "extend") return 1;
-  return 0;
 }
 
 function graphPointRing(net, id) {
@@ -5207,7 +5084,7 @@ function viewMap() {
       layerCol("思想", sets.ideas, ideaHtml, "main-col");
     body = '<div class="map-page map-fill' + (state.mapSideOpen === false ? " side-collapsed" : "") + '"><div class="board pano-board"><div class="float-modes">' +
       modeButton("layer", "分层") + modeButton("panorama", "全景") + net + "</div>" +
-      '<div class="layer-board">' + mapFilters() + '<div class="map' + (side ? " with-card" : "") + '">' + columns + withSideFold(side) + "</div></div></div></div>";
+      '<div class="layer-board' + (sets.sec ? '' : ' is-nosec') + '">' + mapFilters() + '<div class="map' + (side ? " with-card" : "") + '">' + columns + withSideFold(side) + "</div></div></div></div>";
   } else if (state.mapMode === "network") {
     const side = state.mapPoint && state.mapCard ? pointCard() : '<aside class="side"><p class="muted">点一个知识点。</p></aside>';
     body = '<div class="map-page"><div class="board">' + fieldMarkup(true) + side + "</div></div>";
@@ -5264,12 +5141,14 @@ function viewBrief() {
     '<div class="row"><button class="btn" id="begin-test">开始测</button><button class="btn secondary" id="skip-test">先不测</button></div></section>';
 }
 
-/** Escape text that is written into the prototype page. */
-function esc(text) {
-  return String(text || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
-}
-
 /** One question, with graded hints in practice and none in a test. */
+/** 选项整条就是一个公式（\frac{2}{3}、\sqrt{5}）时为真：只有这种才配用大字号。 */
+function soloMath(text) {
+  var t = String(text == null ? "" : text).trim();
+  if (!t || t.charAt(0) !== "\\") return false;
+  var bare = t.replace(/\\[a-zA-Z]+/g, "").replace(/\$/g, "");
+  return !/[A-Za-z\u4e00-\u9fff]/.test(bare);
+}
 /** Passage and method stay on this question. Closing the panel does not change the route. */
 function hintPanelHtml() {
   const item = questionById(state.queue[state.index]);
@@ -5320,12 +5199,15 @@ function viewPractice() {
       '<div class="symbols">' + symbols + "</div>" + note;
   } else if (item.kind === "open") {
     const written = state.mode === "test" ? (state.testPicks[item.id] || "") : (state.openText || "");
-    answerBlock = '<p class="muted">这道做完后自己对，系统不判。</p><label class="blank">把过程写在这里<textarea id="open-answer" class="process">' + esc(written) +
+    answerBlock = '<p class="muted">' + (item.noOpts ? "这道原题是选择题，选项没有录进题库 —— 按「自己对答案」处理，写完再比答案。" : "这道做完后自己对，系统不判。") + '</p><label class="blank">把过程写在这里<textarea id="open-answer" class="process">' + esc(written) +
       "</textarea></label>" + '<div class="symbols">' + symbols + "</div>";
   } else {
     answerBlock = '<div class="list">' + item.options.map(function (text, index) {
       const picked = chosen === index ? " picked" : "";
-      return '<button class="choice' + picked + '" data-choice="' + index + '">' + mathHtml(text) + "</button>";
+      const solo = soloMath(text) ? " is-solo" : "";
+      // A/B/C/D 让家长和孩子能说「我选 B」；整条只有一个公式时（分式、根式）额外放宽字号。
+      return '<button class="choice' + picked + solo + '" data-choice="' + index + '">' +
+        '<b class="opt-k">' + String.fromCharCode(65 + index) + "</b>" + mathHtml(text) + "</button>";
     }).join("") + "</div>";
   }
   const processBox = item.kind === "open" ? "" : '<button type="button" class="link" id="toggle-process">写过程（可不写）</button>' +
@@ -5383,10 +5265,12 @@ function viewPractice() {
       const cls = index === state.index ? " now" : wrote ? " wrote" : skipped ? " skip" : "";
       return '<button type="button" class="num' + cls + '" data-jump="' + index + '">' + (index + 1) + "</button>";
     }).join("") + "</div>"
-    : (hints || '<p class="muted">这一页不给提示。</p>');
+    : state.revealed
+      ? '<p class="muted">这道已经判过，提示收起来了；解析在题目下面。</p>'
+      : (hints || '<p class="muted">这道题没有可用的提示。</p>');
   const progress = state.mode === "test"
     ? ""
-    : '<div class="muted">第 ' + (state.index + 1) + " / " + state.queue.length + " 题" + skipNote + backNote + peekNote + '</div><div class="dots">' + dots + "</div>";
+    : '<div class="muted">第 ' + (state.ord[item.id] || (state.index + 1)) + " / " + state.queue.length + " 题" + skipNote + backNote + peekNote + '</div><div class="dots">' + dots + "</div>";
   return '<div class="practice-fit"><div class="head"><button class="link" id="leave">‹ ' + leaveName(homeRoute()) + '</button><div><strong>' + title +
     "</strong>" + progress + "</div>" + (state.mode === "test" ? "" : '<button class="btn secondary" id="finish">交卷</button>') + "</div>" +
     '<div class="work"><section class="card"><p class="stem">' + mathHtml(item.stem) + "</p>" + answerBlock +
@@ -5419,6 +5303,15 @@ function againPool() {
 }
 
 /** Result of the current set. The row itself is not a button. */
+/** The next group of one section, by volume and section number. */
+function packBySec(vol, no) {
+  if (!vol || !no) return null;
+  const all = gradableFrom(ensureItems(vol, no), "", vol, no);
+  if (!all.length) return null;
+  const g = groupPack(all);
+  return { ids: g.ids, left: Math.min(g.left - g.ids.length, g.left), total: g.total };
+}
+
 function viewResult() {
   if (!state.queue.length) {
     return '<h1>这一组结果</h1><section class="card"><p>这一组的结果找不到了。</p>' +
@@ -5449,7 +5342,8 @@ function viewResult() {
   });
   const skipped = ids.filter(function (id) { return shownMark(id) === "skip"; });
   const groups = [
-    { title: "做错了", marks: { bad: true, empty: true } },
+    { title: "做错了", marks: { bad: true } },
+    { title: "空着交", marks: { empty: true } },
     { title: "看了答案", marks: { peek: true } },
     { title: "跳过了", marks: { skip: true } },
     { title: "等你自己判", marks: { judge: true } },
@@ -5462,7 +5356,7 @@ function viewResult() {
       return '<button class="link" id="show-ok">做对了 ' + rows.length + " 题 · 展开</button>";
     }
     const lines = rows.map(function (id) {
-      return resultRow(id, ids.indexOf(id) + 1);
+      return resultRow(id, state.ord[id] || (ids.indexOf(id) + 1));
     }).join("");
     const head = group.fold ? '<button class="link" id="hide-ok">做对了 · 收起</button>' : '<h2 class="group-title">' + group.title + "</h2>";
     return head + lines;
@@ -5473,6 +5367,12 @@ function viewResult() {
   });
   const again = demoSet ? againPool() : [];
   const againLabel = again.length === QUESTIONS.length ? "再来一组" : "再来一组（" + again.length + " 道）";
+  /* 真题一组只做 GROUP 道，剩下的在结果页给下一组；不然孩子做完 8 道就走到死路上。 */
+  const nextPack = demoSet ? null : packBySec(state.practiceVol, state.practiceNo);
+  const nextLeft = nextPack ? nextPack.left : 0;
+  const nextBtn = nextLeft > 0
+    ? '<button class="btn" id="next-group">再做一组（还有 ' + nextLeft + " 道）</button>"
+    : "";
   const againBtn = demoSet ? '<button class="btn secondary" id="again">' + againLabel + "</button>" : "";
   const homeBtn = '<button class="btn secondary" id="to-home">' + leaveName(homeRoute()) + "</button>";
   const wrongBtn = wrong.length ? '<button class="btn secondary" id="redo">只练错的（' + wrong.length + " 道）</button>" : "";
@@ -5483,11 +5383,13 @@ function viewResult() {
   } else if (state.source === "test") {
     actions = '<button class="btn" id="to-review">回到回顾</button>' + wrongBtn;
   } else if (wrong.length) {
-    actions = '<button class="btn" id="redo">只练错的（' + wrong.length + " 道）</button>" + againBtn + homeBtn;
+    actions = '<button class="btn" id="redo">只练错的（' + wrong.length + " 道）</button>" + nextBtn + againBtn + homeBtn;
   } else if (skipped.length) {
-    actions = '<button class="btn" id="redo-skip">把跳过的做完（' + skipped.length + " 道）</button>" + againBtn + homeBtn;
+    actions = '<button class="btn" id="redo-skip">把跳过的做完（' + skipped.length + " 道）</button>" + nextBtn + againBtn + homeBtn;
   } else if (demoSet) {
     actions = '<button class="btn" id="again">' + againLabel + "</button>" + homeBtn;
+  } else if (nextBtn) {
+    actions = nextBtn + homeBtn;
   } else {
     actions = '<button class="btn" id="to-home">' + leaveName(homeRoute()) + "</button>";
   }
@@ -5532,6 +5434,7 @@ function resultRow(id, number) {
   const label = { ok: "做对了", bad: "做错了", empty: "空着交", peek: "看了答案", skip: "跳过了", judge: "等你自己判" }[mark] || "还没做";
   const level = state.hintUsed[id];
   const hint = level ? '<p class="muted">用了提示：到第 ' + level + " 级</p>" : "";
+  const late = state.afterPeek[id] ? '<p class="muted">判完之后看了完整解析</p>' : "";
   let ops = "";
   if (mark === "skip") ops = '<button type="button" class="link" data-redo-one="' + id + '">现在做</button>';
   else if (mark === "judge") {
@@ -5557,16 +5460,12 @@ function resultRow(id, number) {
   const preview = item.stem && String(item.stem).indexOf("$") >= 0 ? mathHtml(item.stem) : esc(plainPreview);
   return '<article class="result-row"><span class="qno ' + mark + '">' + number + "</span><div>" +
     "<p>" + preview + "</p><p class=\"muted\">" + (item.kp ? mathHtml(kpLabel(item.kp)) + " · " : "") + label + "</p>" +
-    hint + '<div class="ops">' + ops + "</div>" + detail + "</div></article>";
+    hint + late + '<div class="ops">' + ops + "</div>" + detail + "</div></article>";
 }
 
 /** Review keeps both columns even when one of them is empty. */
 function viewReview() {
   state.nav = "review";
-  if (hashParam("load") === "1") {
-    return '<h1>回顾</h1><div class="two"><section class="card"><h2>要重做的题</h2><p>正在打开……</p></section>' +
-      '<section class="card"><h2>不稳的地方</h2><p>正在打开……</p></section></div>';
-  }
   const redo = retryIds();
   const batch = redo.slice(0, 10);
   const points = weakPoints();
@@ -5628,9 +5527,6 @@ function viewReview() {
 /** Local record, without repository commands. */
 function viewRecord() {
   state.nav = "record";
-  if (hashParam("load") === "1") {
-    return '<div class="record-page"><h1>我的记录</h1><section class="card"><p>正在打开……</p></section></div>';
-  }
   const marks = Object.keys(state.answers).filter(function (id) { return isFinal(state.answers[id]); });
   const graded = marks.filter(function (id) { return state.answers[id] !== "skip"; });
   const total = graded.length;
@@ -5682,6 +5578,16 @@ function viewEvidence() {
     "<p>作答存在这台设备上。换设备或清理浏览器就看不到了。</p>" +
     "<p>教材定义不靠这次作答。知识之间的关系还是草稿，教材里的定义不是临时写的。</p>" +
     '<button type="button" class="link" id="to-record">回到我的记录</button></section></div>';
+}
+/** 地址栏写错时也要给出路：白屏等于把读者关在门外。 */
+function viewNotFound() {
+  const asked = state.badRoute ? state.badRoute : "(空)";
+  return '<div class="record-page"><h1>这个地址没有对应的页面</h1>' +
+    '<section class="card"><p>地址里写的是 <b>' + esc(asked) + '</b>，原型里没有这一页。</p>' +
+    '<p class="muted">可能是链接打错了，也可能这一页还没做。</p>' +
+    '<div class="row"><a class="btn" href="#/today">回到今天</a>' +
+    '<a class="btn secondary" href="#/book">去课本</a>' +
+    '<a class="btn secondary" href="#/map">去图谱</a></div></section></div>';
 }
 
 /** Open a dialog. The safe action is the right-hand primary button. */
@@ -5905,6 +5811,8 @@ function bind() {
         state.practiceTitle = pack.title;
         state.practiceVol = pack.vol;
         state.practiceNo = pack.no;
+        state.practiceTotal = pack.total || pack.ids.length;
+        state.practiceLeft = pack.left || pack.ids.length;
         state.practiceKp = "";
         if (source === "today" && pack.no) {
           const pick = todayPick();
@@ -6723,12 +6631,14 @@ function bind() {
           state.setPeeked[item.id] = true;
           record(item.id, "peek");
           state.hintOpen = 5;
+          markHintUse();
           state.revealed = true;
           render();
         }, "再想想", function () {});
         return;
       }
       if (level === state.hintOpen) state.hintOpen += 1;
+      markHintUse();
       render();
     };
   });
@@ -6759,6 +6669,10 @@ function bind() {
   if (afterPeek) {
     afterPeek.onclick = function () {
       state.afterExplain = true;
+      /* 判完再看解析也是「看了答案」，跟提示第 5 级一样得留痕；
+         但它不改这一题的判定（做错还是做错），所以只记 afterPeek，不动 setMarks。 */
+      const id = state.queue[state.index];
+      if (id) state.afterPeek[id] = true;
       render();
     };
   }
@@ -6876,6 +6790,20 @@ function bind() {
   if (finish) finish.onclick = requestFinish;
   const leave = document.getElementById("leave");
   if (leave) leave.onclick = function () { requestLeave(homeRoute()); };
+  const nextGroup = document.getElementById("next-group");
+  if (nextGroup) {
+    nextGroup.onclick = function () {
+      const pack = packBySec(state.practiceVol, state.practiceNo);
+      if (!pack || !pack.ids.length) {
+        state.flash = "这一节做完了。";
+        render();
+        return;
+      }
+      state.practiceTotal = pack.total;
+      state.practiceLeft = pack.left;
+      startQueue(pack.ids, "practice", practiceOrigin());
+    };
+  }
   const redo = document.getElementById("redo");
   if (redo) {
     redo.onclick = function () {
@@ -7247,6 +7175,26 @@ function topBar() {
     (state.searchOpen && (state.query || "").trim() ? searchHits(state.query) : "") + "</div></div></div>";
 }
 
+
+/** 预览行（「今天先做这 N 道」与账本格子）里，一个公式比它的格子还宽时，只把这一个公式缩到刚好放下。
+    为什么不切：切在 $..$ 中间会把公式拆坏（见 briefStem 的注释）；为什么改字号不改行高：预览是缩略图，
+    长式子在小图里本来就该小一点；为什么必须有下限：缩到读不出数就白画了。下限 11px（外层）≈ 公式 17px。
+    只在渲染后跑一趟，不做持续监听：这批节点每次重绘都重建。 */
+function fitTightMath() {
+  const hosts = document.querySelectorAll('.glist .gt, .qband-list .qcell .stem');
+  Array.prototype.forEach.call(hosts, function (host) {
+    const box = host.clientWidth;
+    if (!box) return;
+    Array.prototype.forEach.call(host.querySelectorAll('.math-keep'), function (keep) {
+      const w = keep.getBoundingClientRect().width;
+      if (w <= box - 2) return;
+      const fs = parseFloat(getComputedStyle(keep).fontSize) || 15;
+      const next = Math.max(11, Math.floor(fs * (box - 6) / w * 100) / 100);
+      keep.style.fontSize = next + 'px';
+    });
+  });
+}
+
 /** Paint the current route. */
 function render() {
   if (consumePendingOpen()) return;
@@ -7266,12 +7214,36 @@ function render() {
     result: viewResult,
     review: viewReview,
     record: viewRecord,
-    evidence: viewEvidence
+    evidence: viewEvidence,
+    notfound: viewNotFound
   };
   const view = views[state.route] || viewToday;
+  const keep = focusedInMain();
   document.getElementById("main").innerHTML = topBar() + (state.flash ? '<p class="banner">' + esc(state.flash) + "</p>" : "") + view();
   drawNav();
   bind();
+  restoreFocus(keep);
+  fitTightMath();
+}
+
+/** 整块重绘前记下读者正在用的那个输入框，画完再放回原位（含光标位置）。 */
+function focusedInMain() {
+  const el = document.activeElement;
+  if (!el || el === document.body || !el.id) return null;
+  const main = document.getElementById("main");
+  if (!main || !main.contains(el)) return null;
+  const pos = typeof el.selectionStart === "number" ? el.selectionStart : null;
+  return { id: el.id, pos: pos };
+}
+
+function restoreFocus(keep) {
+  if (!keep) return;
+  const el = document.getElementById(keep.id);
+  if (!el || typeof el.focus !== "function") return;
+  el.focus();
+  if (keep.pos !== null && typeof el.setSelectionRange === "function") {
+    try { el.setSelectionRange(keep.pos, keep.pos); } catch (error) { /* 不是文本框 */ }
+  }
 }
 
 /** Fill the review page for a screenshot. Headless profiles have no saved answers. */
@@ -7317,7 +7289,12 @@ function hashParam(key) {
 function onHash() {
   if (state.ignoreHash) return;
   const name = (location.hash || "#/today").replace("#/", "").split("?")[0];
-  if (!viewsHas(name)) return;
+  if (!viewsHas(name)) {
+    state.badRoute = name;
+    state.route = "notfound";
+    render();
+    return;
+  }
   if (inSet() && name !== state.route && isDirty()) {
     state.ignoreHash = true;
     location.hash = "#/" + state.route;
@@ -7400,7 +7377,7 @@ function onHash() {
 
 /** Return whether the route is one this prototype draws. */
 function viewsHas(name) {
-  return ["today", "book", "chapter", "section", "kp", "method", "q", "map", "brief", "drill", "practice", "test", "result", "review", "record", "evidence"].indexOf(name) >= 0;
+  return ["today", "book", "chapter", "section", "kp", "method", "q", "map", "brief", "drill", "practice", "test", "result", "review", "record", "evidence", "notfound"].indexOf(name) >= 0;
 }
 
 window.addEventListener("hashchange", onHash);
