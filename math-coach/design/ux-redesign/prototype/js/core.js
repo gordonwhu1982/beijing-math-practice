@@ -153,6 +153,44 @@ function mathHtml(value) {
   return out.join("");
 }
 
+/** 列表里不重复贴大公式，只留说明。 */
+function mathAside(value) {
+  const text = String(value == null ? "" : value).replace(/\$\$[\s\S]*?\$\$/g, " ").replace(/[ \t]{2,}/g, " ").trim();
+  return mathHtml(text);
+}
+
+/** 独立公式单独一块，其余说明另起一行。用 span，小节按钮里也能放。 */
+function mathBlocks(value, proseClass) {
+  const text = String(value == null ? "" : value).trim();
+  if (!text) return "";
+  const cls = "kp-prose" + (proseClass ? " " + proseClass : "");
+  if (text.indexOf("$$") < 0) return '<span class="' + cls + '">' + mathHtml(text) + "</span>";
+  const katex = window.katex;
+  const re = /\$\$([\s\S]*?)\$\$/g;
+  const out = [];
+  let last = 0;
+  let match;
+  while ((match = re.exec(text))) {
+    const before = text.slice(last, match.index).trim();
+    if (before) out.push('<span class="' + cls + '">' + mathHtml(before) + "</span>");
+    const tex = match[1].trim();
+    let html = esc(match[0]);
+    if (katex) {
+      try {
+        const rendered = katex.renderToString(tex, {
+          throwOnError: false, output: "html", strict: false, displayMode: true
+        });
+        if (rendered.indexOf("katex-error") < 0) html = rendered;
+      } catch (err) { /* 公式画不出来时保留原文 */ }
+    }
+    out.push('<span class="kp-formula">' + html + "</span>");
+    last = re.lastIndex;
+  }
+  const after = text.slice(last).trim();
+  if (after) out.push('<span class="' + cls + '">' + mathHtml(after) + "</span>");
+  return out.join("");
+}
+
 function volTone(vol) {
   return { "701": "t1", "702": "t2", "801": "t3", "802": "t4", "901": "t5", "902": "t6" }[vol] || "t1";
 }

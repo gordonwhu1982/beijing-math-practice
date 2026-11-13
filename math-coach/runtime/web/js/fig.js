@@ -59,6 +59,11 @@
 
   function markSvg(m) {
     if (!m || !m.kind) return '';
+    if (m.kind === 'circle') {
+      return '<circle cx="' + num(m.cx) + '" cy="' + num(m.cy) + '" r="' + num(m.r) +
+        '" fill="' + (m.fill || '#eff6ff') + '" stroke="' + (m.stroke || '#1d4ed8') +
+        '" stroke-width="' + (m.w || 2) + '"/>';
+    }
     if (m.kind === 'poly') {
       return '<polygon points="' + (m.pts || []).map(function (p) {
         return num(p[0]) + ',' + num(p[1]);
@@ -85,14 +90,15 @@
     return '';
   }
 
-  /* One figure: the picture first, then a one-line caption of what it shows. */
-  function render(fig) {
+  /* One figure: the picture first, then a one-line caption. compact 时不写图说，方便放进小节按钮。 */
+  function render(fig, compact) {
     if (!fig) return '';
     var w = fig.w || 360, h = fig.h || 240;
     var body = (fig.marks || []).map(markSvg).join('');
-    return '<figure class="figbox"><svg viewBox="0 0 ' + w + ' ' + h +
+    var cap = compact ? '' : '<span class="figcap">' + C.esc(fig.caption || fig.name || '') + '</span>';
+    return '<span class="figbox' + (compact ? ' is-compact' : '') + '"><svg viewBox="0 0 ' + w + ' ' + h +
       '" role="img" aria-label="' + C.esc(fig.name || '') + '">' + body +
-      '</svg><figcaption>' + C.esc(fig.caption || fig.name || '') + '</figcaption></figure>';
+      '</svg>' + cap + '</span>';
   }
 
   function matching(id, field) {

@@ -399,6 +399,36 @@ aside.card.hint-side { align-items: stretch; }
 .kp-back { margin: 0; }
 .kp-back .link { min-height: 32px; padding: 0; }
 .kp-lead { margin: -8px 0 0; color: var(--c-text-2); line-height: 1.5; }
+.kp-formula {
+  display: block;
+  margin: 0 0 12px;
+  padding: 18px 12px;
+  border-radius: var(--r-md);
+  background: var(--c-peek-soft);
+  border: 1px solid #f0ddb0;
+  text-align: center;
+  overflow-x: auto;
+  max-width: 100%;
+}
+.kp-formula .katex-display { margin: 0; }
+.kp-formula .katex { font-size: 1.45em; }
+.method-steps .kp-formula { margin: 8px 0; }
+.kp-prose { display: block; margin: 0 0 8px; line-height: 1.5; font-weight: 400; }
+.kp-row .kp-formula { margin: 8px 0 0; padding: 10px 8px; }
+.kp-row .kp-formula .katex { font-size: 1.2em; }
+.kp-row .kp-prose { margin: 6px 0 0; color: var(--c-text-2); font-size: 13px; }
+.kp-statement {
+  display: block;
+  margin: 8px 0 0;
+  padding: 8px 10px;
+  border-radius: var(--r-md);
+  background: var(--c-peek-soft);
+  border: 1px solid #f0ddb0;
+  color: var(--c-text);
+  font-weight: 400;
+  line-height: 1.45;
+  text-align: left;
+}
 .kp-page .card p:first-child { margin-top: 0; }
 .kp-goal { margin: 10px 0 0; padding-top: 10px; border-top: 1px solid var(--c-line); line-height: 1.5; }
 .kp-goal span { display: block; margin-bottom: 2px; color: var(--c-text-2); font-size: var(--fs-small); }
@@ -1910,9 +1940,12 @@ textarea.process {
 .point-focus .seed.here > span { border: 2px solid #14324f; }
 .point-focus .seed.sec > span,
 .point-focus .seed.lead > span { border-radius: 999px; padding-top: 2px; padding-bottom: 2px; }
-.figbox { margin: 8px 0 2px; padding: 8px 8px 2px; background: #f8fafc; border: 1px solid var(--line, #e2e8f0); border-radius: 12px; }
+.figbox { display: block; margin: 8px 0 2px; padding: 8px 8px 2px; background: #f8fafc; border: 1px solid var(--line, #e2e8f0); border-radius: 12px; }
 .figbox svg { width: 100%; max-width: 440px; height: auto; display: block; margin: 0 auto; background: #fff; border-radius: 8px; }
-.figbox figcaption { font-size: var(--fs-small); line-height: 1.45; color: var(--ink, #334155); margin: 8px 4px 6px; }
+.figbox .figcap { display: block; font-size: var(--fs-small); line-height: 1.45; color: var(--ink, #334155); margin: 8px 4px 6px; }
+.kp-row .fig-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.kp-row .figbox { flex: 1 1 200px; margin: 0; padding: 4px; min-width: 0; }
+.kp-row .figbox svg { max-width: 100%; }
 
 /* 出口链接当按钮用：.btn 原本只按 <button> 调过，<a> 要补对齐与去下划线。 */
 a.btn { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }

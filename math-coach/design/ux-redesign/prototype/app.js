@@ -1572,7 +1572,14 @@ function viewSection() {
   const points = kpGroupHtml(kps, function (kp) { return 'data-kp-name="' + esc(kp.id) + '"'; }, function (kp) {
     const rec = kpRecord(kp);
     const sentence = rec && rec.definition ? firstSentence(rec.definition) : "";
-    return sentence ? '<span class="muted">' + mathHtml(sentence) + "</span>" : "";
+    const fig = kpFigures(kp.id, true);
+    if (!sentence) return fig;
+    var body;
+    if (sentence.indexOf("$$") >= 0) body = mathBlocks(sentence);
+    else if (kp.kp_type === "formula" || kp.kp_type === "theorem") {
+      body = '<span class="kp-statement">' + mathHtml(sentence) + "</span>";
+    } else body = '<span class="muted">' + mathHtml(sentence) + "</span>";
+    return body + fig;
   });
   function skillButton(skill, prefix) {
     const name = (prefix ? esc(prefix) + " · " : "") + mathHtml(kpLabel(skill.title));
@@ -1856,7 +1863,7 @@ function viewGraphKp(node) {
   const cut = full.search(/[：:]/);
   const rest = cut > 0 ? full.slice(cut + 1) : "";
   let lead = "";
-  if (rec && rec.definition) lead = "<p>" + mathHtml(rec.definition) + "</p>";
+  if (rec && rec.definition) lead = mathBlocks(rec.definition);
   else if (rec === undefined) lead = '<p class="muted">正在打开这个知识点的说明。</p>';
   else if (rest) lead = "<p>" + mathHtml(rest) + "</p>";
   const slip = kpSlip(node);
@@ -1894,7 +1901,7 @@ function viewGraphKp(node) {
   const methods = (net.skillByKp[node.id] || []).map(function (skill) {
     const pack = skillBundle(skill.id);
     const line = pack && pack.rec && pack.rec.desc
-      ? "<p>" + mathHtml(pack.rec.desc) + "</p>"
+      ? "<p>" + mathAside(pack.rec.desc) + "</p>"
       : "";
     const away = skill.sec && node.sec && skill.sec !== node.sec;
     const name = (away ? esc(skill.sec) + " · " : "") + mathHtml(kpLabel(skill.title));
@@ -1951,7 +1958,9 @@ function viewGraphKp(node) {
     ? '<p class="muted">正在打开例题。</p>'
     : (walkHtml(pickWalk(linked)) || '<p class="muted">这一条还没有带解析的例题。</p>');
   const shortTitle = kpLabel(full);
-  const subtitle = rest && rest !== shortTitle ? '<p class="kp-lead">' + mathHtml(rest) + "</p>" : "";
+  const subtitle = rest && rest !== shortTitle
+    ? (rest.indexOf("$$") >= 0 ? mathBlocks(rest) : '<p class="kp-lead">' + mathHtml(rest) + "</p>")
+    : "";
   const figHtml = kpFigures(node.id);
   const dock = '<div class="dock"><button class="btn" id="kp-drill">练习这个知识点</button>' +
     '<button type="button" class="link" id="kp-map">在图里看</button></div>';
@@ -1977,7 +1986,7 @@ function viewMethod() {
   const steps = rec && rec.steps ? rec.steps.slice().sort(function (a, b) { return (a.ordinal || 0) - (b.ordinal || 0); }) : [];
   const stepHtml = steps.length
     ? '<ol class="method-steps">' + steps.map(function (step) {
-      return "<li><p>" + mathHtml(step.action || "") + "</p>" + (step.basis ? "<p>" + mathHtml(step.basis) + "</p>" : "") + "</li>";
+      return "<li>" + mathBlocks(step.action || "") + (step.basis ? "<p>" + mathHtml(step.basis) + "</p>" : "") + "</li>";
     }).join("") + "</ol>"
     : "<p>步骤还没有写进这一节的数据。</p>";
   const alt = (rec && rec.alternatives) || [];
@@ -2066,7 +2075,7 @@ function viewMethod() {
   const pitHtml = '<section class="kp-note slip"><h2>做错的样子</h2>' + listHtml(rec && rec.signals, "还没有写下做错的样子。") + "</section>";
   return '<div class="method-page"><p class="kp-back"><button type="button" class="link" id="method-map">回到图谱</button><button type="button" class="link" id="method-section">去这一节</button></p>' +
     '<header class="method-head"><h1>' + mathHtml(skill.title) + "</h1>" +
-    (rec && rec.desc ? '<p class="kp-lead">' + mathHtml(rec.desc) + "</p>" : "<p>这条方法还没有一句话说明。</p>") +
+    (rec && rec.desc ? mathBlocks(rec.desc, "kp-lead") : "<p>这条方法还没有一句话说明。</p>") +
     '<p class="muted">' + esc(skillMeta(skill, rec, sec)) + "</p></header>" +
     '<section class="card"><h2>怎么做</h2>' + stepHtml + "</section>" +
     exampleHtml + drill +
@@ -2137,12 +2146,14 @@ function viewKp() {
 }
 
 /** Section record for one knowledge point. Undefined while the file is still opening. */
-function kpFigures(id) {
+function kpFigures(id, compact) {
   const pack = window.MC && window.MC.figures;
   if (!pack || !window.MC.fig || !id) return "";
-  return (pack.figures || []).filter(function (fig) {
+  const html = (pack.figures || []).filter(function (fig) {
     return (fig.kp_refs || []).indexOf(id) >= 0;
-  }).map(function (fig) { return window.MC.fig.render(fig); }).join("");
+  }).map(function (fig) { return window.MC.fig.render(fig, !!compact); }).join("");
+  if (!html) return "";
+  return compact ? '<span class="fig-row">' + html + "</span>" : html;
 }
 
 function kpRecord(node) {
@@ -2179,7 +2190,7 @@ function skillGlance(rec) {
   const ordered = rec.steps ? rec.steps.slice().sort(function (a, b) { return (a.ordinal || 0) - (b.ordinal || 0); }) : [];
   const steps = ordered.length
     ? "<ol class=\"method-brief\">" + ordered.slice(0, 3).map(function (step) {
-      return "<li>" + mathHtml(step.action || "") + "</li>";
+      return "<li>" + (String(step.action || "").indexOf("$$") >= 0 ? mathBlocks(step.action) : mathHtml(step.action || "")) + "</li>";
     }).join("") + "</ol>"
     : "";
   const pits = (rec.signals || []).slice(0, 2);
@@ -2255,7 +2266,7 @@ function graphPointSide(id, extra) {
   const cut = full.search(/[：:]/);
   const rest = cut > 0 ? full.slice(cut + 1) : "";
   let body = "";
-  if (rec && rec.definition) body = "<p>" + mathHtml(rec.definition) + "</p>";
+  if (rec && rec.definition) body = mathBlocks(rec.definition);
   else if (rec === undefined) body = '<p class="muted">正在打开这个知识点的说明。</p>';
   else if (rest && rest !== heading) body = "<p>" + mathHtml(rest) + "</p>";
   const whenPoint = rec && rec.conditions && rec.conditions[0]
@@ -2292,7 +2303,7 @@ function graphPointSide(id, extra) {
     ? "<p><strong>可以用</strong></p>" + methods.map(function (skill) {
       const pack = skillBundle(skill.id);
       const line = pack && pack.rec && pack.rec.desc
-        ? "<p class=\"muted\">" + mathHtml(pack.rec.desc) + "</p>"
+        ? "<p class=\"muted\">" + mathAside(pack.rec.desc) + "</p>"
         : "";
       return "<p>" + markButton(skill, mathHtml(kpLabel(skill.title)), 'data-method="' + esc(skill.id) + '"') + "</p>" + line;
     }).join("")
@@ -2350,15 +2361,15 @@ function sliceWatchdog() {
 }
 
 function ensureSec(vol, sec) {
-  return ensureSlice("sec:" + vol + "-" + sec, "../../../runtime/web/data/sec/" + vol + "-" + sec + ".js?v=133");
+  return ensureSlice("sec:" + vol + "-" + sec, "../../../runtime/web/data/sec/" + vol + "-" + sec + ".js?v=136");
 }
 
 function ensureItems(vol, no) {
-  return ensureSlice("items:" + vol + "-" + no, "../../../runtime/web/data/sec/" + vol + "-" + no + ".items.js?v=133");
+  return ensureSlice("items:" + vol + "-" + no, "../../../runtime/web/data/sec/" + vol + "-" + no + ".items.js?v=136");
 }
 
 function ensureEx(vol, no) {
-  return ensureSlice("ex:" + vol + "-" + no, "../../../runtime/web/data/sec/" + vol + "-" + no + ".ex.js?v=133");
+  return ensureSlice("ex:" + vol + "-" + no, "../../../runtime/web/data/sec/" + vol + "-" + no + ".ex.js?v=136");
 }
 
 function skillBundle(id) {
@@ -2473,7 +2484,7 @@ function graphSkillSide(id) {
   if (!pack) return "";
   const skill = pack.skill;
   const kps = pack.net.skillKps[id] || [];
-  const desc = pack.rec && pack.rec.desc ? "<p>" + mathHtml(pack.rec.desc) + "</p>" : "";
+  const desc = pack.rec && pack.rec.desc ? mathBlocks(pack.rec.desc) : "";
   const glance = skillGlance(pack.rec);
   return '<aside class="side"><div class="row"><h2>' + mathHtml(skill.title) + '</h2></div>' +
     '<button type="button" class="link" id="map-close">关闭</button>' +
@@ -5202,7 +5213,7 @@ function methodCard() {
   const sec = pack && pack.sec;
   const meta = skillMeta(skill, rec, sec);
   const desc = rec && rec.desc
-    ? "<p>" + mathHtml(rec.desc) + "</p>"
+    ? mathBlocks(rec.desc)
     : "<p class=\"muted\">" + (sec ? "这条方法还没有写说明。" : "正在打开这个方法的说明。") + "</p>";
   const glance = skillGlance(rec);
   const kps = (pack && pack.net.skillKps[skill.id]) || [];
