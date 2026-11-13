@@ -8,6 +8,11 @@
   --c-line: #E3E7EF;
   --c-text: #1F2433;
   --c-text-2: #5B6475;
+  --c-text-3: #8B93A1;
+  --ink: #1F2433;
+  --line: #E3E7EF;
+  --dx: 0px;
+  --dy: 0px;
   --c-text-off: #A3AAB8;
   --c-ok: #17805A;
   --c-ok-soft: #E6F5EE;
@@ -245,7 +250,7 @@ aside.card.hint-side { align-items: stretch; }
 .layer-board .col.slim .link { flex-direction: column; align-items: stretch; justify-content: center; gap: 2px; width: max-content; white-space: nowrap; }
 .layer-board .col.slim .link b,
 .layer-board .col.slim .link > span { white-space: nowrap; }
-.layer-board .map > .col:nth-child(3) .link {
+.layer-board .map-scroll > .col:nth-child(3) .link {
   width: max-content;
   max-width: 100%;
   min-height: 36px;
@@ -257,8 +262,8 @@ aside.card.hint-side { align-items: stretch; }
   color: var(--c-primary);
   font-size: var(--fs-question);
 }
-.layer-board .map > .col:nth-child(3) .link:last-child { margin-bottom: 0; }
-.layer-board .map > .col:nth-child(3) .link > span { display: inline; margin: 0 0 0 8px; font-size: var(--fs-question); }
+.layer-board .map-scroll > .col:nth-child(3) .link:last-child { margin-bottom: 0; }
+.layer-board .map-scroll > .col:nth-child(3) .link > span { display: inline; margin: 0 0 0 8px; font-size: var(--fs-question); }
 .col .link b { display: block; font-weight: 650; }
 .col .link > span { display: block; margin-top: 2px; color: var(--c-text-2); font-size: var(--fs-small); }
 .col .link.dim { opacity: 0.45; }
@@ -527,6 +532,28 @@ aside.card.hint-side { align-items: stretch; }
 }
 .qband > summary::-webkit-details-marker { display: none; }
 .qband > summary:hover { background: var(--c-bg); }
+button.qband-sum {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 3.4em minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-height: var(--btn-h);
+  padding: 0 10px;
+  margin: 0;
+  border: 0;
+  border-top: 1px solid var(--c-line);
+  border-left: 3px solid var(--mark);
+  border-radius: 2px var(--r-md) var(--r-md) 2px;
+  background: transparent;
+  font: inherit;
+  font-size: var(--fs-body);
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+button.qband-sum:first-child { border-top: 0; }
+button.qband-sum:hover, button.qband-sum:focus-visible { background: var(--c-bg); }
 .qband[open] > summary { background: var(--mark-bg); }
 .qb-name { color: var(--mark); font-weight: 650; white-space: nowrap; }
 .qb-track { display: block; height: 6px; border-radius: var(--r-pill); background: var(--c-bg); overflow: hidden; }
@@ -538,9 +565,121 @@ aside.card.hint-side { align-items: stretch; }
 .qs-fact + .qs-fact { margin-top: 2px; }
 .qs-fact b { color: var(--c-text); font-variant-numeric: tabular-nums; }
 .qs-foot p { margin: 6px 0 0; }
-.today-qs .grp { margin-top: 12px; }
+.today-qs .grp { margin-top: 0; }
+.today-qs .grp + .card { margin-top: 12px; }
 .today-qs .grp h2 { margin: 0 0 8px; }
 .glist { display: flex; flex-direction: column; }
+.ways { display: flex; flex-direction: column; gap: 12px; max-width: 760px; }
+.way { border-left: 4px solid var(--c-line); }
+.way h2 { margin: 0 0 6px; }
+.way p { margin: 0 0 10px; }
+.way-book { border-left-color: var(--c-primary); }
+.way-end { border-left-color: var(--c-ok); }
+.way-paper { border-left-color: var(--c-peek); }
+.way-topic { border-left-color: #05603f; }
+.way-contest { border-left-color: #7c3aed; }
+.way-master { border-left-color: var(--c-bad); }
+.bank-list { display: flex; flex-direction: column; gap: 8px; }
+.bank-row {
+  display: grid;
+  grid-template-columns: 2.2em minmax(0, 1fr);
+  align-items: start;
+  column-gap: 10px;
+  row-gap: 2px;
+  padding: 10px 12px;
+  border: 1px solid var(--c-line);
+  border-left: 3px solid var(--mark);
+  border-radius: var(--r-md);
+  background: #fff;
+  font: inherit;
+  color: var(--c-text);
+  text-align: left;
+  cursor: pointer;
+}
+.bank-row:hover, .bank-row:focus-visible { background: var(--c-bg); }
+.bank-row .gn { color: var(--mark); font-weight: 650; font-variant-numeric: tabular-nums; text-align: right; line-height: 1.65; }
+.bank-row .gt { font-size: var(--fs-body); line-height: 1.65; min-width: 0; white-space: normal; }
+.bank-row .gt .math-keep { display: inline-block; line-height: normal; vertical-align: middle; }
+.bank-row .gt .katex { font-size: 1.05em; line-height: normal; }
+.bank-row .gm { grid-column: 2; font-size: var(--fs-small); color: var(--c-text-2); line-height: 1.4; }
+.bank-pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 12px;
+  margin-top: 12px;
+}
+.bank-pager-nav { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; }
+.bank-pager .muted { white-space: nowrap; }
+.bank-pages { display: inline-flex; align-items: center; gap: 4px; }
+.bank-page {
+  min-width: 40px;
+  height: var(--btn-h);
+  padding: 0 8px;
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+  background: #fff;
+  color: var(--c-text);
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+.bank-page.is-current { background: var(--c-primary); border-color: var(--c-primary); color: #fff; font-weight: 650; }
+.bank-page:hover, .bank-page:focus-visible { background: var(--c-bg); }
+.bank-page.is-current:hover, .bank-page.is-current:focus-visible { background: var(--c-primary); }
+.bank-gap { min-width: 1em; text-align: center; color: var(--c-text-2); }
+.bank-jump { display: inline-flex; align-items: center; gap: 6px; margin: 0; font-size: var(--fs-small); color: var(--c-text-2); }
+.bank-jump input {
+  width: 4.5em;
+  height: var(--btn-h);
+  padding: 0 8px;
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+  background: #fff;
+  color: var(--c-text);
+  font: inherit;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.bank-jump button {
+  height: var(--btn-h);
+  padding: 0 12px;
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+  background: #fff;
+  color: var(--c-text);
+  font: inherit;
+  cursor: pointer;
+}
+.qs-head .link { flex: none; }
+.qs-actions { display: flex; flex: none; gap: 4px; }
+.bank-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 28px 18px;
+  background: var(--c-scrim);
+}
+.bank-sheet-card {
+  width: min(920px, 100%);
+  max-height: calc(100vh - 56px);
+  display: flex;
+  flex-direction: column;
+  padding: 16px 18px 18px;
+  overflow: hidden;
+}
+.bank-sheet .bank-list { overflow: auto; min-height: 0; flex: 1 1 auto; padding-right: 4px; }
+.bank-sheet.is-full { padding: 0; }
+.bank-sheet.is-full .bank-sheet-card {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  border-radius: 0;
+}
 /* 这 8 道就是点「开始练」会拿到的 8 道：一行一道，左边那道色条是档位，
    和上面账本、和知识点页的题目跳转点是同一套色。 */
 .grow {
@@ -622,13 +761,13 @@ aside.card.hint-side { align-items: stretch; }
   line-height: 1.3;
 }
 .method-links .link.is-extend,
-.layer-board .map > .col:nth-child(3) .link.is-extend {
+.layer-board .map-scroll > .col:nth-child(3) .link.is-extend {
   background: #FFF3E4;
   color: #8A4E12;
   border-color: #e08a2e;
 }
 .method-links .link.is-olymp,
-.layer-board .map > .col:nth-child(3) .link.is-olymp {
+.layer-board .map-scroll > .col:nth-child(3) .link.is-olymp {
   background: #F3E8FF;
   color: #5B21B6;
   border-color: #7c3aed;
@@ -659,8 +798,8 @@ aside.card.hint-side { align-items: stretch; }
 }
 .kp-row.is-extend { border-left: 3px solid #e08a2e; }
 .kp-row.is-olymp { border-left: 3px solid #7c3aed; }
-.layer-board .map > .col:nth-child(2) .link.is-extend { border-left: 3px solid #e08a2e; }
-.layer-board .map > .col:nth-child(2) .link.is-olymp { border-left: 3px solid #7c3aed; }
+.layer-board .map-scroll > .col:nth-child(2) .link.is-extend { border-left: 3px solid #e08a2e; }
+.layer-board .map-scroll > .col:nth-child(2) .link.is-olymp { border-left: 3px solid #7c3aed; }
 .q-also { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; }
 .q-also .link {
   width: auto;
@@ -868,7 +1007,27 @@ button.qcell:hover, button.qcell:focus-visible { background: var(--c-primary-sof
   padding: 12px;
 }
 .layer-board .map-filters { margin: 0 0 10px 168px; }
-.layer-board .map { flex: 1; min-width: 0; overflow-x: auto; overflow-y: hidden; }
+.layer-board .map {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  overflow: hidden;
+}
+.layer-board .map.with-card { grid-template-columns: minmax(0, 1fr) 260px; }
+.layer-board .map-scroll {
+  display: grid;
+  grid-template-columns: max-content minmax(320px, 1.25fr) max-content minmax(240px, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  gap: 10px;
+  min-width: 0;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.layer-board .map > .side { height: 100%; min-width: 0; }
 .map-fill .field-zoom { top: 12px; right: 272px; }
 .map-fill .field-legend { max-width: calc(100% - 280px); }
 .field {
@@ -1523,7 +1682,7 @@ textarea.process {
   align-items: center;
   width: auto;
   max-width: 100%;
-  min-height: 36px;
+  min-height: 40px;
   margin: 0 0 6px;
   padding: 6px 10px;
   border: 1px solid var(--mark-bd);
@@ -1616,25 +1775,6 @@ textarea.process {
 .ex-card { padding: 8px 0 12px; border-top: 1px solid var(--c-line); }
 .ex-card:first-of-type { border-top: 0; }
 .ex-card summary { cursor: pointer; color: var(--c-primary); }
-@media (max-width: 1280px) {
-  .layer-board .map,
-  .layer-board .map.with-card {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
-    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
-    overflow-x: hidden;
-  }
-  .layer-board .map.with-card { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr) minmax(200px, 248px); }
-  .layer-board .map > .col:nth-child(1) { grid-column: 1; grid-row: 1; }
-  .layer-board .map > .col:nth-child(2) { grid-column: 2; grid-row: 1; }
-  .layer-board .map > .col:nth-child(3) { grid-column: 1; grid-row: 2; }
-  .layer-board .map > .col:nth-child(4) { grid-column: 2; grid-row: 2; }
-  .layer-board .map > .side { grid-column: 3; grid-row: 1 / span 2; min-width: 0; }
-  .layer-board .col { min-width: 0; }
-  .layer-board .col.slim .link,
-  .layer-board .col.slim .link b,
-  .layer-board .col.slim .link > span { width: auto; max-width: 100%; white-space: normal; }
-  .layer-board .map > .col:nth-child(3) .link { white-space: normal; }
-}
 @media (max-width: 980px) { .method-grid { grid-template-columns: 1fr; } }
 @media (max-width: 1100px) {
   .today { grid-template-columns: minmax(0, 1fr) minmax(280px, 340px); }
@@ -1648,10 +1788,6 @@ textarea.process {
 @media (max-width: 800px) {
   .map, .two, .method-order, .method-pair { grid-template-columns: 1fr; }
   .kp-counts { grid-template-columns: 1fr 1fr; }
-  .layer-board .map,
-  .layer-board .map.with-card { grid-template-columns: 1fr; grid-template-rows: none; overflow-x: hidden; }
-  .layer-board .map > .col,
-  .layer-board .map > .side { grid-column: auto; grid-row: auto; }
 }
 
 .focus-net .seed.formula > span,
@@ -1781,9 +1917,7 @@ textarea.process {
 /* 出口链接当按钮用：.btn 原本只按 <button> 调过，<a> 要补对齐与去下划线。 */
 a.btn { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
 
-/* 还没选节的时候，方法/思想两栏只有一句「先选一节。」，却各占半屏，
-   节名单被压在 329px 的小窗里，12.10 以后要自己滚才看得见。没选节就把节名单拉满高。 */
-.layer-board.is-nosec .map > .col:nth-child(1) { grid-row: 1 / span 2; }
+/* 四栏横排，每栏自己占满高度。窄窗口用底部横条滑动，不再折成两行。 */
 /* 命中区底线（验收 A5 = 40px）：文字按钮与画布小控件都抬到 40。
    不做「视觉 22px、命中 44px」的伪包装 —— 量什么就是什么。 */
 .link, .kp-back .link, .tier-switch .link { min-height: var(--btn-h); }

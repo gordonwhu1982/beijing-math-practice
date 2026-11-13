@@ -78,7 +78,7 @@ const state = {
   searchOpen: false,
   testBack: "",
   checked: { "三角形的定义": false },
-  kpName: "三角形的定义",
+  kpName: "K801-12.1-01",
   kpMark: "",
   kpQid: "",
   kpSource: "",
@@ -101,5 +101,14 @@ const state = {
   todayVol: "801",
   todayChapter: "12",
   todaySec: "12.1",
-  practiceTitle: ""
+  practiceTitle: "",
+  /* 这一节的题单默认收起。展开后按页看，并按题型、难度、来源、做过没有来筛。 */
+  bankOpen: false,
+  bankFull: false,
+  bankPage: 1,
+  bankSize: 20,
+  bankForm: "",
+  bankBand: "",
+  bankSrc: "",
+  bankDone: ""
 };

@@ -11,7 +11,7 @@ function firstSentence(text) {
 }
 
 function formName(form) {
-  return { choice: "选择", fill: "填空", proof: "证明", solution: "解答", calculation: "计算", construction: "作图" }[form] || "题目";
+  return { choice: "选择", fill: "填空", proof: "证明", solution: "解答", draw: "作图" }[form] || "题目";
 }
 
 function bandLabel(band) {
