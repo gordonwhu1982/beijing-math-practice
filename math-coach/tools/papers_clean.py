@@ -14,11 +14,11 @@
 边缘在中间。所以判据是「5×5 中值仍是灰、且与自身差很小」——细笔画的 5×5 中值
 会被周围纸白拉高，不会被删；水印的大块平坦区会被删干净。
 
-产物（runtime/web/data/papers/<id>/，gitignore）：
+产物（content/papers/<id>/，源数据进仓）：
   p%03d.webp   去水印后的卷面页（广告页不再导出）
 产物（进仓）：
   content/papers/meta.json              files / pages / dropped 重算
-  content/papers/ad-template.webp       末页广告的版式指纹（自举自真实页）
+  tools/assets/ad-template.webp         末页广告的版式指纹（自举自真实页，工具资源不是试卷数据）
   out/papers_clean_stats.json           每页版面指标，给 bodyPages 判定用
 
 用法：
@@ -46,7 +46,7 @@ except ImportError:  # 可选：只用来补「水印压在黑图案上」的残
     ndimage = None
 
 REPO = pb.REPO
-TPL = os.path.join(REPO, "content", "papers", "ad-template.webp")
+TPL = os.path.join(REPO, "tools", "assets", "ad-template.webp")
 STATS = os.path.join(REPO, "out", "papers_clean_stats.json")
 AD_CORR = 0.6      # 末页与该平台页的相关度；实测同版式 1.000 / 改版 0.728 / 干扰页 0.511
 AD_TAIL = 3        # 只在最后三页里认，广告永远在卷尾
@@ -135,7 +135,7 @@ def main():
         key = "%s-%s" % (r["kind"], r["year"])
         seen[key] = seen.get(key, 0) + 1
         pid = "%s%02d" % (r["short"] + str(r["year"])[2:], seen[key])
-        folder = os.path.join(pb.OUT, pid)
+        folder = os.path.join(pb.SRC, pid)
         os.makedirs(folder, exist_ok=True)
         doc = pb.pdfium.PdfDocument(r["path"])
         n = len(doc)
@@ -160,10 +160,20 @@ def main():
             clean.save(fp, "WEBP", quality=args.quality, method=6)
             files.append(os.path.basename(fp))
             stats.append(rec)
+        # 缩略图要从**去水印后**的第一页缩：第一版直接拿 render(scale=1.0) 的原始页去缩，
+        # 缩略图上那层斜排水印跟着一起缩小，看上去像印刷花纹（用户 2026-11-19 报「老缩略图」。
         thumb = os.path.join(folder, "thumb.webp")
-        first = doc[0].render(scale=1.0).to_pil().convert("L")
-        w = 300
-        first.resize((w, max(1, int(first.height * w / first.width)))).save(thumb, "WEBP", quality=70, method=4)
+        if files:
+            first = Image.open(os.path.join(folder, files[0])).convert("L")
+            w = 300
+            first.resize((w, max(1, int(first.height * w / first.width))), Image.LANCZOS).save(
+                thumb, "WEBP", quality=70, method=6)
+        # 上一轮跑出来、这一轮被判成广告页（或本就多余）的页要删掉：
+        # 只让 meta.files 里没有它、文件却留在目录里，等于数据里躺着一堆打不开的广告页。
+        stale = [f for f in os.listdir(folder)
+                 if f.startswith("p") and f.endswith(".webp") and f not in files]
+        for f in stale:
+            os.remove(os.path.join(folder, f))
         rec = dict(old.get(pid, {}))
         rec.update({
             "id": pid, "kind": r["kind"], "cn": r["cn"], "year": r["year"],
@@ -175,9 +185,10 @@ def main():
             rec.setdefault(k, dv)
         papers.append(rec)
         all_stats[pid] = stats
-        print("%-8s %2d 页 → %2d 页  去水印 %5d 万px  补墨 %4d px  广告页 %s"
+        print("%-8s %2d 页 → %2d 页  去水印 %5d 万px  补墨 %4d px  广告页 %s%s"
               % (pid, n, len(files), sum(s.get("wm", 0) for s in stats) // 10000,
-                 sum(s.get("ink", 0) for s in stats), dropped or "-"))
+                 sum(s.get("ink", 0) for s in stats), dropped or "-",
+                 ("  清掉旧页 %d" % len(stale)) if stale else ""))
 
     papers.sort(key=lambda x: (x["kind"], -(x["year"] or 0), x["id"]))
     with io.open(pb.META, "w", encoding="utf-8", newline="\n") as fp:

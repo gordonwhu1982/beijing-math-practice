@@ -44,10 +44,11 @@ content/
   questions/<册>/ch12.spec.jsonl      结构化答案侧车（判题器消费，303 题）
   questions/<册>/ch<章>.options.jsonl  选择题选项侧挂（200 parsed / 27 missing，题干原文不动）
   rubric/<册>/*.jsonl         评分点（一行一点）
-  papers/meta.json            49 套区县真题的卷面索引（id / 年份 / 区县 / 页数 / bodyPages 答案起始页）+ ad-template.webp 广告页模板指纹
+  papers/meta.json            49 套区县真题的卷面索引（id / 年份 / 区县 / 页数 / bodyPages 答案起始页）
   papers/<id>/pNNN.webp       卷面页图 773 张 / 110MB（源数据，随仓发布；已去水印、已剔末页广告页）
 assets/vendor/katex/          本地 KaTeX（不依赖 CDN）
 tools/
+  assets/ad-template.webp     卷尾平台广告页的版式指纹（papers_clean 用它认广告页；工具资源，不是试卷数据）
   framework_extract/          从教材 PDF 抽目录（parse_toc.py / mkvolumes.py）
   framework_gen.py            框架 → build/framework/{nodes,edges}.jsonl + report.txt（含环检测）
   questions_ingest_ch12.py    ch12_index.json → content/questions/801/ch12.jsonl
@@ -88,8 +89,8 @@ judge_spec_audit.js         spec 与判题器一致性体检（覆盖率 / 判�
   fix_math_escapes.js        修被 JSON 转义吃掉的反斜杠（$\frac → $<FF>rac），默认 dry-run，--apply 才写盘
   ux_asserts.js              【已退役 2026-11-19】视觉断言 38 个判据代号（小字占比/≤13px 整体占比/正文最小 14px/英文枚举/公式跨行/横向溢出/段标题倒挂/浮起块/下拉截断/死链/图例压画布/首屏主按钮/三列页塌列/统计合计必须相等/单选控件只有一个实心选中/不许有死胡同/预览态必须列出选项/不许印 [object Object]/链接不许带 undefined/手机画布超出视口/连线默认不亮点开才亮/局部十字图四方向齐全且名字 >=12.5px + 资源加载 KaTeX/cytoscape + 交互 FLOW：判完后主按钮唯一且在结果卡之后、错因卡 ≤520px 且带折叠），26 次路由（430 宽 18 + 1280 宽 8；archive/weak/retry 先注入 8 条记录 SEED_RICH；practice-look 专测单题预览），退出码=不达标条数；--shots <dir> 顺手出全页图；--only <route> 单测一屏
   sync_ui.py                 把设计稿同步到三处运行入口（产品版 / 镜像 / 公开仓镜像）：改 DATA_ROOT、PAPER_ROOT 与 index 前缀三处，缓存串沿用设计稿；默认 dry-run，--write 才写，--remote 带公开仓
-  papers_build.py            试卷装配：读 content/papers/meta.json，把清单写成 runtime/web/data/papers/index.js（页图本身在 content/papers/<id>/，源数据进仓；--index 只重建清单）
-  papers_clean.py            试卷清洗：去水印（5×5 中值判灰、只抹平坦灰不碰笔画）、按末页模板指纹剔广告页（corr≥0.6 只认最后三页），原地写 content/papers/<id>/
+  papers_build.py            试卷装配：读 content/papers/meta.json，把清单写成 runtime/web/data/papers/index.js（页图本身在 content/papers/<id>/，源数据进仓；--index 只重建清单；缩略图不在这里生成，见 papers_clean）
+  papers_clean.py            试卷清洗：去水印（5×5 中值判灰、只抹平坦灰不碰笔画）、按末页模板指纹剔广告页（corr≥0.6 只认最后三页）并删掉目录里的旧页、从去水印后的第一页重生成 thumb.webp；原地写 content/papers/<id>/
   papers_ocr.py              答案边界：rapidocr 逐页扫【答案】/【参考答案】等标记，取首次命中页 -1 写 meta.bodyPages（含「标记须在页顶 45% 内」校验、写 meta、重建 index），--dry / --recheck
   enum_scan.py               从 content/ 抽「作为字段值出现的短英文串」→ tools/enum_values.json（169 个），供 ux_asserts 扫界面漏词；数据变了重跑
   enum_values.json           上面那份词表（生成物，入库，方便看这版扫了哪些词）

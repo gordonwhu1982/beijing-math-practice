@@ -783,3 +783,17 @@ env UXV2_PRE=/runtime/web/ node design/ux-v2/tools/qa/smoke.mjs
 **页图是源数据，进仓；清单是派生物，force-add。** 49 套区县真题的 773 张页图共 110MB，2026-11-19 晚从 `runtime/web/data/papers/`（派生产物目录，`.gitignore` 挡着，重跑 `tools/build_web.py` 就会丢）搬到 **`content/papers/<id>/pNNN.webp`**，与 `content/papers/meta.json` 同级，公开仓 `beijing-math-practice/math-coach/content/papers/` 一并入库（`8bcd4c8`，780 files / 112MB，push 走 `-c credential.helper=manager`）。前端不再按 DATA_ROOT 拼页图路径，改用 `PAPER_ROOT`（见上表第二列），由 `tools/sync_ui.py` 按入口改写。
 
 `runtime/web/data/papers/` 现在只剩一个 `index.js`（`window.MC.put("papers", {...})`，由 `tools/papers_build.py --index` 从 meta 生成）。它仍在 `math-coach/.gitignore` 的 `runtime/web/data/` 之下，公开仓用 `git add -f` 入库 —— 没有它，远程打开试卷页是空列表。改 meta 之后要重跑一次 build 才能让清单跟上，这是这处「源数据进仓、派生物强入库」的代价。
+
+### 2026-11-19 深夜：广告页文件真删干净 + 缩略图重生成（数据的「清单对、文件不对」）
+
+上一轮 clean 只是让步 `meta.files` 里没有广告页 ——**文件留在目录里**。用户在 `content/papers/` 翻到 46 张「北京高考在线平台简介」（正是他之前贴的那张），问「数据里怎么还有」。这属于典型的「清单是真相、磁盘不是」：前端按 `files` 渲染所以界面看不见，但源数据目录里躺着的广告页会被下一次全量迁移、备份、上传原样带走。
+
+**全量重扫（不只末三页）**：用 `ad-template.webp` 的 40×40 灰度相关扫 49 套每一页，`corr` 分布是两极 —— 46 张孤儿页 **1.000（同版式）/ 0.728（2026 改版）**，而列在 `files` 里的页最高只到 **0.525**（f2402 p010 那种是普通版面巧合，不是广告）。所以判据不用改（0.6 依然干净），要改的是「认出来之后必须删文件」。已删 46 张 / 9.4MB，`dropped` 记录保留（那是「第几页是广告」的事实）。
+
+**缩略图**：`thumb.webp` 两处都从**原始渲染页**缩（`papers_build.py` 的 `render(scale=1.0)`、`papers_clean.py` 的同一段），没走 dewatermark，缩略图上带着斜排水印。现在只由 `papers_clean.py` 生成，且从 `files[0]`（已去水印的 `p001.webp`）读回来缩到 300 宽 / quality 70；`papers_build.py` 那段整个删掉并留注释（原始渲染阶段缩出来必然带水印）。49 张全部重生成。
+
+**`ad-template.webp` 挪到 `tools/assets/`**：它是广告页的版式指纹，属工具资源，放在 `content/papers/` 会让人以为又漏了一张广告页（用户第一次质疑就是从这儿起的）。
+
+证据：`out/papers_orphans.json`（46 孤儿全 corr ≥ 0.728、4 条 listed 高相关页 ≤ 0.525）；重生成后 f2505 thumb 300×424 / 11.6KB，肉眼无水印；`node design/ux-v2/tools/qa/smoke.mjs --only paper-list,paper-cover,paper-run,paper-body-only,paper-answers,paper-print,paper-done` → **21 次 0 失败**。
+
+补一句**判据缺口**：冒烟只验 `meta.files` 对应的图能加载（`naturalWidth ≥ 1`），验不出「目录里有不该存在的文件」。这类「磁盘多于清单」的缺陷需要一条独立的目录扫描断言（读 meta → 比 `os.listdir`），目前靠人工全量扫；要接进闸门得先让 smoke 能读文件系统（它现在是纯浏览器端）。
