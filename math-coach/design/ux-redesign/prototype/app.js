@@ -1291,6 +1291,8 @@ function loadedRetryIds() {
 
 /** 试卷卷面与清单都在数据目录。设计版指 runtime/web/data，产品版是 data/；同步时只改这一行。 */
 const DATA_ROOT = "../../../runtime/web/data/";
+// 卷面页图是源数据，放 content/papers/<id>/；这份常量与 DATA_ROOT 一起由 tools/sync_ui.py 按入口改写。
+const PAPER_ROOT = "../../../content/papers/";
 const PAPER_REC_KEY = "mc.papers.v1";
 const PAPER_GROUP = [["final", "期末"], ["mid", "期中"]];
 const PAPER_SHOW = 6;
@@ -1377,7 +1379,7 @@ function paperToday() {
 
 function paperFile(p, index) {
   if (!p || !p.files || index < 0 || index >= p.files.length) return "";
-  return DATA_ROOT + "papers/" + p.id + "/" + p.files[index];
+  return PAPER_ROOT + p.id + "/" + p.files[index];
 }
 
 function paperElapsed() {
@@ -1531,7 +1533,7 @@ function paperPrintHtml(p) {
     '<button type="button" class="btn" id="paper-do-print">打印这张卷</button></div>' +
     '<div class="paper-print"><h1>' + esc(p.title) + "</h1>";
   (p.files || []).forEach(function (file, i) {
-    html += '<figure class="paper-leaf"><img class="paper-page" src="' + esc(DATA_ROOT + "papers/" + p.id + "/" + file) + '" alt="第 ' + (i + 1) + ' 页"></figure>';
+    html += '<figure class="paper-leaf"><img class="paper-page" src="' + esc(PAPER_ROOT + p.id + "/" + file) + '" alt="第 ' + (i + 1) + ' 页"></figure>';
   });
   return html + "</div>";
 }

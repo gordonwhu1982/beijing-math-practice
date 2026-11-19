@@ -19,6 +19,5 @@ data/_second_pass/
 # 会在仓根建一个 ~/ 目录（日志与待发队列），不许进公开仓。
 /~/
 
-# 49 套外部区县真题的整页栅格（112MB，属外部素材）：本地做题页要用，不进公开仓。
-# 需要远程也能做题时，先确认版权口径，再删掉这三行。
-math-coach/runtime/web/data/papers/
+# 卷面页图（49 套 / 773 张 / 110MB）是源数据，放在 math-coach/content/papers/ 随仓发布；
+# math-coach/runtime/web/data/papers/index.js 是 tools/papers_build.py 派生的清单，force-add 入库。
