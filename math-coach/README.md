@@ -44,6 +44,8 @@ content/
   questions/<册>/ch12.spec.jsonl      结构化答案侧车（判题器消费，303 题）
   questions/<册>/ch<章>.options.jsonl  选择题选项侧挂（200 parsed / 27 missing，题干原文不动）
   rubric/<册>/*.jsonl         评分点（一行一点）
+  papers/meta.json            49 套区县真题的卷面索引（id / 年份 / 区县 / 页数 / bodyPages 答案起始页）+ ad-template.webp 广告页模板指纹
+  papers/<id>/pNNN.webp       卷面页图 773 张 / 110MB（源数据，随仓发布；已去水印、已剔末页广告页）
 assets/vendor/katex/          本地 KaTeX（不依赖 CDN）
 tools/
   framework_extract/          从教材 PDF 抽目录（parse_toc.py / mkvolumes.py）
@@ -81,14 +83,18 @@ judge_spec_audit.js         spec 与判题器一致性体检（覆盖率 / 判�
   skills_auto_check.py        方法库闸门：字段必填、uid 规则、每点是否有 core 方法覆盖
   web_detail_probe.js         详情面板探针：点开思想/方法/知识点，断言新增块真的出现
  sc_probe.js                 图谱体量探针：量每个视角的节点数/边数/画布尺寸/缩放/标签实际字号（判断看得清不清）
-  check_all.sh               一次跑完上面全部闸门（加 --web 连无头浏览器冒烟一起跑）
+  check_all.sh               一次跑完上面全部闸门（加 --web 跑界面闸门：uv-x2 smoke 38 路由 × 3 视口 = 114 次）
   math_text_check.js         公式文本检查：全库扫 $ 配对/裸命令/控制字符，对 tools/math_baseline.json 做棘轮（--staged 只看暂存，--write-baseline 重冻）
   fix_math_escapes.js        修被 JSON 转义吃掉的反斜杠（$\frac → $<FF>rac），默认 dry-run，--apply 才写盘
-  ux_asserts.js              视觉断言 38 个判据代号（小字占比/≤13px 整体占比/正文最小 14px/英文枚举/公式跨行/横向溢出/段标题倒挂/浮起块/下拉截断/死链/图例压画布/首屏主按钮/三列页塌列/统计合计必须相等/单选控件只有一个实心选中/不许有死胡同/预览态必须列出选项/不许印 [object Object]/链接不许带 undefined/手机画布超出视口/连线默认不亮点开才亮/局部十字图四方向齐全且名字 >=12.5px + 资源加载 KaTeX/cytoscape + 交互 FLOW：判完后主按钮唯一且在结果卡之后、错因卡 ≤520px 且带折叠），26 次路由（430 宽 18 + 1280 宽 8；archive/weak/retry 先注入 8 条记录 SEED_RICH；practice-look 专测单题预览），退出码=不达标条数；--shots <dir> 顺手出全页图；--only <route> 单测一屏
+  ux_asserts.js              【已退役 2026-11-19】视觉断言 38 个判据代号（小字占比/≤13px 整体占比/正文最小 14px/英文枚举/公式跨行/横向溢出/段标题倒挂/浮起块/下拉截断/死链/图例压画布/首屏主按钮/三列页塌列/统计合计必须相等/单选控件只有一个实心选中/不许有死胡同/预览态必须列出选项/不许印 [object Object]/链接不许带 undefined/手机画布超出视口/连线默认不亮点开才亮/局部十字图四方向齐全且名字 >=12.5px + 资源加载 KaTeX/cytoscape + 交互 FLOW：判完后主按钮唯一且在结果卡之后、错因卡 ≤520px 且带折叠），26 次路由（430 宽 18 + 1280 宽 8；archive/weak/retry 先注入 8 条记录 SEED_RICH；practice-look 专测单题预览），退出码=不达标条数；--shots <dir> 顺手出全页图；--only <route> 单测一屏
+  sync_ui.py                 把设计稿同步到三处运行入口（产品版 / 镜像 / 公开仓镜像）：改 DATA_ROOT、PAPER_ROOT 与 index 前缀三处，缓存串沿用设计稿；默认 dry-run，--write 才写，--remote 带公开仓
+  papers_build.py            试卷装配：读 content/papers/meta.json，把清单写成 runtime/web/data/papers/index.js（页图本身在 content/papers/<id>/，源数据进仓；--index 只重建清单）
+  papers_clean.py            试卷清洗：去水印（5×5 中值判灰、只抹平坦灰不碰笔画）、按末页模板指纹剔广告页（corr≥0.6 只认最后三页），原地写 content/papers/<id>/
+  papers_ocr.py              答案边界：rapidocr 逐页扫【答案】/【参考答案】等标记，取首次命中页 -1 写 meta.bodyPages（含「标记须在页顶 45% 内」校验、写 meta、重建 index），--dry / --recheck
   enum_scan.py               从 content/ 抽「作为字段值出现的短英文串」→ tools/enum_values.json（169 个），供 ux_asserts 扫界面漏词；数据变了重跑
   enum_values.json           上面那份词表（生成物，入库，方便看这版扫了哪些词）
   team_roster_prune.py       清理旧 teammate 与修它们的模型路由（DSH 关掉后才生效）：默认摘 3 个 agency-* 老成员；--list 打印每个成员实际用的 provider/model/effort；--set-model provider/model/effort --all-kept 把成员改回跟主 agent 一样。先写 .bak，改前会拒绝在 DSH 运行时动手
-check_commit.py            提交钩子：前端语法/导图契约/判题回归/方法先后/关系表闸门/公式文本；暂存里动了前端就自动加跑 63 条冒烟，动了样式再先跑视觉断言（--web 强制，--no-web 显式跳过）
+check_commit.py            提交钩子：前端语法/导图契约/判题回归/方法先后/关系表闸门/公式文本；动了前端就自动加跑界面闸门（new_shell() 判定正式页已换成 ux-v2 单页时，改跑 design/ux-v2/tools/qa/smoke.mjs；--web 强制，--no-web 显式跳过）
 runtime/
   shared/judge.js             判题器（唯一一份）：normalize / 有理数 / 多重集 / 宁可 manual 不假判 correct
   web/index.html              壳：只放 header/main/nav/toast 与 script 引用
@@ -127,12 +133,14 @@ python tools/textbook_exercise_extract.py        # 教材 PDF → out/textbook/d
 python tools/textbook_ingest.py                  # 教材题并入 ch<章>.jsonl（按 id 幂等，--dry-run 先看统计）
 python tools/question_options_extract.py          # 选择题选项侧挂（--check 只比对，drift 报错）
 python tools/build_web.py                        # 生成前端数据切片 → runtime/web/data/（目录/图谱/每节）
-node   tools/ux_asserts.js                       # 视觉断言 38 个判据代号 × 29 次路由（430 宽 19 + 1280 宽 10），退出码=不达标条数
-node   tools/web_smoke.js                        # 无头 Chrome 跑 63 项（路由 + 交互断言，含选择题点选、四行卡与图谱落点、全景档与章图、窄屏上拉层、存档写满提示、三列页、方法页例题、错题重练跨节队列、同步桥幂等、搜索别名与按类型搜索、思想总表、素养筛选、按知识点看欠账、到期复习抽取、依据总览），截图到 out/shots/web-*.png
+env UXV2_PRE=/runtime/web/ node design/ux-v2/tools/qa/smoke.mjs   # 界面闸门：38 路由 × 3 视口，逐条量 ovf/off/clip/tiny/tap/ghost/kx，退出码=失败条数
+python tools/sync_ui.py --write --remote        # 设计稿 → 产品版 / 镜像 / 公开仓镜像（dry-run 省 --write）
+node   tools/ux_asserts.js                       # 【已退役】旧架构判据，保留备查
+node   tools/web_smoke.js                        # 【已退役 2026-11-19】旧 js/views 架构的 63 项（路由 + 交互断言，含选择题点选、四行卡与图谱落点、全景档与章图、窄屏上拉层、存档写满提示、三列页、方法页例题、错题重练跨节队列、同步桥幂等、搜索别名与按类型搜索、思想总表、素养筛选、按知识点看欠账、到期复习抽取、依据总览），截图到 out/shots/web-*.png
 node   tools/sc_probe.js                         # 量图谱各视角的体量（节点/边/画布/字号），改布局前后对比用
 W=430 node tools/ux_asserts.js --shots out/shots/x # 顺手出全页图（2x，落盘后拿 read_image 亲看）
 
-bash   tools/check_all.sh                        # 一次跑完上面全部闸门（加 --web 连冒烟一起跑）
+bash   tools/check_all.sh                        # 一次跑完上面全部闸门（加 --web 跑界面闸门 smoke 114 次）
 ```
 
 教材习题那条管线的原理、分级与「第 11 章为什么不可救」写在 [docs/textbook-extraction.md](docs/textbook-extraction.md)。
@@ -164,4 +172,4 @@ bash   tools/check_all.sh                        # 一次跑完上面全部闸�
 
 ## 许可
 
-本仓自有内容为 AI 起草草稿；外部题源一律 cite-only（不进仓、不进发布包）。第 12 章题库中 4–5★ 可能含网搜真题成分（336 题），故 `visibility=stem_public`、`redistributable=false`：将来公开只放题干。
+本仓自有内容为 AI 起草草稿；外部题源一律 cite-only（不进仓、不进发布包）。题库里 `trace_possible=true` 的 336 题可能含网搜真题成分。题目上不再逐行写露出范围和再分发标记，默认只公开题干、不可再分发。

@@ -745,14 +745,14 @@
 
 同一套界面现在要活在三处，再加一个公开仓镜像就是四处：
 
-| 角色 | 路径 | app.js 里的 DATA_ROOT | index.html 前缀 |
-|---|---|---|---|
-| 设计稿（源） | `design/ux-v2/app/` | `../../../runtime/web/data/` | `../../../` |
-| 产品版 | `runtime/web/` | `data/` | `js/`、`data/`、`../../assets/` |
-| 镜像（原冻结基准） | `design/ux-redesign/prototype/` | `../../../runtime/web/data/` | `../../../` |
-| 公开仓镜像 | `beijing-math-practice/math-coach/` 下同两个目录 | 同上 | 同上 |
+| 角色 | 路径 | app.js 里的 DATA_ROOT | app.js 里的 PAPER_ROOT | index.html 前缀 |
+|---|---|---|---|---|
+| 设计稿（源） | `design/ux-v2/app/` | `../../../runtime/web/data/` | `../../../content/papers/` | `../../../` |
+| 产品版 | `runtime/web/` | `data/` | `../../content/papers/` | `js/`、`data/`、`../../assets/` |
+| 镜像（原冻结基准） | `design/ux-redesign/prototype/` | `../../../runtime/web/data/` | `../../../content/papers/` | `../../../` |
+| 公开仓镜像 | `beijing-math-practice/math-coach/` 下同两个目录 | 同上 | 同上 | 同上 |
 
-**两处差异到此为止，别再各写一份。** 同步只有一条命令：
+**三处差异（DATA_ROOT、PAPER_ROOT、index.html 前缀）到此为止，别再各写一份。** 同步只有一条命令：
 
 ```
 python tools/sync_ui.py                  # dry-run，打印哪个目标哪个文件有差异
@@ -780,4 +780,6 @@ env UXV2_PRE=/runtime/web/ node design/ux-v2/tools/qa/smoke.mjs
 
 **实测证据**（2026-11-19 22:00 前后）：四处入口同值 —— `#/today` 767 字 / 9 处公式 / 3 个知识点分组，`#/book` 2680 字 / 63 处公式，`#/section` 597 字 / 17 处公式 / 3 组，`#/paper?id=f2609&run=1` 11 页 / 5 页遮罩 / 按钮「看答案（第 7 页起）」，`#/map` 438 字，全部零 console 错误（`out/probe_sync2.js`，`UXV2_ROOT`/`UXV2_PRE`/`UXV2_PORT`/`UXV2_CDP` 环境变量切换目标）。`bash tools/check_all.sh --web` → **rc=0，失败步骤数 0**（界面闸门 [OK]）。跑第一次时还有一条**既有**失败 `section/S801-12.M 缺必填字段 page`：801 第 12 章末尾的 12.M「比例、面积和模型」是自编竞赛栏目（射影、塞瓦、梅涅劳斯、斯特瓦特等 11 个知识点），教材里没有这一页，page 天然为空。已在 `tools/schema_check.py` 里对 `no` 以 `.M` 结尾的节特判：缺 page 记 WARN 不判红，strict 模式仍要求补。这不是放宽判据，是纠正 schema 把「教材页码」当成所有节的必填项这个错误假设
 
-**公开仓不带试卷页图。** 49 套区县真题的 678 页栅格共 112MB，属外部素材：`beijing-math-practice/math-coach/.gitignore` 的 `runtime/web/data/` 本来就挡住整个数据目录（已跟踪的 `catalog/figures/graph/qkp/qtypes/sec` 是 gitignore 之前入库的，照旧生效），新目录 `data/papers/` 自然不入库。远程点试卷会看到「卷面图没生成」的出口提示；本机与局域网有图。要改这个口径，先确认版权，再删 `.gitignore` 里那条显式规则。
+**页图是源数据，进仓；清单是派生物，force-add。** 49 套区县真题的 773 张页图共 110MB，2026-11-19 晚从 `runtime/web/data/papers/`（派生产物目录，`.gitignore` 挡着，重跑 `tools/build_web.py` 就会丢）搬到 **`content/papers/<id>/pNNN.webp`**，与 `content/papers/meta.json` 同级，公开仓 `beijing-math-practice/math-coach/content/papers/` 一并入库（`8bcd4c8`，780 files / 112MB，push 走 `-c credential.helper=manager`）。前端不再按 DATA_ROOT 拼页图路径，改用 `PAPER_ROOT`（见上表第二列），由 `tools/sync_ui.py` 按入口改写。
+
+`runtime/web/data/papers/` 现在只剩一个 `index.js`（`window.MC.put("papers", {...})`，由 `tools/papers_build.py --index` 从 meta 生成）。它仍在 `math-coach/.gitignore` 的 `runtime/web/data/` 之下，公开仓用 `git add -f` 入库 —— 没有它，远程打开试卷页是空列表。改 meta 之后要重跑一次 build 才能让清单跟上，这是这处「源数据进仓、派生物强入库」的代价。
