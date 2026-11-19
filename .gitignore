@@ -18,3 +18,7 @@ data/_second_pass/
 # git-ai 采集器的 post-commit 钩子在本机把 HOME 解析成字面量 ~，
 # 会在仓根建一个 ~/ 目录（日志与待发队列），不许进公开仓。
 /~/
+
+# 49 套外部区县真题的整页栅格（112MB，属外部素材）：本地做题页要用，不进公开仓。
+# 需要远程也能做题时，先确认版权口径，再删掉这三行。
+math-coach/runtime/web/data/papers/

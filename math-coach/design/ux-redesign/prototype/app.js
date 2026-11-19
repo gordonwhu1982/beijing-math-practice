@@ -1289,6 +1289,281 @@ function loadedRetryIds() {
   return retryIds().filter(function (id) { return !!questionById(id); });
 }
 
+/** 试卷卷面与清单都在数据目录。设计版指 runtime/web/data，产品版是 data/；同步时只改这一行。 */
+const DATA_ROOT = "../../../runtime/web/data/";
+const PAPER_REC_KEY = "mc.papers.v1";
+const PAPER_GROUP = [["final", "期末"], ["mid", "期中"]];
+const PAPER_SHOW = 6;
+
+function ensurePapers() {
+  return ensureSlice("papers", DATA_ROOT + "papers/index.js");
+}
+
+function papers() {
+  ensurePapers();
+  const box = window.MC && window.MC.papers;
+  return (box && box.papers) || [];
+}
+
+/** 期末在前、新年份在前；同一年按 id（就是区县顺序）。 */
+function papersSorted() {
+  const rank = function (p) { return p.kind === "final" ? 0 : p.kind === "mid" ? 1 : 2; };
+  return papers().slice().sort(function (a, b) {
+    if (rank(a) !== rank(b)) return rank(a) - rank(b);
+    if ((b.year || 0) !== (a.year || 0)) return (b.year || 0) - (a.year || 0);
+    return String(a.id).localeCompare(String(b.id));
+  });
+}
+
+function paperById(id) {
+  ensurePapers();
+  return papers().filter(function (p) { return p.id === id; })[0] || null;
+}
+
+/** 「海淀 · 2026 期末」：认卷靠这三样，不靠文件名。 */
+function paperName(p) {
+  return (p.region ? p.region + " · " : "") + String(p.year || "") + " " + (p.cn || "");
+}
+
+/** 一行能容下的卷面事实。缺的就不写，绝不拿默认值凑。 */
+function paperFacts(p) {
+  const bits = [];
+  if (p.qCount) bits.push(p.qCount + " 题");
+  if (p.fullMarks) bits.push(p.fullMarks + " 分");
+  if (p.minutes) bits.push(p.minutes + " 分钟");
+  if (!bits.length) {
+    if (p.bodyPages) bits.push(p.bodyPages + " 页");
+    else if (p.pages) bits.push(p.pages + " 页");
+    else bits.push("页数没记");
+  }
+  bits.push(p.hasAnswer === false ? "没有答案" : "有答案");
+  return bits.join(" · ");
+}
+
+function paperRecs() {
+  try {
+    const raw = localStorage.getItem(PAPER_REC_KEY);
+    const box = raw ? JSON.parse(raw) : null;
+    return (box && box.byId) || {};
+  } catch (error) { return {}; }
+}
+
+function paperLastRec(id) {
+  const rows = paperRecs()[id];
+  return rows && rows.length ? rows[rows.length - 1] : null;
+}
+
+function savePaperRec(id, row) {
+  const all = paperRecs();
+  all[id] = (all[id] || []).concat([row]).slice(-20);
+  try { localStorage.setItem(PAPER_REC_KEY, JSON.stringify({ version: 1, byId: all })); } catch (error) {}
+}
+
+function paperLastText(id) {
+  const rec = paperLastRec(id);
+  if (!rec) return "";
+  const bits = [];
+  if (typeof rec.score === "number" && isFinite(rec.score)) bits.push(rec.score + " 分");
+  if (rec.minutes) bits.push(rec.minutes + " 分钟");
+  if (rec.date) bits.push(rec.date);
+  return bits.length ? "上次 " + bits.join(" · ") : "";
+}
+
+function paperToday() {
+  const d = new Date();
+  const pad = function (x) { return (x < 10 ? "0" : "") + x; };
+  return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+}
+
+function paperFile(p, index) {
+  if (!p || !p.files || index < 0 || index >= p.files.length) return "";
+  return DATA_ROOT + "papers/" + p.id + "/" + p.files[index];
+}
+
+function paperElapsed() {
+  if (!state.paperStart) return 0;
+  return Math.max(0, Math.round((Date.now() - state.paperStart) / 60000));
+}
+
+/** 卷面一行：哪一年、哪个区、多少题、做过没有。 */
+function paperRowHtml(p) {
+  const last = paperLastText(p.id);
+  return '<button type="button" class="paper-row" data-paper="' + esc(p.id) + '">' +
+    '<span class="paper-name">' + esc(paperName(p)) + "</span>" +
+    '<span class="paper-facts">' + esc(paperFacts(p)) + "</span>" +
+    (last ? '<span class="paper-last">' + esc(last) + "</span>" : "") +
+    "</button>";
+}
+
+/** 练法页里的试卷房间：真清单，不写「还没有试卷」。 */
+function paperCardHtml() {
+  ensurePapers();
+  if (!window.MC || !window.MC.papers) return '<p class="muted">正在打开试卷清单。</p>';
+  const all = papersSorted();
+  if (!all.length) return '<p class="muted">清单是空的：卷面还没渲染（tools/papers_build.py）。</p>';
+  const limit = state.paperAll ? all.length : PAPER_SHOW;
+  const groups = PAPER_GROUP.map(function (pair) {
+    const rows = all.filter(function (p) { return (p.kind || "") === pair[0]; });
+    if (!rows.length) return "";
+    const rest = rows.length - limit;
+    const more = rest > 0
+      ? '<button type="button" class="link paper-more" data-paper-more="1">这一组还有 ' + rest + " 套</button>"
+      : "";
+    return '<div class="paper-group"><p class="paper-ghead">' + pair[1] + " · " + rows.length + " 套</p>" +
+      '<div class="paper-rows">' + rows.slice(0, limit).map(paperRowHtml).join("") + "</div>" + more + "</div>";
+  }).join("");
+  const tail = state.paperAll && all.length > PAPER_SHOW
+    ? '<div class="row"><button type="button" class="link" id="paper-less">先收起</button></div>'
+    : "";
+  return groups + tail;
+}
+
+function paperDeadEnd(why, id) {
+  return "<h1>没找到这张卷</h1><p>" + esc(why || "试卷清单里没有这一张。") + "</p>" +
+    (id ? '<p class="muted">' + esc(id) + "</p>" : "") +
+    '<div class="row"><a class="btn" href="#/ways">回练法挑一张</a><a class="btn secondary" href="#/today">回到今天</a></div>';
+}
+
+function paperCoverHtml(p) {
+  const rec = paperLastRec(p.id);
+  const rows = [
+    ["年份", (p.year || "—") + " 年"],
+    ["类型", p.cn || "—"],
+    ["地区", p.region || "—"],
+    ["题量", p.qCount ? p.qCount + " 道" : "卷面没写"],
+    ["满分", p.fullMarks ? p.fullMarks + " 分" : "卷面没写"],
+    ["时长", p.minutes ? p.minutes + " 分钟" : "卷面没写"],
+    ["卷面", (p.bodyPages ? p.bodyPages + " 页" : "—") + "（连答案共 " + (p.pages || 0) + " 页）"],
+    ["答案", p.hasAnswer === false ? "没有" : "有"]
+  ];
+  const kvs = rows.map(function (pair) {
+    return '<span class="paper-kv"><em>' + pair[0] + "</em>" + esc(String(pair[1])) + "</span>";
+  }).join("");
+  const last = rec
+    ? "上次：<b>" + (typeof rec.score === "number" && isFinite(rec.score) ? rec.score + " 分" : "没记分") + "</b>" +
+      (rec.minutes ? " · 用时 " + rec.minutes + " 分钟" : "") + (rec.date ? " · " + esc(rec.date) : "")
+    : "还没做过这一张。";
+  return "<h1>" + esc(p.title) + "</h1>" +
+    '<p class="muted">' + esc(paperFacts(p)) + (p.bodyPages ? " · 卷面 " + p.bodyPages + " 页" : "") + "</p>" +
+    '<div class="paper-cover">' +
+      '<div class="paper-thumb-box"><img class="paper-thumb" src="' + esc(paperFile(p, 0)) + '" alt="卷面第 1 页" width="300" height="424"></div>' +
+      '<div class="paper-side"><div class="paper-kvs">' + kvs + "</div>" +
+        '<p class="paper-last">' + last + "</p>" +
+        '<div class="row"><button type="button" class="btn" id="paper-start">开始做这套卷</button>' +
+        '<button type="button" class="btn secondary" id="paper-peek">先看看卷面</button></div>' +
+        '<p class="muted">做完按答案自己估分，记一笔。这一张不进错题池，也不算进「会做率」。</p>' +
+      "</div></div>";
+}
+
+function paperDoneHtml(p, used) {
+  const max = p.fullMarks || 100;
+  return '<section class="card paper-done"><h2>交卷 · 记一笔</h2>' +
+    '<p class="muted">' + (p.fullMarks ? "这一张满分 " + p.fullMarks + " 分" : "这一张卷面没标满分") + "，你用了 " + used + " 分钟。</p>" +
+    '<label class="paper-field">得分（满分 ' + max + '）<input id="paper-score" type="number" min="0" max="' + max + '" inputmode="numeric" autocomplete="off"></label>' +
+    '<label class="paper-field">用时（分钟）<input id="paper-min" type="number" min="0" inputmode="numeric" value="' + used + '"></label>' +
+    '<div class="row"><button type="button" class="btn" id="paper-save">保存这次</button>' +
+    '<button type="button" class="btn secondary" id="paper-cancel">先不记</button></div></section>';
+}
+
+/** 卷面阅读器：整卷竖着排，一路滚下去做；答案页不进这条流水，点了才取图。
+    为什么不是一页一图：翻页要来回点，做到第 5 页想回头对第 3 题得点四次；滚动更像
+    纸卷，手机上滑比点按钮省事。卷面页和答案页仍然分开 —— 能一路滚到答案，做题就
+    变成抄答案。 */
+/* 有人第一次看到答案边界不对，改一次就该记住：覆盖值存在 localStorage，按卷 id 记。
+   为什么不写回 meta：这是这台机器上的阅读偏好，不是这份卷子的固有属性。 */
+function paperBodyOverride(id) {
+  try {
+    const m = JSON.parse(localStorage.getItem("mc-paper-body") || "{}");
+    const v = parseInt(m[id], 10);
+    return v > 0 ? v : 0;
+  } catch (error) {
+    return 0;
+  }
+}
+
+function paperRunHtml(p) {
+  const files = (p.files || []).length;
+  if (!files) return paperDeadEnd("这张卷的卷面图没生成：在仓里跑 python tools/papers_clean.py。", p.id);
+  /* 答案从第几页起：卷面页数（bodyPages）对得上就用它；对不上就按后半段遮住。
+     为什么会有「对不上」：三分之一的卷子页脚把卷面页和答案页连着编号（第 1 页 共 23 页 一路编到末页），
+     光看页码分不出哪页开始是答案。宁可多遮一页卷面（点一下「看答案」就回来），也不许把答案亮在卷子上。 */
+  const override = paperBodyOverride(p.id);
+  const known = override || parseInt(p.bodyPages, 10) || 0;
+  /* 推断方向：宁可把卷面page也糊进去（点一下「看答案」就回来了），也不许把答案亮在卷子上。
+     为什么不用「一半」：实测答案常常从四成处就开始了（f2401 第 9 页已是【分析】）。 */
+  const ansFrom = p.hasAnswer && files > 1
+    ? (known > 0 && known < files ? known + 1 : Math.max(2, Math.ceil(files * 0.4)))
+    : files + 1;
+  const hasAns = ansFrom <= files;
+  if (!state.paperStart) state.paperStart = Date.now();
+  const used = paperElapsed();
+  const head = '<div class="paper-bar" id="paper-bar"><button type="button" class="link" id="paper-exit">\u2039 退出</button>' +
+    "<b>" + esc(paperName(p)) + "</b>" +
+    '<span class="muted" id="paper-pos">卷面 ' + files + " 页 · 已用 " + used + " 分钟</span></div>";
+  if (hashParam("done") === "1") return "<h1>" + esc(p.title) + "</h1>" + head + paperDoneHtml(p, used);
+  let leaves = "";
+  for (let i = 1; i <= files; i += 1) {
+    const veil = i >= ansFrom;
+    if (i === ansFrom) leaves += '<p class="paper-ansline" id="paper-ansline">下面 <b id="paper-ansn">' + (files - ansFrom + 1) + '</b> 页是答案，点下面「看答案」才看得清。' +
+      '<label class="paper-ansfrom">答案其实从第 <input id="paper-ansfrom" type="number" min="2" max="' + files + '" value="' + ansFrom + '"> 页起' +
+      '<button type="button" class="link" id="paper-ansfrom-save">存下来</button></label></p>';
+    leaves += '<figure class="paper-leaf' + (veil ? " is-veiled" : "") + '" id="pp-' + i + '" data-page="' + i + '">' +
+      '<img class="paper-page" loading="lazy" decoding="async" src="' + esc(paperFile(p, i - 1)) + '" alt="' +
+      (veil ? "答案第 " : "卷面第 ") + i + ' 页">' +
+      '<figcaption>第 ' + i + " 页 · 共 " + files + " 页" + (veil ? ' · <span class="muted">答案</span>' : "") + "</figcaption></figure>";
+  }
+  return "<h1>" + esc(p.title) + "</h1>" + head +
+    '<div class="paper-roll" id="paper-roll">' + leaves + "</div>" +
+    '<div class="paper-foot">' +
+      (hasAns ? '<button type="button" class="btn secondary" id="paper-ans" data-from="' + ansFrom + '">看答案（第 ' + ansFrom + " 页起）</button>" : "") +
+      '<button type="button" class="btn" id="paper-submit">做完 · 交卷</button>' +
+      '<button type="button" class="link" id="paper-orig">看原图（打印用）</button>' +
+    "</div>" +
+    '<p class="muted">一路滚下去做，不用翻页。' +
+    (hasAns ? "答案在最后 " + (files - ansFrom + 1) + " 页，糊着盖住了，点了才看得见。" : "") + "</p>";
+}
+
+/** 打印视图：整卷连答案一页不漏，去掉所有控件交给浏览器打印。
+    留着它的理由：清理后的卷面图就是原件，家长要打印的时候直接打这一页。 */
+function paperPrintHtml(p) {
+  let html = '<div class="paper-bar no-print"><button type="button" class="link" id="paper-exit">\u2039 退出</button>' +
+    "<b>打印视图 · " + esc(paperName(p)) + "</b>" +
+    '<button type="button" class="btn" id="paper-do-print">打印这张卷</button></div>' +
+    '<div class="paper-print"><h1>' + esc(p.title) + "</h1>";
+  (p.files || []).forEach(function (file, i) {
+    html += '<figure class="paper-leaf"><img class="paper-page" src="' + esc(DATA_ROOT + "papers/" + p.id + "/" + file) + '" alt="第 ' + (i + 1) + ' 页"></figure>';
+  });
+  return html + "</div>";
+}
+
+/** 试卷真题：一张卷单独开。清单没载入时说正在打开，不许凭空说没有。 */
+function viewPaper() {
+  state.nav = "ways";
+  const id = hashParam("id") || "";
+  ensurePapers();
+  const box = window.MC && window.MC.papers;
+  const p = id ? paperById(id) : null;
+  if (!p) {
+    if (!box) return '<h1>试卷</h1><p class="muted">正在打开试卷清单。</p>';
+    return paperDeadEnd(id ? "清单里没有这张卷。" : "地址里没写是哪一张卷。", id);
+  }
+  /* 换了一张卷就从第一页、卷面侧、计时重新开始；同一张卷的翻页不许被重置。 */
+  if (state.paperId !== id) {
+    state.paperId = id;
+    state.paperPage = 1;
+    state.paperSeeAns = false;
+    state.paperStart = 0;
+  }
+  if (hashParam("print") === "1") return paperPrintHtml(p);
+  if (hashParam("run") === "1") return paperRunHtml(p);
+  return paperCoverHtml(p);
+}
+
+function paperCrumb() {
+  const p = paperById(hashParam("id") || "");
+  return p ? "试卷 · " + paperName(p) : "试卷";
+}
+
 /** One room per way of practicing. Empty rooms say so and do not start. */
 function viewWays() {
   state.nav = "ways";
@@ -1306,7 +1581,7 @@ function viewWays() {
   return '<h1>练法</h1><p class="muted">选一种入口。做题的时候还是一次一组，一组最多 8 道。</p><div class="ways">' +
     '<section class="card way way-book"><h2>跟着课本</h2><p>按今天选中的这一节来练。</p><button type="button" class="btn" data-go="today">去今天练这一节</button></section>' +
     '<section class="card way way-end"><h2>章末综合</h2><p>把这一章各节的题混在一起。课本目录里不单列。</p><div class="row">' + chapterEndButtons() + "</div>" + note + "</section>" +
-    '<section class="card way way-paper"><h2>试卷真题</h2><p>一张卷单独开，封面写年份、地区和考试类型。</p><p>还没有可核对的试卷，所以不能开始。</p></section>' +
+    '<section class="card way way-paper"><h2>试卷真题</h2><p>一张卷从头做到尾。做完按答案自己估分，记一笔。</p>' + paperCardHtml() + "</section>" +
     '<section class="card way way-topic"><h2>专题</h2><p>动点、新定义、存在、阅读、探究。题上还没有标专题，所以不能开始。</p></section>' +
     '<section class="card way way-contest"><h2>竞赛</h2><p>竞赛档的题还散在各节里。单独的竞赛专项还没组好，所以不能开始。</p></section>' +
     '<section class="card way way-master"><h2>按掌握</h2>' + mastery + "</section></div>";
@@ -2361,15 +2636,15 @@ function sliceWatchdog() {
 }
 
 function ensureSec(vol, sec) {
-  return ensureSlice("sec:" + vol + "-" + sec, "../../../runtime/web/data/sec/" + vol + "-" + sec + ".js?v=136");
+  return ensureSlice("sec:" + vol + "-" + sec, DATA_ROOT + "sec/" + vol + "-" + sec + ".js?v=136");
 }
 
 function ensureItems(vol, no) {
-  return ensureSlice("items:" + vol + "-" + no, "../../../runtime/web/data/sec/" + vol + "-" + no + ".items.js?v=136");
+  return ensureSlice("items:" + vol + "-" + no, DATA_ROOT + "sec/" + vol + "-" + no + ".items.js?v=136");
 }
 
 function ensureEx(vol, no) {
-  return ensureSlice("ex:" + vol + "-" + no, "../../../runtime/web/data/sec/" + vol + "-" + no + ".ex.js?v=136");
+  return ensureSlice("ex:" + vol + "-" + no, DATA_ROOT + "sec/" + vol + "-" + no + ".ex.js?v=136");
 }
 
 function skillBundle(id) {
@@ -5427,7 +5702,9 @@ function viewBrief() {
 /** One question, with graded hints in practice and none in a test. */
 /** 选项整条就是一个公式（\frac{2}{3}、\sqrt{5}）时为真：只有这种才配用大字号。 */
 function soloMath(text) {
-  var t = String(text == null ? "" : text).trim();
+  /* 选项文本常常带外层的 $..$（"$\\frac{2}{3}$"）。先剥掉再判，否则一个纯公式的选项
+     永远被当成「含文字的选项」，走不到大字号那一档（第十轮实测：4 个纯分式选项全是 16.96px）。 */
+  var t = String(text == null ? "" : text).trim().replace(/^\$+|\$+$/g, "").trim();
   if (!t || t.charAt(0) !== "\\") return false;
   var bare = t.replace(/\\[a-zA-Z]+/g, "").replace(/\$/g, "");
   return !/[A-Za-z\u4e00-\u9fff]/.test(bare);
@@ -6225,6 +6502,126 @@ function bind() {
     state.practiceNo = (first && first.sec) || state.secId;
     state.practiceKp = "";
     startQueue(ids, "practice", "ways");
+  };
+  document.querySelectorAll("[data-paper]").forEach(function (button) {
+    button.onclick = function () {
+      state.paperPage = 1;
+      state.paperStart = 0;
+      state.paperZoom = false;
+      location.hash = "#/paper?id=" + button.getAttribute("data-paper");
+    };
+  });
+  document.querySelectorAll("[data-paper-more]").forEach(function (button) {
+    button.onclick = function () { state.paperAll = true; render(); };
+  });
+  const paperLess = document.getElementById("paper-less");
+  if (paperLess) paperLess.onclick = function () { state.paperAll = false; render(); };
+  const openPaperRun = function () {
+    state.paperStart = Date.now();
+    state.paperPage = 1;
+    location.hash = "#/paper?id=" + (hashParam("id") || "") + "&run=1";
+  };
+  const paperStartBtn = document.getElementById("paper-start");
+  if (paperStartBtn) paperStartBtn.onclick = openPaperRun;
+  const paperPeek = document.getElementById("paper-peek");
+  if (paperPeek) paperPeek.onclick = openPaperRun;
+  const paperExit = document.getElementById("paper-exit");
+  if (paperExit) paperExit.onclick = function () {
+    state.paperStart = 0;
+    state.paperPage = 1;
+    location.hash = "#/paper?id=" + (hashParam("id") || "");
+  };
+  /* 滚动卷面：页码跟着「已经滚过头顶的那一页」走。答案页一开始是糊的，点「看答案」才解开。 */
+  const paperRoll = document.getElementById("paper-roll");
+  const paperPos = document.getElementById("paper-pos");
+  if (window.__paperIO) { try { window.__paperIO.disconnect(); } catch (error) {} window.__paperIO = null; }
+  const paperTotal = paperRoll ? paperRoll.querySelectorAll(".paper-leaf").length : 0;
+  if (paperRoll && window.IntersectionObserver) {
+    const leaves = Array.prototype.slice.call(paperRoll.querySelectorAll(".paper-leaf"));
+    const io = new IntersectionObserver(function () {
+      let cur = 1;
+      leaves.forEach(function (leaf) {
+        const rect = leaf.getBoundingClientRect();
+        if (rect.top <= 140) cur = Math.max(cur, parseInt(leaf.getAttribute("data-page"), 10) || 1);
+      });
+      if (paperPos) paperPos.textContent = "第 " + cur + " / " + paperTotal + " 页 · 已用 " + paperElapsed() + " 分钟";
+    }, { threshold: [0, 0.1, 0.4, 1] });
+    leaves.forEach(function (leaf) { io.observe(leaf); });
+    window.__paperIO = io;
+  }
+  const paperAns = document.getElementById("paper-ans");
+  const applyFrom = function (v) {
+    if (!paperRoll) return;
+    paperRoll.classList.remove("show-ans");
+    Array.prototype.forEach.call(paperRoll.querySelectorAll(".paper-leaf"), function (leaf) {
+      leaf.classList.toggle("is-veiled", (parseInt(leaf.getAttribute("data-page"), 10) || 1) >= v);
+    });
+    const line = document.getElementById("paper-ansline");
+    if (line) line.hidden = v > paperTotal;
+    const nEl = document.getElementById("paper-ansn");
+    if (nEl) nEl.textContent = String(Math.max(0, paperTotal - v + 1));
+    const inp = document.getElementById("paper-ansfrom");
+    if (inp) inp.value = String(v);
+    if (paperAns) {
+      paperAns.setAttribute("data-from", String(v));
+      paperAns.textContent = "看答案（第 " + v + " 页起）";
+    }
+  };
+  const paperFromSave = document.getElementById("paper-ansfrom-save");
+  if (paperFromSave) paperFromSave.onclick = function () {
+    const inp = document.getElementById("paper-ansfrom");
+    const v = inp ? parseInt(inp.value, 10) : 0;
+    if (!(v >= 2 && v <= paperTotal)) return;
+    try {
+      const m = JSON.parse(localStorage.getItem("mc-paper-body") || "{}");
+      m[hashParam("id") || ""] = v - 1;
+      localStorage.setItem("mc-paper-body", JSON.stringify(m));
+    } catch (error) {}
+    applyFrom(v);
+    paperFromSave.textContent = "记下了";
+    setTimeout(function () { paperFromSave.textContent = "存下来"; }, 1600);
+  };
+  if (paperAns) {
+    const from = parseInt(paperAns.getAttribute("data-from"), 10) || 3;
+    paperAns.onclick = function () {
+      if (!paperRoll) return;
+      const on = !paperRoll.classList.contains("show-ans");
+      paperRoll.classList.toggle("show-ans", on);
+      paperAns.textContent = on ? "收起答案" : "看答案（第 " + from + " 页起）";
+      if (on) {
+        const leaf = document.getElementById("pp-" + from);
+        if (leaf) leaf.scrollIntoView({ block: "start", behavior: "smooth" });
+      }
+    };
+  }
+  const paperOrig = document.getElementById("paper-orig");
+  if (paperOrig) paperOrig.onclick = function () {
+    location.hash = "#/paper?id=" + (hashParam("id") || "") + "&print=1";
+  };
+  const paperDoPrint = document.getElementById("paper-do-print");
+  if (paperDoPrint) paperDoPrint.onclick = function () { window.print(); };
+  const paperSubmit = document.getElementById("paper-submit");
+  if (paperSubmit) paperSubmit.onclick = function () {
+    location.hash = "#/paper?id=" + (hashParam("id") || "") + "&run=1&done=1";
+  };
+  const paperCancel = document.getElementById("paper-cancel");
+  if (paperCancel) paperCancel.onclick = function () {
+    state.paperStart = 0;
+    location.hash = "#/paper?id=" + (hashParam("id") || "");
+  };
+  const paperSave = document.getElementById("paper-save");
+  if (paperSave) paperSave.onclick = function () {
+    const id = hashParam("id") || "";
+    const scoreEl = document.getElementById("paper-score");
+    const minEl = document.getElementById("paper-min");
+    const score = scoreEl && scoreEl.value !== "" ? Number(scoreEl.value) : null;
+    const minutes = minEl && minEl.value !== "" ? Number(minEl.value) : 0;
+    if (id) savePaperRec(id, { score: score, minutes: minutes, date: paperToday(), ts: Date.now() });
+    state.paperStart = 0;
+    state.paperPage = 1;
+    state.flash = "这一张记下来了。";
+    location.hash = "#/paper?id=" + id;
+    render();
   };
   bindAbandon("abandon", state.route === "today" ? "today" : "section");
   bindAbandon("abandon-review", "review");
@@ -7445,6 +7842,7 @@ function advance() {
 
 /** Pages that already have their own head, so they do not get the shared bar. */
 function hideTopBar() {
+  if (state.route === "paper" && hashParam("run") === "1") return true;
   return inSet();
 }
 
@@ -7455,6 +7853,7 @@ function backTarget() {
     if (state.chapterFrom === "record") return "record";
     return "book";
   }
+  if (state.route === "paper") return "ways";
   if (state.route === "record") return state.recordFrom || "review";
   if (state.route === "section") return "chapter";
   if (state.route === "brief") {
@@ -7486,6 +7885,7 @@ function crumbBar() {
   const section = { route: "section", label: (currentSection() && currentSection().title) || "这一节" };
   let parts = [{ label: "今天" }];
   if (state.route === "ways") parts = [{ label: "练法" }];
+  else if (state.route === "paper") parts = [{ route: "ways", label: "练法" }, { label: paperCrumb() }];
   else if (state.route === "book") parts = [{ label: "课本" }];
   else if (state.route === "chapter") parts = [book, { label: (currentChapter() && currentChapter().title) || "这一章" }];
   else if (state.route === "section") parts = [book, { route: "chapter", label: (currentChapter() && currentChapter().title) || "这一章" }, { label: (currentSection() && currentSection().title) || "这一节" }];
@@ -7615,6 +8015,7 @@ function render() {
   const views = {
     today: viewToday,
     ways: viewWays,
+    paper: viewPaper,
     book: viewBook,
     chapter: viewChapter,
     section: viewSection,
@@ -7792,7 +8193,7 @@ function onHash() {
 
 /** Return whether the route is one this prototype draws. */
 function viewsHas(name) {
-  return ["today", "ways", "book", "chapter", "section", "kp", "method", "q", "map", "brief", "drill", "practice", "test", "result", "review", "record", "evidence", "notfound"].indexOf(name) >= 0;
+  return ["today", "ways", "paper", "book", "chapter", "section", "kp", "method", "q", "map", "brief", "drill", "practice", "test", "result", "review", "record", "evidence", "notfound"].indexOf(name) >= 0;
 }
 
 window.addEventListener("hashchange", onHash);

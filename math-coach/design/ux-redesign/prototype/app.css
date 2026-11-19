@@ -416,7 +416,7 @@ aside.card.hint-side { align-items: stretch; }
 .kp-prose { display: block; margin: 0 0 8px; line-height: 1.5; font-weight: 400; }
 .kp-row .kp-formula { margin: 8px 0 0; padding: 10px 8px; }
 .kp-row .kp-formula .katex { font-size: 1.2em; }
-.kp-row .kp-prose { margin: 6px 0 0; color: var(--c-text-2); font-size: 13px; }
+.kp-row .kp-prose { margin: 6px 0 0; color: var(--c-text-2); font-size: var(--fs-small); }
 .kp-statement {
   display: block;
   margin: 8px 0 0;
@@ -682,7 +682,7 @@ button.qband-sum:hover, button.qband-sum:focus-visible { background: var(--c-bg)
   font: inherit;
   cursor: pointer;
 }
-.qs-head .link { flex: none; }
+.qs-head .link { flex: none; min-width: 44px; min-height: 40px; }
 .qs-actions { display: flex; flex: none; gap: 4px; }
 .bank-sheet {
   position: fixed;
@@ -2031,9 +2031,7 @@ a.btn { display: inline-flex; align-items: center; justify-content: center; text
 /* 一行里只放大带分数的公式：纯数字/字母 1.06em 与中文齐平，含分数才抬到 --math-stem。
    理由（用户两次反馈）：一律放大时「AB = 5」和「的取值范围是」一样高，孩子看到一行两种字号。 */
 .stem .katex { font-size: var(--math-plain); }
-.stem .katex.is-frac { font-size: var(--math-stem); }
 .list button .katex, .choice .katex { font-size: var(--math-plain); }
-.list button .katex.is-frac, .choice .katex.is-frac { font-size: var(--math-opt); }
 .kp-row.kp-with-def .katex { font-size: var(--math-scale); }
 .kp-row.kp-with-def .muted { font-size: var(--fs-body); }
 
@@ -2080,7 +2078,6 @@ a.btn { display: inline-flex; align-items: center; justify-content: center; text
 }
 /* 选项整条就是一个公式时要比行内大一点（它没有中文陪衬），但仍然只有分式才抬到最大档。 */
 .choice.is-solo .katex, .list button.is-solo .katex { font-size: var(--math-stem); }
-.choice.is-solo .katex.is-frac, .list button.is-solo .katex.is-frac { font-size: 2.15em; }
 .choice .opt-k { flex: 0 0 auto; margin-right: 12px; font-size: 15px; font-weight: 700; color: var(--c-text-3, #8b93a1); letter-spacing: .5px; }
 .choice.picked .opt-k { color: var(--c-primary); }
 .choice { display: flex; align-items: center; }
@@ -2092,7 +2089,9 @@ a.btn { display: inline-flex; align-items: center; justify-content: center; text
 /* 只有含分数的公式才放大：1.3em 落在「10」「5」「18 cm」这类纯数字上，数字比中文高一头，
    同一行像两种字体拼起来（第八轮只量了分式，没量同一行的纯数字，所以漏了）。 */
 .qband-list .qcell .stem .katex { font-size: 1.1em; }
-.qband-list .qcell .stem .katex.is-frac { font-size: 1.3em; }
+/* 账本里的分式要一眼看出是分数（用户反馈「右边分式还是太小」），但只有分式放大，
+   同一行「共 8 道」这类数字保持原样。 */
+.qband-list .qcell .stem .mfrac { font-size: 1.6em; }
 
 /* 「今天先做这 N 道」的题干预览也一样看不清：基准 14px 乘 1.21 = 16.94px，分式的分子分母只剩 12px，
    一道 6/8 在屏上就是个灰点。预览只有一行，正文吃 --fs-body(15px)、公式 1.5em = 22.5px；
@@ -2100,5 +2099,155 @@ a.btn { display: inline-flex; align-items: center; justify-content: center; text
 .grow .gt { font-size: var(--fs-body); line-height: 1.45; }
 /* 预览：纯数字/字母跟正文齐高（1.06em）；带分数的才放大到 1.6em（分数盒约 30px）。 */
 .grow .gt .katex { font-size: 1.06em; }
-.grow .gt .katex.is-frac { font-size: 1.6em; }
 .katex { display: inline-block; }
+/* ---- 只放大分式本身，不抬整个公式 ------------------------------------
+   用户第三次反馈（练习页）：把带分数的公式整段抬到 1.6em，同一行里「AB = ___」与
+   分数就一样高，分子分母显得比旁边数字大一头；他要的是「分式这个符号大一点，其余保持不变」。
+   做法：改 .mfrac 自己的字号——KaTeX 的分数线与分子分母高度都用 em 表达，整块等比放大，
+   旁边的字母数字一动不动。is-frac 类保留：判据与 fitTightMath 仍按它认「这一格有没有分数」。 */
+.katex .mfrac { font-size: 1.3em; }
+.katex .mfrac .mfrac { font-size: 1em; }
+.choice.is-solo .katex .mfrac, .list button.is-solo .katex .mfrac { font-size: 1.5em; }
+/* ---- 试卷真题（#/ways 的房间 + #/paper 封面与卷面） ----
+   为什么列表不用卡片网格：49 套卷要按「期末/期中 → 年份」竖向认，横向网格会把年份打散；
+   为什么一屏只列 6 套：练法页还有五个别的房间，试卷房间不该把整页height吃光。 */
+.paper-group { margin-top: var(--s-4); }
+.paper-ghead { margin: 0 0 var(--s-3); font-size: var(--fs-small); font-weight: 650; color: var(--c-text-2); }
+.paper-rows { display: grid; gap: var(--s-2); }
+.paper-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px var(--s-4);
+  width: 100%;
+  min-height: 52px;
+  padding: var(--s-3) var(--s-4);
+  text-align: left;
+  background: var(--c-surface);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+  cursor: pointer;
+}
+.paper-row:hover { border-color: var(--c-focus); background: var(--c-primary-soft); }
+.paper-row:focus-visible { outline: 2px solid var(--c-primary); outline-offset: 2px; }
+.paper-name { font-size: var(--fs-body); font-weight: 650; color: var(--c-text); }
+.paper-facts { grid-column: 1; font-size: var(--fs-small); color: var(--c-text-2); }
+.paper-last { grid-column: 2; grid-row: 1 / span 2; align-self: center; font-size: var(--fs-small); color: var(--c-ok); white-space: nowrap; }
+
+/* 封面：左边缩略看是什么卷，右边是能照着决定的八项事实。 */
+.paper-cover {
+  display: grid;
+  grid-template-columns: minmax(0, 220px) minmax(0, 1fr);
+  gap: var(--s-6);
+  align-items: start;
+  margin-top: var(--s-5);
+}
+.paper-thumb-box { border: 1px solid var(--c-line); border-radius: var(--r-md); overflow: hidden; background: var(--c-surface); }
+.paper-thumb { display: block; width: 100%; height: auto; }
+.paper-kvs { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s-2) var(--s-5); }
+.paper-kv { display: flex; gap: var(--s-2); font-size: var(--fs-small); color: var(--c-text); }
+.paper-kv em { flex: 0 0 2.6em; font-style: normal; color: var(--c-text-3); }
+.paper-side .paper-last { grid-column: auto; grid-row: auto; margin: var(--s-4) 0 var(--s-3); color: var(--c-text-2); white-space: normal; }
+.paper-done { max-width: 520px; }
+.paper-field { display: block; margin: var(--s-3) 0; font-size: var(--fs-small); color: var(--c-text-2); }
+.paper-field input { display: block; width: 100%; max-width: 220px; min-height: var(--btn-h); margin-top: var(--s-2); }
+
+/* 卷面：整卷竖排，一页一张往下滚 —— 做题时不用来回点翻页，回头对第 3 题就是往上滑。
+   答案页也在这条流水里，但一开始糊着（.is-veiled）：能滚到、看不清，点「看答案」才解开。
+   为什么不把答案页整段拿掉：三分之一卷子的页脚是连答案一起编号的，切不准；糊住既不会
+   漏答案，也不会把卷面页藏起来。打印视图走的是同一套 .paper-leaf（不带 is-veiled）。 */
+.paper-bar { display: flex; align-items: baseline; gap: var(--s-4); flex-wrap: wrap; padding: var(--s-3) 0 var(--s-3); }
+.paper-bar b { font-size: var(--fs-body); }
+.paper-roll { display: grid; gap: var(--s-4); }
+.paper-leaf {
+  margin: 0;
+  background: var(--c-surface);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+.paper-leaf img.paper-page { display: block; width: 100%; height: auto; }
+.paper-leaf.is-veiled { position: relative; }
+.paper-leaf.is-veiled img.paper-page {
+  filter: blur(9px) saturate(.55);
+  opacity: .55;
+}
+.paper-leaf.is-veiled::after {
+  content: "答案 · 还没揭开";
+  position: absolute;
+  left: var(--s-3);
+  top: var(--s-3);
+  padding: 2px 10px;
+  border: 1px solid var(--c-line);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--c-surface) 86%, var(--c-text) 14%);
+  font-size: var(--fs-small);
+  color: var(--c-text-2);
+  pointer-events: none;
+}
+.paper-ansline {
+  margin: var(--s-3) 0 0;
+  padding: var(--s-2) var(--s-3);
+  border-left: 3px solid var(--c-line);
+  font-size: var(--fs-small);
+  color: var(--c-text-3);
+}
+.paper-ansfrom { display: inline-flex; align-items: center; gap: var(--s-2); margin-left: var(--s-3); }
+.paper-ansfrom input {
+  width: 3.4em;
+  min-height: calc(var(--btn-h) - 10px);
+  padding: 0 4px;
+  text-align: center;
+}
+.paper-roll.show-ans .paper-leaf.is-veiled img.paper-page { filter: none; opacity: 1; }
+.paper-roll.show-ans .paper-leaf.is-veiled::after { content: none; }
+.paper-leaf figcaption {
+  padding: var(--s-2) var(--s-3);
+  border-top: 1px solid var(--c-line);
+  font-size: var(--fs-small);
+  color: var(--c-text-3);
+}
+.paper-ansbox {
+  margin-top: var(--s-5);
+  padding: var(--s-4);
+  border: 1px dashed var(--c-line);
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--c-surface) 92%, var(--c-text) 8%);
+}
+.paper-anshead { display: flex; align-items: baseline; gap: var(--s-3); flex-wrap: wrap; margin-bottom: var(--s-3); }
+.paper-anslist { display: grid; gap: var(--s-4); }
+.paper-missing { padding: var(--s-5); }
+/* 打印：只留纸面，控件与页脚一律不进纸。 */
+@media print {
+  .no-print, .paper-foot, .pb-wrap, #topbar, .tabs, .paper-ansbox { display: none !important; }
+  .paper-leaf { break-inside: avoid; border: 0; border-radius: 0; }
+  .paper-leaf figcaption { display: none; }
+  .paper-leaf img.paper-page { filter: none !important; opacity: 1 !important; }
+}
+.paper-foot { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; padding: var(--s-4) 0; }
+.paper-jump { display: flex; align-items: center; gap: var(--s-2); font-size: var(--fs-small); }
+.paper-jump input { width: 4.2em; min-height: var(--btn-h); }
+.paper-jump button { min-width: 44px; min-height: var(--btn-h); }
+
+@media (max-width: 760px) {
+  .paper-cover { grid-template-columns: minmax(0, 1fr); }
+  .paper-thumb-box { max-width: 220px; }
+  .paper-kvs { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 560px) {
+  .paper-row { grid-template-columns: minmax(0, 1fr); }
+  .paper-last { grid-column: 1; grid-row: auto; align-self: start; }
+  .paper-foot .btn { min-height: 44px; }
+}
+/* Topbar: the crumb must not wrap. Chinese breaks at any character, so without
+   nowrap a long paper name turns the bar into a stack of four lines while the
+   search box keeps its fixed 280px. Let the search give up width instead. */
+.crumbs > * { white-space: nowrap; }
+.crumbs > span:last-child { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.topbar > .crumbs { overflow: hidden; }
+.topbar > button { white-space: nowrap; flex: none; }
+@media (max-width: 760px) {
+  .topbar { gap: 8px; }
+  .search { width: auto; flex: 1 1 auto; max-width: 240px; min-width: 96px; }
+  .crumbs { flex: 0 1 auto; }
+}
