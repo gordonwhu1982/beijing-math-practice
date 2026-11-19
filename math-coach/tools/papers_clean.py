@@ -49,7 +49,10 @@ REPO = pb.REPO
 TPL = os.path.join(REPO, "tools", "assets", "ad-template.webp")
 STATS = os.path.join(REPO, "out", "papers_clean_stats.json")
 AD_CORR = 0.6      # 末页与该平台页的相关度；实测同版式 1.000 / 改版 0.728 / 干扰页 0.511
-AD_TAIL = 3        # 只在最后三页里认，广告永远在卷尾
+# 0 = 所有页都算相关度。2026-11-19 全量重扫发现：只认末三页时，广告一旦夹在中间就整个漏掉，
+# 而把范围放到全页并不会误伤 —— 列在 meta.files 里的正常页 corr 最高 0.525（f2402 p010 那种版面
+# 巧合），与 0.6 阈值之间有足够间隔。
+AD_TAIL = 0
 
 
 def sig(im, size=40):
@@ -143,7 +146,7 @@ def main():
         for i in range(n):
             im = doc[i].render(scale=args.scale).to_pil().convert("L")
             dens, lines = page_metrics(np.asarray(im))
-            corr = ad_score(im, tpl) if i >= n - AD_TAIL else None
+            corr = ad_score(im, tpl) if AD_TAIL <= 0 or i >= n - AD_TAIL else None
             rec = {"page": i + 1, "dens": round(dens, 4), "lines": lines}
             if corr is not None:
                 rec["ad"] = round(corr, 3)
