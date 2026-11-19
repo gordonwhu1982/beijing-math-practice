@@ -28,12 +28,12 @@ step "框架报告"   python tools/framework_status.py
 step "前端切片"   python tools/build_web.py
 step "题→知识点"   python tools/questions_kp_check.py
 if [ "${1:-}" = "--web" ]; then
-  # 视觉断言先跑：它不点页面、只量像素与文本，几秒出结果，失败时离改动最近
-  step "视觉断言"       node tools/ux_asserts.js
-  step "无头浏览器冒烟" node tools/web_smoke.js
-  # 冒烟收尾会 taskkill chrome，紧接着启动探针偶发抢不到调试端口（实测出现过一次假 FAIL）
-  sleep 1
-  step "详情面板探针"   node tools/web_detail_probe.js
+  # 2026-11-19：runtime/web 换成 ux-v2 那一版单文件 app.js（与 design/ux-v2/app 同源，
+  # 由 tools/sync_ui.py 保证三处一致）。旧三道 web 闸门（ux_asserts / web_smoke /
+  # web_detail_probe）判的是 js/views 架构的 hash 路由与 DOM 类名，换架构后一条都不成立 ——
+  # 留着跑只会满屏假红，把真问题埋掉。界面闸门改由 ux-v2 的 smoke 承担：
+  # 38 路由 × 3 视口，逐路由量 ovf / off / clip / tiny / tap / ghost / kx，退出码 = 失败条数。
+  step "界面闸门(38 路由 × 3 视口)" env UXV2_PRE=/runtime/web/ UXV2_PORT=8786 UXV2_CDP=9536 node design/ux-v2/tools/qa/smoke.mjs
 fi
 printf '\n===== 失败步骤数: %d =====\n' "$FAIL"
 exit $((FAIL > 0))

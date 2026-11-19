@@ -206,6 +206,14 @@ def validate(recs, nodes, strict):
             tag = r.get("uid") or r.get("id") or r.get("qid") or "#%d" % i
             for f in must:
                 if r.get(f) in (None, "", [], {}):
+                    # 章末拓展节（no 以 .M 结尾，如 801 的 12.M「比例、面积和模型」）
+                    # 是自编竞赛栏目，教材里没有这一页，page 天然为空；
+                    # 这类节缺页码记 WARN 不判红，strict 模式仍然要求补。
+                    if ent == "section" and f == "page" and str(r.get("no", "")).endswith(".M"):
+                        warn_count[(ent, "page")] += 1
+                        if len(warn_samples[(ent, "page")]) < 3:
+                            warn_samples[(ent, "page")].append(tag)
+                        continue
                     errors.append("%s/%s 缺必填字段 %s" % (ent, tag, f))
             for k in r:
                 if k.startswith("_") or k in allowed:
@@ -230,6 +238,9 @@ def validate(recs, nodes, strict):
     chk_enum("question", recs["question"], "band", "band")
     chk_enum("question", recs["question"], "visibility", "visibility")
     chk_enum("question", recs["question"], "review_status", "review_status")
+    chk_enum("question", recs["question"], "options_status", "options_status")
+    chk_enum("question", recs["question"], "judge", "answer_judge")
+    chk_enum("question", recs["question"], "specials", "special")
     chk_enum("knowledge_point", recs["knowledge_point"], "status", "kp_status")
     chk_enum("edge", recs["edge"], "relation", "relation")
     chk_enum("knowledge_point_detail", recs["knowledge_point_detail"], "kp_type", "kp_type")
@@ -244,8 +255,37 @@ def validate(recs, nodes, strict):
         for t in q.get("topics") or []:
             if t not in node_ids:
                 errors.append("question/%s 的 topics 引用不存在节点 %s" % (q.get("id"), t))
+        vol = q.get("volume_id") or "801"
+        if q.get("section_no"):
+            place = "S%s-%s" % (vol, q.get("section_no"))
+        elif q.get("chapter_no") is not None:
+            place = "C%s-%02d" % (vol, int(q.get("chapter_no")))
+        else:
+            place = None
+        if place and place not in node_ids:
+            errors.append("question/%s 的位置 %s 没有对应节点" % (q.get("id"), place))
+        if q.get("pitfall") not in (None, True):
+            errors.append("question/%s 的 pitfall 只能是 true" % q.get("id"))
         if q.get("answer_status") == "present" and not (q.get("answer") or "").strip():
             errors.append("question/%s answer_status=present 但 answer 为空" % q.get("id"))
+        src = q.get("source")
+        if isinstance(src, dict) and src.get("kind") is not None:
+            if src.get("kind") not in ENUMS["source_kind"]:
+                errors.append("question/%s source.kind=%r 不在枚举 source_kind" % (q.get("id"), src.get("kind")))
+            if src.get("kind") == "paper" and (not src.get("year") or src.get("exam_type") not in ENUMS["exam_type"]):
+                errors.append("question/%s 试卷题必须有年份和考试类型" % q.get("id"))
+            if src.get("kind") == "textbook" and src.get("book_position") not in ENUMS["book_position"]:
+                errors.append("question/%s 教材题必须有课本位置" % q.get("id"))
+            if src.get("kind") != "textbook" and src.get("book_position"):
+                errors.append("question/%s 非教材题不能写课本位置" % q.get("id"))
+        if q.get("kp_primary") and q.get("kp_primary") not in node_ids:
+            errors.append("question/%s 的 kp_primary 引用不存在节点 %s" % (q.get("id"), q.get("kp_primary")))
+        for kid in q.get("kp_secondary") or []:
+            if kid not in node_ids:
+                errors.append("question/%s 的 kp_secondary 引用不存在节点 %s" % (q.get("id"), kid))
+        for sid in q.get("skills") or []:
+            if sid not in node_ids:
+                errors.append("question/%s 的 skills 引用不存在节点 %s" % (q.get("id"), sid))
     for r in recs["rubric_point"]:
         if r.get("qid") not in qids:
             errors.append("rubric/%s 的 qid 引用不存在题目 %s" % (r.get("qid"), r.get("qid")))

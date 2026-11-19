@@ -740,3 +740,44 @@
 
 看界面：仓根 `python -m http.server 8780` → `http://127.0.0.1:8780/design/ux-v2/app/#/today`（必须在仓根起服务，原型用 `../../../` 引 katex 与切片）。
 验收：`node design/ux-v2/tools/qa/smoke.mjs`（回归线 13px/32px）与 `--strict`（验收线 14px/40px），两条都要 0 失败；缓存串用 `node design/ux-v2/tools/qa/bust.mjs` 重算。
+
+### 2026-11-19 晚：界面四处入口收成同一份（tools/sync_ui.py）
+
+同一套界面现在要活在三处，再加一个公开仓镜像就是四处：
+
+| 角色 | 路径 | app.js 里的 DATA_ROOT | index.html 前缀 |
+|---|---|---|---|
+| 设计稿（源） | `design/ux-v2/app/` | `../../../runtime/web/data/` | `../../../` |
+| 产品版 | `runtime/web/` | `data/` | `js/`、`data/`、`../../assets/` |
+| 镜像（原冻结基准） | `design/ux-redesign/prototype/` | `../../../runtime/web/data/` | `../../../` |
+| 公开仓镜像 | `beijing-math-practice/math-coach/` 下同两个目录 | 同上 | 同上 |
+
+**两处差异到此为止，别再各写一份。** 同步只有一条命令：
+
+```
+python tools/sync_ui.py                  # dry-run，打印哪个目标哪个文件有差异
+python tools/sync_ui.py --write          # 写本地两处
+python tools/sync_ui.py --write --remote # 连公开仓镜像一起写
+```
+
+缓存串默认沿用设计稿 `index.html` 里那一个，四处必须同串：同一个界面在不同目录下缓存行为不一致时，「改了看不见」会查很久。改界面的流程是 **改设计稿 → `node design/ux-v2/tools/qa/bust.mjs` 重算内容指纹 → `sync_ui.py --write --remote`**。
+
+**`design/ux-redesign/prototype/` 不再是冻结基准。** 2026-11-12 那一版（tag `ux-baseline-20261112` = `6c12ec3`）是 cursor 的交付，当时定为「不再改动」。2026-11-19 用户要求「这三处都要是最新界面」，该决定作废：prototype 现在是 ux-v2 的镜像。要看旧基准用 tag 取，不要在这个目录里找「以前的样子」。
+
+### 2026-11-19：旧三道 web 闸门退役，界面闸门换成 ux-v2 smoke
+
+`runtime/web` 从 `js/views/*` 模块化架构换成 ux-v2 的单文件 `app.js`（8284 行）之后，`tools/ux_asserts.js`（37 个判据代号 × 29 次旧 hash 路由）、`tools/web_smoke.js`（63 条，判 `#/toc`、`#/kp/...`、`#map-cross` 这些旧 DOM）、`tools/web_detail_probe.js` 的判据一条都不成立 —— 留着跑就是拿旧尺子量新房子，满屏假红会把真问题埋掉。
+
+`tools/check_all.sh --web` 现在跑的是：
+
+```
+env UXV2_PRE=/runtime/web/ node design/ux-v2/tools/qa/smoke.mjs
+```
+
+38 路由 × 3 视口 = 114 次，逐路由量 `ovf / off / clip / tiny / tap / ghost / kx`，外加每条路由的 `seen` 文本判据与步骤（`#start`、`#skip`、`#paper-ans` 等），退出码 = 失败条数。三个旧脚本文件保留在 `tools/` 里备查，不再进闸门。
+
+`tools/check_commit.py` 早就有 `new_shell()` 判定（`index.html` 引用 `app.js` 且不含 `js/views/map.js`）：命中时视觉断言自动 SKIP、冒烟改跑 ux-v2 smoke，所以提交钩子不需要改。
+
+**实测证据**（2026-11-19 22:00 前后）：四处入口同值 —— `#/today` 767 字 / 9 处公式 / 3 个知识点分组，`#/book` 2680 字 / 63 处公式，`#/section` 597 字 / 17 处公式 / 3 组，`#/paper?id=f2609&run=1` 11 页 / 5 页遮罩 / 按钮「看答案（第 7 页起）」，`#/map` 438 字，全部零 console 错误（`out/probe_sync2.js`，`UXV2_ROOT`/`UXV2_PRE`/`UXV2_PORT`/`UXV2_CDP` 环境变量切换目标）。`bash tools/check_all.sh --web` → **rc=0，失败步骤数 0**（界面闸门 [OK]）。跑第一次时还有一条**既有**失败 `section/S801-12.M 缺必填字段 page`：801 第 12 章末尾的 12.M「比例、面积和模型」是自编竞赛栏目（射影、塞瓦、梅涅劳斯、斯特瓦特等 11 个知识点），教材里没有这一页，page 天然为空。已在 `tools/schema_check.py` 里对 `no` 以 `.M` 结尾的节特判：缺 page 记 WARN 不判红，strict 模式仍要求补。这不是放宽判据，是纠正 schema 把「教材页码」当成所有节的必填项这个错误假设
+
+**公开仓不带试卷页图。** 49 套区县真题的 678 页栅格共 112MB，属外部素材：`beijing-math-practice/math-coach/.gitignore` 的 `runtime/web/data/` 本来就挡住整个数据目录（已跟踪的 `catalog/figures/graph/qkp/qtypes/sec` 是 gitignore 之前入库的，照旧生效），新目录 `data/papers/` 自然不入库。远程点试卷会看到「卷面图没生成」的出口提示；本机与局域网有图。要改这个口径，先确认版权，再删 `.gitignore` 里那条显式规则。
