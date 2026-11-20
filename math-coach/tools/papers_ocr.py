@@ -7,7 +7,7 @@
 
 判据（两道）：
   1. 页面上出现答案标记词（【答案】/【分析】/【详解】/【解答】/参考答案/参考案/
-     答案及评标/答案与评分/答案与解析）；
+     答案及评标/答案与评分/答案与解析/答案及评分）；
   2. 该标记出现在页面顶部 45% 以内 —— 答案页的标题/首答总在上半页，卷面页里
      「参考答案见第 X 页」这类小字在下半页或页脚，光看词会误判（实测 m2504）。
 
@@ -29,7 +29,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 META = os.path.join(ROOT, "content", "papers", "meta.json")
 INDEX = os.path.join(ROOT, "runtime", "web", "data", "papers", "index.js")
 KEYS = ["【答案】", "【分析】", "【详解】", "【解答】", "参考答案", "参考案",
-        "答案及评标", "答案与评分", "答案与解析"]
+        "答案及评标", "答案与评分", "答案与解析", "答案及评分"]
 TOP_SHARE = 0.45
 
 _ocr = RapidOCR()
@@ -37,7 +37,7 @@ _ocr = RapidOCR()
 
 def page_hits(pid, files, pg):
     """返回这一页命中的标记词与相对位置（0=页顶，1=页底）。"""
-    path = os.path.join(ROOT, "runtime", "web", "data", "papers", pid, files[pg - 1])
+    path = os.path.join(ROOT, "content", "papers", pid, files[pg - 1])
     im = Image.open(path).convert("RGB")
     w = 640
     im = im.resize((w, int(im.height * w / im.width)))
